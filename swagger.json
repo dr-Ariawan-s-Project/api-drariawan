@@ -1,0 +1,187 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "dr Ariawan's Project",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://api.server.test/v1"
+        }
+    ],
+    "paths": {
+        "/question": {
+            "get": {
+                "tags": [
+                    "Questions"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/QuestionResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Questions"
+                ],
+                "requestBody":{
+                    "required": true,
+                    "description": "Send client answer",
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#/components/schemas/AnswerRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseSuccess"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "EmptyResponseSuccess": {
+                "type": "object",
+                "properties": {
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    },
+                    "messages": {
+                        "$ref": "#/components/schemas/Messages"
+                    },
+                    "data": {}
+                }
+            },
+            "QuestionResponse": {
+                "type": "object",
+                "properties": {
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    },
+                    "messages": {
+                        "$ref": "#/components/schemas/Messages"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "number",
+                                    "example": "10"
+                                },
+                                "question": {
+                                    "type": "string",
+                                    "example": "https://linkto.com/video.mp4"
+                                },
+                                "desc": {
+                                    "type": "string",
+                                    "example": "Tolong jawab dengan kata ya dan tidak"
+                                },
+                                "choices": {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "detail": {
+                                                        "type": "string",
+                                                        "example": "Ya"
+                                                    },
+                                                    "slugs": {
+                                                        "type": "string",
+                                                        "example": "boleh;silahkan;oke;yes;lanjutkan;"
+                                                    },
+                                                    "goto": {
+                                                        "type": "number",
+                                                        "example": "15"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "detail": {
+                                                        "type": "string",
+                                                        "example": "Tidak"
+                                                    },
+                                                    "slugs": {
+                                                        "type": "string",
+                                                        "example": "jangan dulu;tidak;maaf;no;"
+                                                    },
+                                                    "goto": {
+                                                        "type": "number",
+                                                        "example": "20"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "Meta": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "example": "001REC-S"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "success"
+                    }
+                }
+            },
+            "Messages": {
+                "type": "array",
+                "items": {}
+            },
+            "AnswerRequest": {
+                "type": "object",
+                "properties": {
+                    "answer": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "question": {
+                                    "type": "number",
+                                    "example": "10"
+                                },
+                                "desc": {
+                                    "type": "string",
+                                    "example": "yes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
