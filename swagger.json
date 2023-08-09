@@ -15,6 +15,7 @@
                 "tags": [
                     "Questions"
                 ],
+                "description": "Get list of questions and choises answer",
                 "responses": {
                     "200": {
                         "description": "Success Response",
@@ -32,12 +33,12 @@
                 "tags": [
                     "Questions"
                 ],
-                "requestBody":{
+                "description": "Submit the answer of questions",
+                "requestBody": {
                     "required": true,
-                    "description": "Send client answer",
                     "content": {
-                        "application/json":{
-                            "schema":{
+                        "application/json": {
+                            "schema": {
                                 "$ref": "#/components/schemas/AnswerRequest"
                             }
                         }
@@ -56,6 +57,46 @@
                     }
                 }
             }
+        },
+        "/question/validate":{
+            "post":{
+                "tags": [
+                    "Questions"
+                ],
+                "description": "Validate the user that want to answer the question. Everyone is just have 2 attemp for answering, as myself and partner.",
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#/components/schemas/QuestionerUserValidate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseSuccess"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "User already take the questioner",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegisterdResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -68,6 +109,22 @@
                     },
                     "messages": {
                         "$ref": "#/components/schemas/Messages"
+                    },
+                    "data": {}
+                }
+            },
+            "RegisterdResponseError": {
+                "type": "object",
+                "properties": {
+                    "meta": {
+                        "$ref": "#/components/schemas/Meta"
+                    },
+                    "messages": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": "User has already registered."
+                        }
                     },
                     "data": {}
                 }
@@ -97,6 +154,17 @@
                                 "desc": {
                                     "type": "string",
                                     "example": "Tolong jawab dengan kata ya dan tidak"
+                                },
+                                "ans_type": {
+                                    "type": "string",
+                                    "example": "choices",
+                                    "enum": [
+                                        "choices",
+                                        "number",
+                                        "text",
+                                        "date",
+                                        "voice"
+                                    ]
                                 },
                                 "choices": {
                                     "type": "array",
@@ -179,6 +247,27 @@
                                 }
                             }
                         }
+                    }
+                }
+            },
+            "QuestionerUserValidate": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "example": "jhon.doe@check.com"
+                    },
+                    "number": {
+                        "type": "string",
+                        "example": "08129909891234"
+                    },
+                    "as":{
+                        "type": "string",
+                        "example": "myself",
+                        "enum": [
+                            "myself",
+                            "partner"
+                        ]
                     }
                 }
             }
