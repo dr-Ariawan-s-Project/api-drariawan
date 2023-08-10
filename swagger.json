@@ -10,10 +10,10 @@
         }
     ],
     "paths": {
-        "/question": {
+        "/questioner": {
             "get": {
                 "tags": [
-                    "Questions"
+                    "Questioner"
                 ],
                 "description": "Get list of questions and choises answer",
                 "responses": {
@@ -31,7 +31,7 @@
             },
             "post": {
                 "tags": [
-                    "Questions"
+                    "Questioner"
                 ],
                 "description": "Submit the answer of questions",
                 "requestBody": {
@@ -58,10 +58,10 @@
                 }
             }
         },
-        "/question/validate":{
+        "/questioner/validate":{
             "post":{
                 "tags": [
-                    "Questions"
+                    "Questioner"
                 ],
                 "description": "Validate the user that want to answer the question. Everyone is just have 2 attemp for answering, as myself and partner.",
                 "requestBody":{
