@@ -58,17 +58,17 @@
                 }
             }
         },
-        "/questioner/validate":{
-            "post":{
+        "/questioner/validate": {
+            "post": {
                 "tags": [
                     "Questioner"
                 ],
                 "description": "Validate the user that want to answer the question. Everyone is just have 2 attemp for answering, as myself and partner.",
-                "requestBody":{
+                "requestBody": {
                     "required": true,
                     "content": {
-                        "application/json":{
-                            "schema":{
+                        "application/json": {
+                            "schema": {
                                 "$ref": "#/components/schemas/QuestionerUserValidate"
                             }
                         }
@@ -91,6 +91,160 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/RegisterdResponseError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "required": true,
+                        "schema":{
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "meta": {
+                                            "$ref": "#/components/schemas/Meta"
+                                        },
+                                        "messages": {
+                                            "$ref": "#/components/schemas/Messages"
+                                        },
+                                        "data": {
+                                           "$ref": "#/components/schemas/User"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "requestBody":{
+                    "content": {
+                        "application/json": {
+                            "schema":{
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseSuccess"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "requestBody":{
+                    "content": {
+                        "application/json": {
+                            "schema":{
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseSuccess"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/list": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "meta": {
+                                            "$ref": "#/components/schemas/Meta"
+                                        },
+                                        "messages": {
+                                            "$ref": "#/components/schemas/Messages"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items":{
+                                                "$ref": "#/components/schemas/User"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/deactive": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "required": true,
+                        "schema":{
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseSuccess"
                                 }
                             }
                         }
@@ -261,13 +415,38 @@
                         "type": "string",
                         "example": "08129909891234"
                     },
-                    "as":{
+                    "as": {
                         "type": "string",
                         "example": "myself",
                         "enum": [
                             "myself",
                             "partner"
                         ]
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "example": "jhondoe@email.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "supersecret"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Jhon Doe"
+                    },
+                    "picture": {
+                        "type": "string",
+                        "example": "picture.jpg"
+                    },
+                    "role": {
+                        "type": "string",
+                        "example": "admin"
                     }
                 }
             }
