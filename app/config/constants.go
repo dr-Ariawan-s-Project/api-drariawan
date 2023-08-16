@@ -5,39 +5,39 @@ var (
 	SERVERPORT int16
 )
 
-// var (
-// 	// ErrRecordNotFound record not found error
-// 	ErrRecordNotFound = errors.New("error data not found")
-// 	// ErrMissingWhereClause missing where clause
-// 	ErrMissingWhereClause = errors.New("WHERE conditions required")
-// 	// ErrUnsupportedRelation unsupported relations
-// 	ErrUnsupportedRelation = errors.New("unsupported relations")
-// 	// ErrInvalidData unsupported data
-// 	ErrInvalidData = errors.New("unsupported data")
-// 	// ErrInvalidField invalid field
-// 	ErrInvalidField = errors.New("invalid field")
-// 	// ErrPreloadNotAllowed preload is not allowed when count is used
-// 	ErrPreloadNotAllowed = errors.New("preload is not allowed when count is used")
-// )
+// const code feature
+const (
+	FEAT_USER_CODE         = "001"
+	FEAT_AUTH_CODE         = "002"
+	FEAT_QUESTIONAIRE_CODE = "003"
+)
+
+// const code layer
+const (
+	LAYER_DATA_CODE    = "DATA"
+	LAYER_SERVICE_CODE = "SERVICE"
+	LAYER_HANDLER_CODE = "HANDLER"
+	LAYER_DEFAULT_CODE = "DEFAULT"
+)
 
 // const db error
 const (
 	// ErrRecordNotFound record not found error
-	ERR_RECORD_NOT_FOUND = "error data not found"
+	DB_ERR_RECORD_NOT_FOUND = "error data not found"
 	// ErrMissingWhereClause missing where clause
-	ERR_MISSING_WHERE_CLAUSE = "error WHERE conditions required"
+	DB_ERR_MISSING_WHERE_CLAUSE = "error WHERE conditions required"
 	// ErrUnsupportedRelation unsupported relations
-	ERR_UNSUPPORTED_RELATION = "error unsupported relations"
+	DB_ERR_UNSUPPORTED_RELATION = "error unsupported relations"
 	// ErrInvalidData unsupported data
-	ERR_INVALID_DATA = "error unsupported data"
+	DB_ERR_INVALID_DATA = "error unsupported data"
 	// ErrInvalidField invalid field
-	ERR_INVALID_FIELD = "error invalid field"
+	DB_ERR_INVALID_FIELD = "error invalid field"
 	// ErrPreloadNotAllowed preload is not allowed when count is used
-	ERR_PRELOAD_NOT_ALLOWED = "error preload is not allowed when count is used"
+	DB_ERR_PRELOAD_NOT_ALLOWED = "error preload is not allowed when count is used"
 	// ErrInvalidDB
-	ERR_INVALID_DB = "error invalid database"
+	DB_ERR_INVALID_DB = "error invalid database"
 	// ErrPrimaryKeyRequired
-	ERR_PRIMARY_KEY_REQUIRED = "error primary key required"
+	DB_ERR_PRIMARY_KEY_REQUIRED = "error primary key required"
 )
 
 // Failed Response
@@ -48,19 +48,19 @@ const (
 
 // input request body
 const (
-	InvalidIdParam    string = "invaild id param"
-	InvalidPageParam  string = "invalid page param"
-	InvalidLimitParam string = "invalid limit param"
-	ErrorBindData     string = "error bind data"
+	REQ_InvalidIdParam    string = "invaild id param"
+	REQ_InvalidPageParam  string = "invalid page param"
+	REQ_InvalidLimitParam string = "invalid limit param"
+	REQ_ErrorBindData     string = "error bind data"
 )
 
-// input file
+// validation input file
 const (
-	InvalidImageFileType string = "invalid image file type"
-	InvalidFileSize      string = "invalid file size"
+	VAL_InvalidImageFileType string = "invalid image file type"
+	VAL_InvalidFileSize      string = "invalid file size"
 )
 
-// Failed
+// validation input
 const (
-	VALIDATION_InvalidInput string = "invalid input"
+	VAL_InvalidInput string = "invalid input"
 )
