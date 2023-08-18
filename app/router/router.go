@@ -1,16 +1,18 @@
 package router
 
 import (
-	"net/http"
-
+	_questionaireData "github.com/dr-ariawan-s-project/api-drariawan/features/questionaire/data"
+	_questionaireHandler "github.com/dr-ariawan-s-project/api-drariawan/features/questionaire/handler"
+	_questionaireService "github.com/dr-ariawan-s-project/api-drariawan/features/questionaire/service"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
 
 func InitRouter(db *gorm.DB, e *echo.Echo) {
-	e.GET("/hello", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, map[string]any{
-			"message": "hello world",
-		})
-	})
+
+	questionaireData := _questionaireData.New(db)
+	questionaireService := _questionaireService.New(questionaireData)
+	questionaireHandlerAPI := _questionaireHandler.New(questionaireService)
+
+	e.GET("/questioner", questionaireHandlerAPI.GetAllQuestion)
 }
