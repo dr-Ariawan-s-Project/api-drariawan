@@ -18,7 +18,8 @@ type AppConfig struct {
 	DB_HOSTNAME string
 	DB_PORT     int
 	DB_NAME     string
-	jwtKey      string
+	JWT_SECRET  string
+	APP_PATH    string
 }
 
 func InitConfig() *AppConfig {
@@ -32,7 +33,7 @@ func ReadEnv() *AppConfig {
 
 	// proses mencari & membaca environment var dg key tertentu
 	if val, found := os.LookupEnv("JWT_KEY"); found {
-		app.jwtKey = val
+		app.JWT_SECRET = val
 		isRead = false
 	}
 	if val, found := os.LookupEnv("DBUSER"); found {
@@ -67,8 +68,12 @@ func ReadEnv() *AppConfig {
 			log.Println("error read config : ", err.Error())
 			return nil
 		}
-
-		app.jwtKey = viper.Get("JWT_KEY").(string)
+		// err = viper.Unmarshal(&app)
+		// if err != nil {
+		// 	log.Println("error parse config : ", err.Error())
+		// 	return nil
+		// }
+		app.JWT_SECRET = viper.Get("JWT_KEY").(string)
 		app.DB_USERNAME = viper.Get("DBUSER").(string)
 		app.DB_PASSWORD = viper.Get("DBPASS").(string)
 		app.DB_HOSTNAME = viper.Get("DBHOST").(string)
@@ -76,6 +81,7 @@ func ReadEnv() *AppConfig {
 		app.DB_NAME = viper.Get("DBNAME").(string)
 	}
 
-	SECRET_JWT = app.jwtKey
+	// SECRET_JWT = app.jwtKey
+	// fmt.Println("check", app.jwtKey)
 	return &app
 }
