@@ -23,3 +23,12 @@ type Repositories interface {
 	GetByID(id int) (*Users, error)
 	GetByUsername(username string) (*Users, error)
 }
+
+type UserService interface {
+	FindByUsernameOrEmail(string) (*Users, error)
+	Insert(*Users) (int, error)
+	Update(*Users, int) error
+	Delete(int) error
+	FindById(int) (*Users, error)
+	FindAll(int, int, string) []*Users
+}

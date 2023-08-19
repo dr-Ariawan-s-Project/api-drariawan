@@ -6,15 +6,6 @@ import (
 	"github.com/dr-ariawan-s-project/api-drariawan/features/users"
 )
 
-type UserService interface {
-	FindByUsernameOrEmail(string) (*users.Users, error)
-	Insert(*users.Users) (int, error)
-	Update(*users.Users, int) error
-	Delete(int) error
-	FindById(int) (*users.Users, error)
-	FindAll(int, int, string) []*users.Users
-}
-
 type userServ struct {
 	userRepo users.Repositories
 }
