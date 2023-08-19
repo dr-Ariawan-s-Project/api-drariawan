@@ -39,7 +39,6 @@ WARNING : please make sure the query in rollback / down file, its may contains D
 	}
 
 	dbMysql := database.InitDBMysql(cfg)
-	database.InitMigration(dbMysql)
 
 	e := echo.New()
 
