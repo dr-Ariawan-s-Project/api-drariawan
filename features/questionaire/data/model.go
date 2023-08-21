@@ -1,12 +1,17 @@
 package data
 
 import (
+	"time"
+
 	"github.com/dr-ariawan-s-project/api-drariawan/features/questionaire"
 	"gorm.io/gorm"
 )
 
 type Question struct {
-	gorm.Model
+	ID                 uint
+	CreatedAt          time.Time
+	UpdatedAt          time.Time
+	DeletedAt          gorm.DeletedAt
 	Type               string
 	Question           string
 	Description        string
