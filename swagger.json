@@ -99,6 +99,7 @@
             }
         },
         "/user": {
+            "description": "admin, perawat, dokter",
             "get": {
                 "tags": [
                     "User"
@@ -468,6 +469,10 @@
                     "name": {
                         "type": "string",
                         "example": "Jhon Doe"
+                    },
+                    "specialization": {
+                        "type": "string",
+                        "example": "Spesialis Obstetri dan Ginekologi"
                     },
                     "picture": {
                         "type": "string",
