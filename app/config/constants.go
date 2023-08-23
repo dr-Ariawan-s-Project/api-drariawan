@@ -41,10 +41,16 @@ const (
 	DB_ERR_PRIMARY_KEY_REQUIRED = "error primary key required"
 )
 
-// Failed Response
+// Failed JWT Response
 const (
 	JWT_InvalidJwtToken       string = "jwt token missing or invalid"
 	JWT_FailedCastingJwtToken string = "failed to cast claims as jwt.MapClaims"
+	JWT_FailedCreateToken     string = "failed generate token"
+)
+
+// auth
+const (
+	ERR_AuthWrongCredentials = "wrong email/password"
 )
 
 // input request body
@@ -63,5 +69,5 @@ const (
 
 // validation input
 const (
-	VAL_InvalidInput string = "invalid input"
+	VAL_InvalidValidation string = "Validation Error"
 )

@@ -20,11 +20,17 @@ func CheckHandlerSuccessCode(msg string) int {
 
 func CheckHandlerErrorCode(err error) (responseCode int, layerCode string, errConst error) {
 	switch err.Error() {
+	case config.ERR_AuthWrongCredentials:
+		return http.StatusBadRequest, config.LAYER_SERVICE_CODE, err
+
 	case config.JWT_InvalidJwtToken:
 		return http.StatusBadRequest, config.LAYER_HANDLER_CODE, err
 
 	case config.JWT_FailedCastingJwtToken:
 		return http.StatusInternalServerError, config.LAYER_HANDLER_CODE, err
+
+	case config.JWT_FailedCreateToken:
+		return http.StatusInternalServerError, config.LAYER_SERVICE_CODE, err
 
 	case config.REQ_ErrorBindData:
 		return http.StatusBadRequest, config.LAYER_HANDLER_CODE, err
@@ -42,6 +48,9 @@ func CheckHandlerErrorCode(err error) (responseCode int, layerCode string, errCo
 		return http.StatusBadRequest, config.LAYER_SERVICE_CODE, err
 
 	case config.VAL_InvalidFileSize:
+		return http.StatusBadRequest, config.LAYER_SERVICE_CODE, err
+
+	case config.VAL_InvalidValidation:
 		return http.StatusBadRequest, config.LAYER_SERVICE_CODE, err
 
 	case config.DB_ERR_RECORD_NOT_FOUND:
