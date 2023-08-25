@@ -1,0 +1,81 @@
+name: deploy to gcp
+
+on:
+  push:
+    tags:        
+      - '**'  
+
+jobs:
+  build-image:
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: build image at actions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      - name: Extract Tags Version
+        id: tag_version
+        run: |
+          echo "SOURCE_TAG=${{github.ref_name}}" >> $GITHUB_OUTPUT
+      - name: Build docker image and save to tar
+        run: |
+          mkdir image
+          docker build -t service-app:$SOURCE_TAG .
+          docker save -o image/service.tar service-app:$SOURCE_TAG
+        env:
+          SOURCE_TAG: ${{ steps.tag_version.outputs.SOURCE_TAG }}
+      - name: Artifact docker image
+        uses: actions/upload-artifact@v3
+        with:
+          name: dockerimage
+          path: image
+          retention-days: 1
+  deploy-prod:
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: deploy to production server
+    runs-on: ubuntu-latest
+    needs: build-image
+    environment: Production
+    steps:
+      - name: Download docker image from Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: dockerimage
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.KEY }}" > ~/.ssh/server
+          chmod 600 ~/.ssh/server
+          cat >>~/.ssh/config <<END
+          Host server
+            HostName ${{ secrets.HOST }}
+            User ${{ secrets.USERNAME }}
+            Port ${{ secrets.PORT }}
+            IdentityFile ~/.ssh/server
+            StrictHostKeyChecking no
+          END
+          ssh-keyscan -t rsa ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+      - name: Extract tags version
+        id: tag_version
+        run: |
+          echo "SOURCE_TAG=${{github.ref_name}}" >> $GITHUB_OUTPUT
+      - name: Copy docker image to remote server
+        run: |
+          ls -al
+          scp -v -r -i ~/.ssh/server $(pwd) ${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{ secrets.HOMEPATH }}image
+      - name: Deploy at remote server
+        shell: bash
+        run: |
+          ssh server <<END
+
+          docker load -i ${{ secrets.HOMEPATH }}image/temp-cicd/service.tar
+
+          docker stop api_server || true && docker rm api_server || true
+
+          docker run --rm -e DBUSER=${{ secrets.DBUSER }} -e DBPASS=${{ secrets.DBPASS }} -e DBHOST=${{ secrets.DBHOST }} -e DBPORT=${{ secrets.DBPORT }} -e DBNAME=${{ secrets.DBNAME }} -e "TZ=Asia/Jakarta" --name=migration --restart=no service-app:$SOURCE_TAG sh -c "./service-app migrateup"
+
+          docker run -d --rm -e DBUSER=${{ secrets.DBUSER }} -e DBPASS=${{ secrets.DBPASS }} -e DBHOST=${{ secrets.DBHOST }} -e DBPORT=${{ secrets.DBPORT }} -e DBNAME=${{ secrets.DBNAME }} -v export-app:/app/export -v public-app:/app/public -p 80:80 -e "APP_PATH=/app" -e "TZ=Asia/Jakarta" --name=api_server --restart=no service-app:$SOURCE_TAG sh -c "./service-app"
+
+          END
+        env:
+          SOURCE_TAG: ${{ steps.tag_version.outputs.SOURCE_TAG }}
