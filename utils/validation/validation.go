@@ -1,8 +1,6 @@
 package validation
 
 import (
-	"fmt"
-
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/go-playground/validator/v10"
 )
@@ -21,6 +19,16 @@ func (err ValidationError) Error() string {
 	return err.Message
 }
 
+func messageForErrTag(msg validator.FieldError) string {
+	switch msg.Tag() {
+	case "required":
+		return "This field is required"
+	case "email":
+		return "Invalid email"
+	}
+	return msg.Error()
+}
+
 func ValidateStruct(validate *validator.Validate, data any) error {
 	errors := []ValidationErrorItem{}
 	err := validate.Struct(data)
@@ -28,7 +36,7 @@ func ValidateStruct(validate *validator.Validate, data any) error {
 		for _, err := range err.(validator.ValidationErrors) {
 			errors = append(errors, ValidationErrorItem{
 				Field: err.Field(),
-				Error: fmt.Sprintf("%s|%s", err.Field(), err.ActualTag()),
+				Error: messageForErrTag(err),
 			})
 		}
 	}
