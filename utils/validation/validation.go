@@ -1,18 +1,15 @@
 package validation
 
 import (
+	"fmt"
+
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/go-playground/validator/v10"
 )
 
-type ValidationErrorItem struct {
-	Field string `json:"field"`
-	Error string `json:"error"`
-}
-
 type ValidationError struct {
 	Message string
-	Errors  []ValidationErrorItem
+	Errors  []string
 }
 
 func (err ValidationError) Error() string {
@@ -30,14 +27,11 @@ func messageForErrTag(msg validator.FieldError) string {
 }
 
 func ValidateStruct(validate *validator.Validate, data any) error {
-	errors := []ValidationErrorItem{}
+	var errors []string
 	err := validate.Struct(data)
 	if err != nil {
 		for _, err := range err.(validator.ValidationErrors) {
-			errors = append(errors, ValidationErrorItem{
-				Field: err.Field(),
-				Error: messageForErrTag(err),
-			})
+			errors = append(errors, fmt.Sprintf("Field: %s - %s", err.Field(), messageForErrTag(err)))
 		}
 	}
 	if len(errors) > 0 {
