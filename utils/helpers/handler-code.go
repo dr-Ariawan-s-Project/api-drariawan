@@ -9,9 +9,9 @@ import (
 
 func CheckHandlerSuccessCode(msg string) int {
 	switch true {
-	case strings.Contains(msg, "insert"):
+	case strings.Contains(msg, "insert") || strings.Contains(msg, "create"):
 		return http.StatusCreated
-	case strings.Contains(msg, "read") || strings.Contains(msg, "update") || strings.Contains(msg, "read"):
+	case strings.Contains(msg, "read") || strings.Contains(msg, "get") || strings.Contains(msg, "update") || strings.Contains(msg, "delete"):
 		return http.StatusOK
 	default:
 		return http.StatusOK
