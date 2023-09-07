@@ -2,33 +2,37 @@ package users
 
 import "time"
 
-type Users struct {
+type UsersCore struct {
 	ID             int
-	FullName       string
+	Name           string
 	Email          string
 	Password       string
 	Role           string
-	Picture        string
+	UrlPicture     string
 	Specialization string
-	Status         string
+	State          string
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
+	DeletedAt      time.Time
 }
 
-type Repositories interface {
-	Insert(data Users) (*Users, error)
-	Update(data Users, id int) (*Users, error)
+type UserData interface {
+	Insert(data UsersCore) (UsersCore, error)
+	Update(data UsersCore, id int) (UsersCore, error)
 	Delete(id int) error
-	Select(search string, rp int, page int) ([]*Users, error)
-	GetByID(id int) (*Users, error)
-	GetByUsername(username string) (*Users, error)
+	// Select(search string, rp int, page int) ([]*UsersCore, error)
+	// GetByID(id int) (*UsersCore, error)
+	// GetByUsername(username string) (*UsersCore, error)
 }
 
 type UserService interface {
-	FindByUsernameOrEmail(string) (*Users, error)
-	Insert(*Users) (int, error)
-	Update(*Users, int) error
-	Delete(int) error
-	FindById(int) (*Users, error)
-	FindAll(int, int, string) []*Users
+	Insert(data UsersCore) (int, error)
+	Update(data UsersCore, id int) error
+	Delete(id int) error
+	// FindById(int) (*UsersCore, error)
+	// FindByUsernameOrEmail(string) (*UsersCore, error)
+	// FindAll(int, int, string) []*UsersCore
+}
+
+type UserHandler interface {
 }
