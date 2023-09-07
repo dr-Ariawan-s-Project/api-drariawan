@@ -1,6 +1,10 @@
 package users
 
-import "time"
+import (
+	"time"
+
+	"github.com/labstack/echo/v4"
+)
 
 type UsersCore struct {
 	ID             int
@@ -35,4 +39,7 @@ type UserService interface {
 }
 
 type UserHandler interface {
+	Insert() echo.HandlerFunc
+	Update() echo.HandlerFunc
+	Delete() echo.HandlerFunc
 }

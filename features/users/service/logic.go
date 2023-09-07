@@ -8,7 +8,7 @@ type userServ struct {
 	userRepo users.UserData
 }
 
-func NewUserServ(ur users.UserData) users.UserService {
+func New(ur users.UserData) users.UserService {
 	return &userServ{
 		userRepo: ur,
 	}
