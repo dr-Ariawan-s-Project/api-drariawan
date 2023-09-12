@@ -17,7 +17,7 @@ type Users struct {
 	State          string
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
-	DeletedAt      time.Time
+	DeletedAt      *time.Time
 }
 
 func DataToCore(data Users) users.UsersCore {

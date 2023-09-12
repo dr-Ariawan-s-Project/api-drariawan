@@ -2,7 +2,6 @@ package handler
 
 import (
 	"log"
-	"net/http"
 
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/users"
@@ -26,7 +25,8 @@ func (uh *UserHandler) Insert() echo.HandlerFunc {
 		requestBody := UserRequest{}
 		err := c.Bind(&requestBody)
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "input format incorrect"})
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			return c.JSON(httpCode, jsonResponse)
 		}
 		res, err := uh.srv.Insert(*ReqToCore(requestBody))
 		if err != nil {
@@ -44,34 +44,72 @@ func (uh *UserHandler) Insert() echo.HandlerFunc {
 // Update implements users.UserHandler.
 func (uh *UserHandler) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "input format incorrect"})
+		requestBody := UserRequest{}
+		err := c.Bind(&requestBody)
+		if err != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+		err = uh.srv.Update(*ReqToCore(requestBody), c.Get("user"))
+		if err != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": "string"})
+		return c.JSON(httpCode, mapResponse)
 	}
 }
 
 // Delete implements users.UserHandler.
 func (uh *UserHandler) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "input format incorrect"})
+		userID := 1
+		err := uh.srv.Delete(userID)
+		if err != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": "string"})
+		return c.JSON(httpCode, mapResponse)
 	}
 }
 
 // FindAll implements users.UserHandler.
 func (uh *UserHandler) FindAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "input format incorrect"})
+		res, err := uh.srv.FindAll("johndoe", 1, 1)
+		if err != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": CoreToResponseArray(res)})
+		return c.JSON(httpCode, mapResponse)
 	}
 }
 
 // FindById implements users.UserHandler.
 func (uh *UserHandler) FindById() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "input format incorrect"})
+		res, err := uh.srv.FindById(1)
+		if err != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": CoreToResponse(res)})
+		return c.JSON(httpCode, mapResponse)
 	}
 }
 
 // FindByUsernameOrEmail implements users.UserHandler.
 func (uh *UserHandler) FindByUsernameOrEmail() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "input format incorrect"})
+		res, err := uh.srv.FindByUsernameOrEmail("johndoe")
+		if err != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": CoreToResponse(res)})
+		return c.JSON(httpCode, mapResponse)
 	}
 }
