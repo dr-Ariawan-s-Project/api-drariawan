@@ -64,6 +64,10 @@ func ReadEnv() *AppConfig {
 	}
 
 	if isRead {
+		//load env for go test
+		// assume file test located in ./features/featurename/layer/_test.go
+		viper.AddConfigPath("../../..")
+		// load env for go run
 		viper.AddConfigPath(".")
 		viper.SetConfigName("local")
 		viper.SetConfigType("env")
