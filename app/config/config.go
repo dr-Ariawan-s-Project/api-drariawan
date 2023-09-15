@@ -13,13 +13,14 @@ var (
 )
 
 type AppConfig struct {
-	DB_USERNAME string
-	DB_PASSWORD string
-	DB_HOSTNAME string
-	DB_PORT     int
-	DB_NAME     string
-	JWT_SECRET  string
-	APP_PATH    string
+	DB_USERNAME    string
+	DB_PASSWORD    string
+	DB_HOSTNAME    string
+	DB_PORT        int
+	DB_NAME        string
+	JWT_SECRET     string
+	APP_PATH       string
+	AES_GCM_SECRET string
 }
 
 func InitConfig() *AppConfig {
@@ -57,8 +58,16 @@ func ReadEnv() *AppConfig {
 		app.DB_NAME = val
 		isRead = false
 	}
+	if val, found := os.LookupEnv("AESGCMSECRET"); found {
+		app.AES_GCM_SECRET = val
+		isRead = false
+	}
 
 	if isRead {
+		//load env for go test
+		// assume file test located in ./features/featurename/layer/_test.go
+		viper.AddConfigPath("../../..")
+		// load env for go run
 		viper.AddConfigPath(".")
 		viper.SetConfigName("local")
 		viper.SetConfigType("env")
@@ -68,20 +77,15 @@ func ReadEnv() *AppConfig {
 			log.Println("error read config : ", err.Error())
 			return nil
 		}
-		// err = viper.Unmarshal(&app)
-		// if err != nil {
-		// 	log.Println("error parse config : ", err.Error())
-		// 	return nil
-		// }
+
 		app.JWT_SECRET = viper.Get("JWT_KEY").(string)
 		app.DB_USERNAME = viper.Get("DBUSER").(string)
 		app.DB_PASSWORD = viper.Get("DBPASS").(string)
 		app.DB_HOSTNAME = viper.Get("DBHOST").(string)
 		app.DB_PORT, _ = strconv.Atoi(viper.Get("DBPORT").(string))
 		app.DB_NAME = viper.Get("DBNAME").(string)
+		app.AES_GCM_SECRET = viper.Get("AESGCMSECRET").(string)
 	}
 
-	// SECRET_JWT = app.jwtKey
-	// fmt.Println("check", app.jwtKey)
 	return &app
 }
