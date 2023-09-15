@@ -16,6 +16,16 @@ func New(db *gorm.DB) questionaire.QuestionaireDataInterface {
 	}
 }
 
+// InsertAnswer implements questionaire.QuestionaireDataInterface.
+func (repo *questionaireQuery) InsertAnswer(idAttempt string, data []questionaire.CoreAnswer) error {
+	var input = AnswerCoretoModel(idAttempt, data)
+	tx := repo.db.Create(&input)
+	if tx.Error != nil {
+		return helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	return nil
+}
+
 // SelectAll implements questionaire.QuestionaireDataInterface.
 func (repo *questionaireQuery) SelectAll() ([]questionaire.Core, error) {
 	var questionData []Question
