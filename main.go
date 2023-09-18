@@ -49,7 +49,7 @@ WARNING : please make sure the query in rollback / down file, its may contains D
 		Format: `[${time_rfc3339}] ${status} ${method} ${host}${path} ${latency_human}` + "\n",
 	}))
 
-	router.InitRouter(dbMysql, e)
+	router.InitRouter(dbMysql, e, cfg)
 
 	e.Logger.Fatal(e.Start(":80"))
 }
