@@ -2,55 +2,82 @@ package service
 
 import (
 	"errors"
+	"log"
 
 	"github.com/dr-ariawan-s-project/api-drariawan/features/users"
+	"github.com/dr-ariawan-s-project/api-drariawan/utils/encrypt"
 )
 
 type userServ struct {
-	userRepo users.Repositories
+	userRepo users.UserData
 }
 
-func NewUserServ(ur users.Repositories) *userServ {
+func New(ur users.UserData) users.UserService {
 	return &userServ{
 		userRepo: ur,
 	}
 }
 
-func (us *userServ) FindByUsernameOrEmail(param string) (*users.Users, error) {
-	if param != "" {
-		return &users.Users{}, errors.New("param not found")
+// Insert implements users.UserService.
+func (us *userServ) Insert(data users.UsersCore) (users.UsersCore, error) {
+	data.Password = encrypt.GeneratePassword(data.Password)
+	res, err := us.userRepo.Insert(data)
+	if err != nil {
+		return users.UsersCore{}, errors.New(err.Error())
 	}
-	return us.userRepo.GetByUsername(param)
+	return res, nil
 }
 
-func (us *userServ) Insert(data *users.Users) (int, error) {
-	res, err := us.userRepo.Insert(*data)
+// Update implements users.UserService.
+func (us *userServ) Update(data users.UsersCore, token interface{}) error {
+	userID, _, err := encrypt.ExtractToken(token)
 	if err != nil {
-		return 0, err
+		return errors.New(err.Error())
 	}
-	return res.ID, nil
-}
-
-func (us *userServ) Update(data *users.Users, id int) error {
-	_, err := us.userRepo.Update(*data, id)
+	log.Println(userID)
+	if data.Password != "" {
+		data.Password = encrypt.GeneratePassword(data.Password)
+	}
+	err = us.userRepo.Update(data, userID)
 	if err != nil {
-		return err
+		return errors.New(err.Error())
 	}
 	return nil
 }
 
+// Delete implements users.UserService.
 func (us *userServ) Delete(id int) error {
-	return us.userRepo.Delete(id)
+	err := us.userRepo.Delete(id)
+	if err != nil {
+		return errors.New(err.Error())
+	}
+	return nil
 }
 
-func (us *userServ) FindById(id int) (*users.Users, error) {
-	res, err := us.userRepo.GetByID(id)
+// FindAll implements users.UserService.
+func (us *userServ) FindAll(search string, rp int, page int) ([]users.UsersCore, error) {
+	res, err := us.userRepo.FindAll(search, rp, page)
 	if err != nil {
-		return &users.Users{}, err
+		return []users.UsersCore{}, errors.New(err.Error())
 	}
 	return res, nil
 }
-func (us *userServ) FindAll(page int, rp int, param string) []*users.Users {
-	res, _ := us.userRepo.Select(param, rp, page)
-	return res
+
+// FindById implements users.UserService.
+func (us *userServ) FindById(id int) (users.UsersCore, error) {
+	res, err := us.userRepo.FindByID(id)
+	if err != nil {
+
+		return users.UsersCore{}, errors.New(err.Error())
+	}
+	return res, nil
+}
+
+// FindByUsernameOrEmail implements users.UserService.
+func (us *userServ) FindByUsernameOrEmail(username string) (users.UsersCore, error) {
+	res, err := us.userRepo.FindByUsernameOrEmail(username)
+	if err != nil {
+		return users.UsersCore{}, errors.New(err.Error())
+	}
+	return res, nil
 }

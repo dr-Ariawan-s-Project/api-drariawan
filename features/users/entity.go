@@ -1,34 +1,48 @@
 package users
 
-import "time"
+import (
+	"time"
 
-type Users struct {
-	ID             int
-	FullName       string
-	Email          string
-	Password       string
-	Role           string
-	Picture        string
-	Specialization string
-	Status         string
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
+	"github.com/labstack/echo/v4"
+)
+
+type UsersCore struct {
+	ID             int        `json:"id"`
+	Name           string     `json:"name"`
+	Email          string     `json:"email"`
+	Password       string     `json:"password"`
+	Role           string     `json:"role"`
+	UrlPicture     string     `json:"picture"`
+	Specialization string     `json:"specialization"`
+	State          string     `json:"state"`
+	CreatedAt      time.Time  `json:"created_at"`
+	UpdatedAt      time.Time  `json:"updated_at"`
+	DeletedAt      *time.Time `json:"deleted_at"`
 }
 
-type Repositories interface {
-	Insert(data Users) (*Users, error)
-	Update(data Users, id int) (*Users, error)
+type UserData interface {
+	Insert(data UsersCore) (UsersCore, error)
+	Update(data UsersCore, id int) error
 	Delete(id int) error
-	Select(search string, rp int, page int) ([]*Users, error)
-	GetByID(id int) (*Users, error)
-	GetByUsername(username string) (*Users, error)
+	FindAll(search string, rp int, page int) ([]UsersCore, error)
+	FindByID(id int) (UsersCore, error)
+	FindByUsernameOrEmail(username string) (UsersCore, error)
 }
 
 type UserService interface {
-	FindByUsernameOrEmail(string) (*Users, error)
-	Insert(*Users) (int, error)
-	Update(*Users, int) error
-	Delete(int) error
-	FindById(int) (*Users, error)
-	FindAll(int, int, string) []*Users
+	Insert(data UsersCore) (UsersCore, error)
+	Update(data UsersCore, token interface{}) error
+	Delete(id int) error
+	FindAll(search string, rp, page int) ([]UsersCore, error)
+	FindById(id int) (UsersCore, error)
+	FindByUsernameOrEmail(username string) (UsersCore, error)
+}
+
+type UserHandler interface {
+	Insert() echo.HandlerFunc
+	Update() echo.HandlerFunc
+	Delete() echo.HandlerFunc
+	FindAll() echo.HandlerFunc
+	FindById() echo.HandlerFunc
+	FindByUsernameOrEmail() echo.HandlerFunc
 }
