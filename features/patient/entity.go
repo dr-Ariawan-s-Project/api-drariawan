@@ -8,30 +8,34 @@ type Core struct {
 	Email          string
 	Password       string
 	NIK            string
-	DOB            time.Time
+	DOB            *time.Time
 	Phone          string
-	Gender         string
+	Gender         *string
 	MarriageStatus string
 	Nationality    string
 	PartnerID      *string
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
+	Partner        *Core
 }
 
 type PatientDataInterface interface {
-	Insert(data Core) error
-	Update(data Core) (*Core, error)
+	Insert(data Core) (*Core, error)
+	Update(id string, data Core) (*Core, error)
 	Delete(id string) error
-	Select(search string, page int, perPage int) ([]Core, error)
+	Select(search string, offset int, limit int) ([]Core, error)
 	SelectById(id string) (*Core, error)
-	CheckByEmailOrPhone(email string, phone string) (*Core, error)
+	SelectByEmailOrPhone(str string) (*Core, error)
+	CheckByEmailAndPhone(email string, phone string) (*Core, error)
+	CountPartner(partnerId string) (int, error)
 }
 
 type PatientServiceInterface interface {
-	Insert(data Core) error
+	Insert(data Core, partnerEmail string) (*Core, error)
 	Update(data Core) (*Core, error)
 	Delete(id string) error
 	FindAll(search string, page int, perPage int) ([]Core, error)
 	FindById(id string) (*Core, error)
-	CheckByEmailOrPhone(email string, phone string) (*Core, error)
+	CheckByEmailAndPhone(email string, phone string) (*Core, error)
+	CountPartner(partnerId string) (int, error)
 }
