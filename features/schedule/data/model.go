@@ -11,8 +11,8 @@ type Schedules struct {
 	UserId            int
 	HealthcareAddress string
 	Day               string
-	TimeStart         time.Time
-	TimeEnd           time.Time
+	TimeStart         string
+	TimeEnd           string
 	CreatedAt         time.Time
 	UpdatedAt         time.Time
 	DeletedAt         *time.Time

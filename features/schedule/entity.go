@@ -7,15 +7,15 @@ import (
 )
 
 type Core struct {
-	ID                int
-	UserId            int
-	HealthcareAddress string
-	Day               string
-	TimeStart         time.Time
-	TimeEnd           time.Time
-	CreatedAt         time.Time
-	UpdatedAt         time.Time
-	DeletedAt         *time.Time
+	ID                int        `json:"schedule_id"`
+	UserId            int        `json:"user_id"`
+	HealthcareAddress string     `json:"health_care_address"`
+	Day               string     `json:"day"`
+	TimeStart         string     `json:"time_start"`
+	TimeEnd           string     `json:"time_end"`
+	CreatedAt         time.Time  `json:"created_at"`
+	UpdatedAt         time.Time  `json:"updated_at"`
+	DeletedAt         *time.Time `json:"deleted_at"`
 }
 
 type ScheduleHandler interface {

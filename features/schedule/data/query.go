@@ -71,7 +71,7 @@ func (sq *scheduleQuery) Delete(id int) error {
 // GetAll implements schedule.ScheduleData.
 func (sq *scheduleQuery) GetAll() ([]schedule.Core, error) {
 	qry := []Schedules{}
-	err := sq.db.Find(&qry).Error
+	err := sq.db.Where("deleted_at is null").Find(&qry).Error
 	if err != nil {
 		log.Println("query error", err.Error())
 		return []schedule.Core{}, errors.New(err.Error())
