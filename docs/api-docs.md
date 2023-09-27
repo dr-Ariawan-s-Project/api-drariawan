@@ -262,3 +262,163 @@
     ```
 </details>
 <!-- ==== End Of Section -->
+
+<details>
+  <summary><kbd>PUT /v1/patients/{patient_id}</kbd></summary>
+  > Edit patient
+    <br>
+
+-  <kbd>Parameter</kbd>
+    ```
+    patient_id
+    ```
+
+-  <kbd>Request Body update data patient</kbd>
+
+    ```json
+    {
+    "name": "budi partner",
+    "email": "budi2.partner@mail.com",
+    "password":"qwerty",
+    "nik": "12345671",
+    "dob": "2023-01-01",
+    "phone": "08123456711",
+    "gender": "male",
+    "marriage_status":"married",
+    "nationality": "indonesia",
+    "partner_email":"budi@mail.com"
+    }
+    ```
+
+-  <kbd>Response Body</kbd>
+    ```json
+    {
+    "data": {
+        "id": "d7f77642-a6a0-4283-b99a-73e339a16563",
+        "name": "budi partner",
+        "email": "budi2a.partner@mail.com",
+        "nik": "TOBlsuFa3aBs3UfdM3efdL1eFeUNYN5Ptm1wY9+PvVmw35wG",
+        "dob": "2023-01-01",
+        "phone": "08123456711",
+        "gender": "male",
+        "marriage_status": "married",
+        "nationality": "indonesia"
+    },
+    "messages": [
+        "[success] update patient"
+    ],
+    "meta": {
+        "code": "200-004-OK",
+        "status": "success"
+    }
+    }   
+    ```
+</details>
+<!-- ==== End Of Section -->
+
+<details>
+  <summary><kbd>GET /v1/patients</kbd></summary>
+  > GET all patient
+    <br>
+
+-  <kbd>Query params</kbd>
+    ```
+    - page
+    - limit
+    - search
+    ```
+
+-  <kbd>Response Body</kbd>
+    ```json
+    {
+    "data": [
+        {
+            "id": "022b7a27-6890-403c-978c-aa33448d78bf",
+            "name": "rudi partner 2",
+            "email": "rudi.partner@mail.com",
+            "phone": "08123",
+            "partner_id": "7c0706b3-8cdd-43b2-8262-c542e2cae870",
+            "partner": {
+                "id": "7c0706b3-8cdd-43b2-8262-c542e2cae870"
+            }
+        },
+        {
+            "id": "38e82d68-cceb-4063-8c99-ce4e2676f26d",
+            "name": "budi 2",
+            "email": "budi@mail.com",
+            "nik": "OKdIIuAJgvgRJDGb97E5cA/hPNROZsbpVqz9KcVv/G+EPxUi",
+            "dob": "2023-01-01",
+            "phone": "0812345671",
+            "gender": "male",
+            "marriage_status": "married",
+            "nationality": "indonesia"
+        }
+    ],
+    "messages": [
+        "[success] read data"
+    ],
+    "meta": {
+        "code": "200-004-OK",
+        "status": "success"
+    }
+    }  
+    ```
+</details>
+<!-- ==== End Of Section -->
+
+<details>
+  <summary><kbd>GET /v1/patients/{patient_id}</kbd></summary>
+  > GET patient by ID
+    <br>
+
+-  <kbd>Parameter</kbd>
+    ```
+    patient_id
+    ```
+
+-  <kbd>Response Body</kbd>
+    ```json
+    {
+    "data": {
+        "id": "022b7a27-6890-403c-978c-aa33448d78bf",
+        "email": "rudi.partner@mail.com",
+        "phone": "08123",
+        "partner_id": "7c0706b3-8cdd-43b2-8262-c542e2cae870"
+    },
+    "messages": [
+        "[success] read data"
+    ],
+    "meta": {
+        "code": "200-004-OK",
+        "status": "success"
+    }
+    }  
+    ```
+</details>
+<!-- ==== End Of Section -->
+
+<details>
+  <summary><kbd>DELETE /v1/patients/{patient_id}</kbd></summary>
+  > DELETE patient by ID
+    <br>
+
+-  <kbd>Parameter</kbd>
+    ```
+    patient_id
+    ```
+
+-  <kbd>Response Body</kbd>
+    ```json
+    {
+    "data": null,
+    "messages": [
+        "[success] delete data"
+    ],
+    "meta": {
+        "code": "200-004-OK",
+        "status": "success"
+    }
+    }
+    ```
+</details>
+<!-- ==== End Of Section -->
