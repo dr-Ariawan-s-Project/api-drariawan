@@ -73,5 +73,5 @@ const (
 
 // validation input
 const (
-	VAL_InvalidValidation string = "Validation Error"
+	VAL_InvalidValidation string = "validation error"
 )
