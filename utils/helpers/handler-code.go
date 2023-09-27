@@ -35,6 +35,9 @@ func CheckHandlerErrorCode(err error) (responseCode int, layerCode string, errCo
 	case config.REQ_ErrorBindData:
 		return http.StatusBadRequest, config.LAYER_HANDLER_CODE, err
 
+	case config.REQ_InvalidParam:
+		return http.StatusBadRequest, config.LAYER_HANDLER_CODE, err
+
 	case config.REQ_InvalidIdParam:
 		return http.StatusBadRequest, config.LAYER_HANDLER_CODE, err
 
@@ -76,6 +79,9 @@ func CheckHandlerErrorCode(err error) (responseCode int, layerCode string, errCo
 
 	case config.DB_ERR_PRIMARY_KEY_REQUIRED:
 		return http.StatusInternalServerError, config.LAYER_DATA_CODE, err
+
+	case config.DB_ERR_DUPLICATE_KEY:
+		return http.StatusBadRequest, config.LAYER_DATA_CODE, err
 
 	default:
 		return http.StatusInternalServerError, config.LAYER_DEFAULT_CODE, err
