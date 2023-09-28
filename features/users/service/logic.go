@@ -8,10 +8,10 @@ import (
 )
 
 type userServ struct {
-	userRepo users.UserData
+	userRepo users.Data
 }
 
-func New(ur users.UserData) users.UserService {
+func New(ur users.Data) users.Service {
 	return &userServ{
 		userRepo: ur,
 	}

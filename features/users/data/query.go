@@ -13,7 +13,7 @@ type userQuery struct {
 	db *gorm.DB
 }
 
-func New(db *gorm.DB) users.UserData {
+func New(db *gorm.DB) users.Data {
 	return &userQuery{
 		db: db,
 	}
