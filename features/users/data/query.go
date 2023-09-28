@@ -26,7 +26,6 @@ func (uq *userQuery) Insert(data users.UsersCore) (users.UsersCore, error) {
 	query.State = "active"
 	query.DeletedAt = nil
 	query.UrlPicture = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-	query.Password = "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi"
 	err := uq.db.Create(&query).Error
 	if err != nil {
 		log.Println("query error", err.Error())
