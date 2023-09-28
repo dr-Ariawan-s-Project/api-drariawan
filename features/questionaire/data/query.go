@@ -16,6 +16,26 @@ func New(db *gorm.DB) questionaire.QuestionaireDataInterface {
 	}
 }
 
+// CountTestAttemp implements questionaire.QuestionaireDataInterface.
+func (repo *questionaireQuery) CountTestAttempt(patientId string) (int, error) {
+	var countAttemp int64
+	tx := repo.db.Model(&TestAttempt{}).Where("patient_id = ?", patientId).Count(&countAttemp)
+	if tx.Error != nil {
+		return 0, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	return int(countAttemp), nil
+}
+
+// InsertTestAttemp implements questionaire.QuestionaireDataInterface.
+func (repo *questionaireQuery) InsertTestAttempt(data questionaire.CoreAttempt) error {
+	var input = AttempCoreToModel(data)
+	tx := repo.db.Create(&input)
+	if tx.Error != nil {
+		return helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	return nil
+}
+
 // InsertAnswer implements questionaire.QuestionaireDataInterface.
 func (repo *questionaireQuery) InsertAnswer(idAttempt string, data []questionaire.CoreAnswer) error {
 	var input = AnswerCoretoModel(idAttempt, data)

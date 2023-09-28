@@ -54,11 +54,12 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	v1Schedule.PUT("", sysRoute.scheduleHandler.Update())
 	v1Schedule.POST("/delete", sysRoute.scheduleHandler.Delete())
 	v1Schedule.GET("/list", sysRoute.scheduleHandler.GetAll())
-  
+
 	v1Patient := v1.Group("/patients")
 	v1Patient.POST("", sysRoute.patientHandler.AddPatient)
 	v1Patient.GET("", sysRoute.patientHandler.GetAll)
 	v1Patient.GET("/:patient_id", sysRoute.patientHandler.GetById)
 	v1Patient.PUT("/:patient_id", sysRoute.patientHandler.EditPatient)
 	v1Patient.DELETE("/:patient_id", sysRoute.patientHandler.DeleteById)
+	v1Questioner.POST("/validate", sysRoute.questionaireHandler.Validate)
 }

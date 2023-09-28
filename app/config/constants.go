@@ -22,6 +22,12 @@ const (
 	RESPONSE_SUCCESS_CODE = "OK"
 )
 
+// questioner test attempt
+const (
+	QUESTIONER_ATTEMPT_SELF    = "myself"
+	QUESTIONER_ATTEMPT_PARTNER = "partner"
+)
+
 // const db error
 const (
 	// ErrRecordNotFound record not found error

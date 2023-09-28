@@ -2,6 +2,7 @@ package factory
 
 import (
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
+	_patientFactory "github.com/dr-ariawan-s-project/api-drariawan/features/patient/factory"
 	_questionaireData "github.com/dr-ariawan-s-project/api-drariawan/features/questionaire/data"
 	_questionaireHandler "github.com/dr-ariawan-s-project/api-drariawan/features/questionaire/handler"
 	_questionaireService "github.com/dr-ariawan-s-project/api-drariawan/features/questionaire/service"
@@ -9,8 +10,10 @@ import (
 )
 
 func New(db *gorm.DB, cfg *config.AppConfig) *_questionaireHandler.QuestionaireHandler {
+	patientService := _patientFactory.NewServiceFactory(db, cfg)
+
 	repo := _questionaireData.New(db)
-	service := _questionaireService.New(repo, cfg)
+	service := _questionaireService.New(repo, *patientService, cfg)
 	handler := _questionaireHandler.New(service)
 
 	return handler
