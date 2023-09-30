@@ -17,6 +17,34 @@ func New(service questionaire.QuestionaireServiceInterface) *QuestionaireHandler
 	}
 }
 
+func (handler *QuestionaireHandler) Validate(c echo.Context) error {
+	validateInput := new(ValidateRequest)
+	errBind := c.Bind(&validateInput)
+	if errBind != nil {
+		jsonResponse, httpCode := helpers.WebResponseError(errBind, config.FEAT_QUESTIONAIRE_CODE)
+		return c.JSON(httpCode, jsonResponse)
+	}
+	patientData := questionaire.Patient{
+		Email: validateInput.Email,
+		Phone: validateInput.Phone,
+	}
+
+	codeAttempt, countAttempt, err := handler.questionaireService.Validate(patientData, validateInput.As, validateInput.PartnerEmail)
+	if err != nil {
+		jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_QUESTIONAIRE_CODE)
+		if countAttempt != 0 {
+			jsonResponse["messages"] = []string{"user has already taken the test"}
+		}
+		return c.JSON(httpCode, jsonResponse)
+	}
+	data := map[string]any{
+		"code_attempt":  codeAttempt,
+		"count_attempt": countAttempt,
+	}
+	mapResponse, httpCode := helpers.WebResponseSuccess("[success] test attempt added. Start your test.", config.FEAT_QUESTIONAIRE_CODE, data)
+	return c.JSON(httpCode, mapResponse)
+}
+
 func (handler *QuestionaireHandler) AddAnswer(c echo.Context) error {
 	answerInput := new(AnswerRequest)
 	errBind := c.Bind(&answerInput)

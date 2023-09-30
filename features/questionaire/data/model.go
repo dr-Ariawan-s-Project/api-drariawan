@@ -43,6 +43,10 @@ type TestAttempt struct {
 	DeletedAt    gorm.DeletedAt
 }
 
+func (TestAttempt) TableName() string {
+	return "test_attempt"
+}
+
 type Answer struct {
 	ID          string
 	AttemptId   string
@@ -109,4 +113,12 @@ func AnswerCoretoModel(attempId string, data []questionaire.CoreAnswer) []Answer
 		})
 	}
 	return result
+}
+
+func AttempCoreToModel(core questionaire.CoreAttempt) TestAttempt {
+	return TestAttempt{
+		ID:          core.Id,
+		PatientId:   core.PatientId,
+		CodeAttempt: core.CodeAttempt,
+	}
 }
