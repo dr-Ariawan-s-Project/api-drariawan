@@ -10,6 +10,7 @@ const (
 	FEAT_USER_CODE         = "001"
 	FEAT_AUTH_CODE         = "002"
 	FEAT_QUESTIONAIRE_CODE = "003"
+	FEAT_PATIENT_CODE      = "004"
 )
 
 // const code layer
@@ -39,6 +40,8 @@ const (
 	DB_ERR_INVALID_DB = "error invalid database"
 	// ErrPrimaryKeyRequired
 	DB_ERR_PRIMARY_KEY_REQUIRED = "error primary key required"
+	// ErrDuplicatedKey
+	DB_ERR_DUPLICATE_KEY = "duplicated key not allowed"
 )
 
 // Failed JWT Response
@@ -55,6 +58,7 @@ const (
 
 // input request body
 const (
+	REQ_InvalidParam      string = "invalid param"
 	REQ_InvalidIdParam    string = "invaild id param"
 	REQ_InvalidPageParam  string = "invalid page param"
 	REQ_InvalidLimitParam string = "invalid limit param"
@@ -69,5 +73,5 @@ const (
 
 // validation input
 const (
-	VAL_InvalidValidation string = "Validation Error"
+	VAL_InvalidValidation string = "validation error"
 )
