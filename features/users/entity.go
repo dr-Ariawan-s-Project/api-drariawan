@@ -2,8 +2,6 @@ package users
 
 import (
 	"time"
-
-	"github.com/labstack/echo/v4"
 )
 
 type UsersCore struct {
@@ -36,13 +34,4 @@ type UserService interface {
 	FindAll(search string, rp, page int) ([]UsersCore, error)
 	FindById(id int) (UsersCore, error)
 	FindByUsernameOrEmail(username string) (UsersCore, error)
-}
-
-type UserHandler interface {
-	Insert() echo.HandlerFunc
-	Update() echo.HandlerFunc
-	Delete() echo.HandlerFunc
-	FindAll() echo.HandlerFunc
-	FindById() echo.HandlerFunc
-	FindByUsernameOrEmail() echo.HandlerFunc
 }
