@@ -28,7 +28,6 @@ func (uq *userQuery) Insert(data users.UsersCore) (users.UsersCore, error) {
 	query.UrlPicture = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
 	err := uq.db.Create(&query).Error
 	if err != nil {
-		log.Println("query error", err.Error())
 		return users.UsersCore{}, errors.New(err.Error())
 	}
 	return DataToCore(query), nil
@@ -78,7 +77,6 @@ func (uq *userQuery) FindAll(search string, rp int, page int) ([]users.UsersCore
 	offset := (page - 1) * rp
 	err := uq.db.Where("name LIKE ? AND deleted_at is null AND state = ?", "%"+search+"%", "active").Limit(rp).Offset(offset).Find(&data).Error
 	if err != nil {
-		log.Println("query error", err.Error())
 		return []users.UsersCore{}, errors.New(err.Error())
 	}
 	return DataToCoreArray(data), nil
@@ -89,18 +87,6 @@ func (uq *userQuery) FindByID(id int) (users.UsersCore, error) {
 	data := Users{}
 	err := uq.db.Where("id = ? AND deleted_at is null AND state = ?", id, "active").First(&data).Error
 	if err != nil {
-		log.Println("query error", err.Error())
-		return users.UsersCore{}, errors.New(err.Error())
-	}
-	return DataToCore(data), nil
-}
-
-// FindByUsernameOrEmail implements users.UserData.
-func (uq *userQuery) FindByUsernameOrEmail(username string) (users.UsersCore, error) {
-	data := Users{}
-	err := uq.db.Where("username = ?", username).First(&data).Error
-	if err != nil {
-		log.Println("query error", err.Error())
 		return users.UsersCore{}, errors.New(err.Error())
 	}
 	return DataToCore(data), nil
