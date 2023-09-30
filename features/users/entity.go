@@ -8,6 +8,7 @@ type UsersCore struct {
 	ID             int        `json:"id"`
 	Name           string     `json:"name"`
 	Email          string     `json:"email"`
+	Phone          string     `json:"phone"`
 	Password       string     `json:"password"`
 	Role           string     `json:"role"`
 	UrlPicture     string     `json:"picture"`
@@ -18,20 +19,18 @@ type UsersCore struct {
 	DeletedAt      *time.Time `json:"deleted_at"`
 }
 
-type UserData interface {
+type Data interface {
 	Insert(data UsersCore) (UsersCore, error)
 	Update(data UsersCore, id int) error
 	Delete(id int) error
 	FindAll(search string, rp int, page int) ([]UsersCore, error)
 	FindByID(id int) (UsersCore, error)
-	FindByUsernameOrEmail(username string) (UsersCore, error)
 }
 
-type UserService interface {
+type Service interface {
 	Insert(data UsersCore) (UsersCore, error)
-	Update(data UsersCore, token interface{}) error
+	Update(data UsersCore, id int) error
 	Delete(id int) error
 	FindAll(search string, rp, page int) ([]UsersCore, error)
 	FindById(id int) (UsersCore, error)
-	FindByUsernameOrEmail(username string) (UsersCore, error)
 }
