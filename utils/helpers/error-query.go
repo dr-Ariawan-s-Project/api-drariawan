@@ -24,6 +24,8 @@ func CheckQueryErrorMessage(err error) error {
 		return errors.New(config.DB_ERR_INVALID_DB)
 	} else if errors.Is(err, gorm.ErrPrimaryKeyRequired) {
 		return errors.New(config.DB_ERR_PRIMARY_KEY_REQUIRED)
+	} else if errors.Is(err, gorm.ErrDuplicatedKey) {
+		return errors.New(config.DB_ERR_DUPLICATE_KEY)
 	} else {
 		return err
 	}
