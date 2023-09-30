@@ -39,6 +39,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	v1Questioner := v1.Group("/questioner")
 	v1Questioner.GET("", sysRoute.questionaireHandler.GetAllQuestion)
 	v1Questioner.POST("", sysRoute.questionaireHandler.AddAnswer)
+	v1Questioner.POST("/validate", sysRoute.questionaireHandler.Validate)
 
 	// users
 	v1User := v1.Group("/user")
@@ -61,5 +62,4 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	v1Patient.GET("/:patient_id", sysRoute.patientHandler.GetById)
 	v1Patient.PUT("/:patient_id", sysRoute.patientHandler.EditPatient)
 	v1Patient.DELETE("/:patient_id", sysRoute.patientHandler.DeleteById)
-	v1Questioner.POST("/validate", sysRoute.questionaireHandler.Validate)
 }
