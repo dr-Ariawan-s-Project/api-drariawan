@@ -10,6 +10,7 @@ type Users struct {
 	ID             int
 	Name           string
 	Email          string
+	Phone          string
 	Password       string
 	Role           string
 	UrlPicture     string
@@ -25,6 +26,7 @@ func DataToCore(data Users) users.UsersCore {
 		ID:             data.ID,
 		Name:           data.Name,
 		Email:          data.Email,
+		Phone:          data.Phone,
 		Password:       data.Password,
 		Role:           data.Role,
 		UrlPicture:     data.UrlPicture,
@@ -40,6 +42,7 @@ func CoreToData(data users.UsersCore) Users {
 		ID:             data.ID,
 		Name:           data.Name,
 		Email:          data.Email,
+		Phone:          data.Phone,
 		Password:       data.Password,
 		Role:           data.Role,
 		UrlPicture:     data.UrlPicture,

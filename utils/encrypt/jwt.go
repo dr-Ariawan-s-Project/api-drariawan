@@ -25,18 +25,6 @@ func GenerateToken(userId int) (string, interface{}) {
 }
 
 func ExtractToken(t interface{}) (int, string, error) {
-	// user := t.(*jwt.Token)
-	// userId := -1
-	// if user.Valid {
-	// 	claims := user.Claims.(jwt.MapClaims)
-	// 	switch claims["userID"].(type) {
-	// 	case float64:
-	// 		userId = int(claims["userID"].(float64))
-	// 	case int:
-	// 		userId = claims["userID"].(int)
-	// 	}
-	// }
-	// return userId
 	user := t.(*jwt.Token)
 	if user.Valid {
 		claims := user.Claims.(jwt.MapClaims)

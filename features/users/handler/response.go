@@ -5,6 +5,7 @@ import "github.com/dr-ariawan-s-project/api-drariawan/features/users"
 type UserResponse struct {
 	Name           string `json:"name" `
 	Email          string `json:"email"`
+	Phone          string `json:"phone"`
 	Role           string `json:"role"`
 	UrlPicture     string `json:"picture"`
 	Specialization string `json:"specialization"`
@@ -14,6 +15,7 @@ func CoreToResponse(core users.UsersCore) UserResponse {
 	return UserResponse{
 		Name:           core.Name,
 		Email:          core.Email,
+		Phone:          core.Phone,
 		Role:           core.Role,
 		UrlPicture:     core.UrlPicture,
 		Specialization: core.Specialization,

@@ -5,6 +5,7 @@ import "github.com/dr-ariawan-s-project/api-drariawan/features/users"
 type UserRequest struct {
 	Name           string `json:"name" form:"name"`
 	Email          string `json:"email" form:"email"`
+	Phone          string `json:"phone" form:"phone"`
 	Password       string `json:"password" form:"password"`
 	Role           string `json:"role" form:"role"`
 	UrlPicture     string `json:"picture" form:"picture"`
@@ -23,6 +24,7 @@ func ReqToCore(data interface{}) *users.UsersCore {
 		cnv := data.(UserRequest)
 		res.Name = cnv.Name
 		res.Email = cnv.Email
+		res.Phone = cnv.Phone
 		res.Password = cnv.Password
 		res.Role = cnv.Role
 		res.UrlPicture = cnv.UrlPicture
