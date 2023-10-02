@@ -12,6 +12,30 @@ type QuestionaireData struct {
 	mock.Mock
 }
 
+// CountTestAttempt provides a mock function with given fields: patientId
+func (_m *QuestionaireData) CountTestAttempt(patientId string) (int, error) {
+	ret := _m.Called(patientId)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (int, error)); ok {
+		return rf(patientId)
+	}
+	if rf, ok := ret.Get(0).(func(string) int); ok {
+		r0 = rf(patientId)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(patientId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // InsertAnswer provides a mock function with given fields: idAttempt, data
 func (_m *QuestionaireData) InsertAnswer(idAttempt string, data []questionaire.CoreAnswer) error {
 	ret := _m.Called(idAttempt, data)
@@ -19,6 +43,20 @@ func (_m *QuestionaireData) InsertAnswer(idAttempt string, data []questionaire.C
 	var r0 error
 	if rf, ok := ret.Get(0).(func(string, []questionaire.CoreAnswer) error); ok {
 		r0 = rf(idAttempt, data)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// InsertTestAttempt provides a mock function with given fields: data
+func (_m *QuestionaireData) InsertTestAttempt(data questionaire.CoreAttempt) error {
+	ret := _m.Called(data)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(questionaire.CoreAttempt) error); ok {
+		r0 = rf(data)
 	} else {
 		r0 = ret.Error(0)
 	}
