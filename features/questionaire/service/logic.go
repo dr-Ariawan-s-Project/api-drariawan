@@ -7,6 +7,7 @@ import (
 	"github.com/dr-ariawan-s-project/api-drariawan/features/patient"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/questionaire"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/encrypt"
+	"github.com/dr-ariawan-s-project/api-drariawan/utils/helpers"
 	"github.com/google/uuid"
 )
 
@@ -67,6 +68,9 @@ func (service *questionaireService) Validate(patientData questionaire.Patient, a
 	if errTestAttempt != nil {
 		return "", 0, errTestAttempt
 	}
+
+	//send email invitation link
+	go helpers.SendMailQuestionerLink(patientData.Email, codeAttemp, service.cfg.GMAIL_APP_PASSWORD)
 
 	return codeAttemp, 0, nil
 }
