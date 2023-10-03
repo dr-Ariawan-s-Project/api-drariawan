@@ -16,6 +16,16 @@ type Core struct {
 	CreatedAt         time.Time  `json:"created_at"`
 	UpdatedAt         time.Time  `json:"updated_at"`
 	DeletedAt         *time.Time `json:"deleted_at"`
+	User              User
+}
+
+type User struct {
+	ID             int
+	Name           string
+	Email          string
+	Phone          string
+	UrlPicture     string
+	Specialization string
 }
 
 type ScheduleHandler interface {

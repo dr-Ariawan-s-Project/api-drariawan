@@ -19,13 +19,27 @@ func New(db *gorm.DB) schedule.ScheduleData {
 	}
 }
 
+func (sq *scheduleQuery) CheckDuplUserID(userId int) error {
+	check := Schedules{}
+	err := sq.db.Where("user_id = ?", userId).First(&check).Error
+	if err == nil {
+		log.Println("sudah ada")
+		return errors.New("user already have a schedule")
+	} else {
+		log.Println("belum ada")
+		return nil
+	}
+}
+
 // Create implements schedule.ScheduleData.
 func (sq *scheduleQuery) Create(data schedule.Core) error {
+	if err := sq.CheckDuplUserID(data.UserId); err != nil {
+		return errors.New("user already have a schedule")
+	}
 	qry := CoreToData(data)
 	qry.DeletedAt = nil
 	err := sq.db.Create(&qry).Error
 	if err != nil {
-		log.Println("query error", err.Error())
 		return errors.New(err.Error())
 	}
 	return nil
@@ -33,6 +47,10 @@ func (sq *scheduleQuery) Create(data schedule.Core) error {
 
 // Update implements schedule.ScheduleData.
 func (sq *scheduleQuery) Update(id int, data schedule.Core) error {
+	if err := sq.CheckDuplUserID(data.UserId); err != nil {
+		return errors.New("user already have a schedule")
+	}
+
 	cnv := CoreToData(data)
 	cnv.DeletedAt = nil
 	qry := sq.db.Model(&Schedules{}).Where("id = ?", id).Updates(&cnv)
@@ -43,7 +61,6 @@ func (sq *scheduleQuery) Update(id int, data schedule.Core) error {
 	}
 	err := qry.Error
 	if err != nil {
-		log.Println("update user query error", err.Error())
 		return errors.New(err.Error())
 	}
 	return nil
@@ -62,7 +79,6 @@ func (sq *scheduleQuery) Delete(id int) error {
 	}
 	err := qry.Error
 	if err != nil {
-		log.Println("update user query error", err.Error())
 		return errors.New(err.Error())
 	}
 	return nil
@@ -71,10 +87,10 @@ func (sq *scheduleQuery) Delete(id int) error {
 // GetAll implements schedule.ScheduleData.
 func (sq *scheduleQuery) GetAll() ([]schedule.Core, error) {
 	qry := []Schedules{}
-	err := sq.db.Where("deleted_at is null").Find(&qry).Error
+	err := sq.db.Preload("User").Where("deleted_at is null").Find(&qry).Error
 	if err != nil {
-		log.Println("query error", err.Error())
 		return []schedule.Core{}, errors.New(err.Error())
 	}
+	log.Println(qry)
 	return DataToCoreArray(qry), nil
 }
