@@ -20,9 +20,16 @@ dr. Ariawan Project
     export DBPORT='your-db-port'
     export DBNAME='your-db-name'
     export AESGCMSECRET='your-16-byte-aes'
+    export GMAILAPPPASSWORD='your-app-password-gmail'
     ```
 
-2. Run app
+2. GMAIL Configuration to send email notification
+  * Setup Email at `utils/helpers/sendEmail.go`
+  * Setup Base URL frontend at `utils/helpers/sendEmail.go`
+  * note how to generate `gmail app password`:
+  https://support.google.com/accounts/answer/185833?hl=en
+
+3. Run app
     ```
     go run .
     ```

@@ -74,7 +74,7 @@ jobs:
 
           docker run --rm -e DBUSER=${{ secrets.DBUSER }} -e DBPASS=${{ secrets.DBPASS }} -e DBHOST=${{ secrets.DBHOST }} -e DBPORT=${{ secrets.DBPORT }} -e DBNAME=${{ secrets.DBNAME }} -e "TZ=Asia/Jakarta" --name=migration --restart=no service-app:$SOURCE_TAG sh -c "./service-app migrateup"
 
-          docker run -d --rm -e AESGCMSECRET=${{ secrets.AESGCMSECRET }} -e DBUSER=${{ secrets.DBUSER }} -e DBPASS=${{ secrets.DBPASS }} -e DBHOST=${{ secrets.DBHOST }} -e DBPORT=${{ secrets.DBPORT }} -e DBNAME=${{ secrets.DBNAME }} -v export-app:/app/export -v public-app:/app/public -p 80:80 -e "APP_PATH=/app" -e "TZ=Asia/Jakarta" --name=api_server --restart=no service-app:$SOURCE_TAG sh -c "./service-app"
+          docker run -d --rm -e AESGCMSECRET=${{ secrets.AESGCMSECRET }} -e GMAILAPPPASSWORD=${{ secrets.GMAILAPPPASSWORD }} -e BASEURLFE=${{ secrets.BASEURLFE }} -e DBUSER=${{ secrets.DBUSER }} -e DBPASS=${{ secrets.DBPASS }} -e DBHOST=${{ secrets.DBHOST }} -e DBPORT=${{ secrets.DBPORT }} -e DBNAME=${{ secrets.DBNAME }} -v export-app:/app/export -v public-app:/app/public -p 80:80 -e "APP_PATH=/app" -e "TZ=Asia/Jakarta" --name=api_server --restart=no service-app:$SOURCE_TAG sh -c "./service-app"
 
           END
         env:

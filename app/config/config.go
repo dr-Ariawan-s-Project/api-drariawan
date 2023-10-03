@@ -13,14 +13,16 @@ var (
 )
 
 type AppConfig struct {
-	DB_USERNAME    string
-	DB_PASSWORD    string
-	DB_HOSTNAME    string
-	DB_PORT        int
-	DB_NAME        string
-	JWT_SECRET     string
-	APP_PATH       string
-	AES_GCM_SECRET string
+	DB_USERNAME        string
+	DB_PASSWORD        string
+	DB_HOSTNAME        string
+	DB_PORT            int
+	DB_NAME            string
+	JWT_SECRET         string
+	APP_PATH           string
+	AES_GCM_SECRET     string
+	GMAIL_APP_PASSWORD string
+	BASE_URL_FE        string
 }
 
 func InitConfig() *AppConfig {
@@ -62,6 +64,14 @@ func ReadEnv() *AppConfig {
 		app.AES_GCM_SECRET = val
 		isRead = false
 	}
+	if val, found := os.LookupEnv("GMAILAPPPASSWORD"); found {
+		app.GMAIL_APP_PASSWORD = val
+		isRead = false
+	}
+	if val, found := os.LookupEnv("BASEURLFE"); found {
+		app.BASE_URL_FE = val
+		isRead = false
+	}
 
 	if isRead {
 		//load env for go test
@@ -85,6 +95,8 @@ func ReadEnv() *AppConfig {
 		app.DB_PORT, _ = strconv.Atoi(viper.Get("DBPORT").(string))
 		app.DB_NAME = viper.Get("DBNAME").(string)
 		app.AES_GCM_SECRET = viper.Get("AESGCMSECRET").(string)
+		app.GMAIL_APP_PASSWORD = viper.Get("GMAILAPPPASSWORD").(string)
+		app.BASE_URL_FE = viper.Get("BASEURLFE").(string)
 	}
 
 	return &app
