@@ -28,7 +28,7 @@ type Data interface {
 }
 
 type Service interface {
-	Insert(data UsersCore) (UsersCore, error)
+	Insert(data UsersCore, role string) (UsersCore, error)
 	Update(data UsersCore, id int) error
 	Delete(id int) error
 	FindAll(search string, rp, page int) ([]UsersCore, error)
