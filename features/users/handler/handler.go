@@ -24,13 +24,18 @@ func New(us users.Service) *UserHandler {
 // Insert implements users.UserHandler.
 func (uh *UserHandler) Insert() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		requestBody := UserRequest{}
-		err := c.Bind(&requestBody)
+		_, role, err := encrypt.ExtractToken(c.Get("user"))
 		if err != nil {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		res, err := uh.srv.Insert(*ReqToCore(requestBody))
+		requestBody := UserRequest{}
+		err = c.Bind(&requestBody)
+		if err != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+		res, err := uh.srv.Insert(*ReqToCore(requestBody), role)
 		if err != nil {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
