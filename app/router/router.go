@@ -4,6 +4,8 @@ import (
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	_authFactory "github.com/dr-ariawan-s-project/api-drariawan/features/auth/factory"
 	_authAPI "github.com/dr-ariawan-s-project/api-drariawan/features/auth/handler"
+	_bookingFactory "github.com/dr-ariawan-s-project/api-drariawan/features/booking/factory"
+	_bookingAPI "github.com/dr-ariawan-s-project/api-drariawan/features/booking/handler"
 	_patientFactory "github.com/dr-ariawan-s-project/api-drariawan/features/patient/factory"
 	_patientAPI "github.com/dr-ariawan-s-project/api-drariawan/features/patient/handler"
 	_questionaireFactory "github.com/dr-ariawan-s-project/api-drariawan/features/questionaire/factory"
@@ -30,6 +32,7 @@ type appsFactory struct {
 	userHandler         *_usersAPI.UserHandler
 	scheduleHandler     *_scheduleAPI.ScheduleHandler
 	patientHandler      *_patientAPI.PatientHandler
+	bookingHandler      *_bookingAPI.BookingHandler
 }
 
 func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
@@ -39,6 +42,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 		userHandler:         _usersFactory.New(db),
 		scheduleHandler:     _scheduleFactory.New(db, cfg),
 		patientHandler:      _patientFactory.New(db, cfg),
+		bookingHandler:      _bookingFactory.New(db, cfg),
 	}
 	e.POST("/login", sysRoute.authHandler.Login)
 
@@ -69,4 +73,11 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	v1Patient.GET("/:patient_id", sysRoute.patientHandler.GetById)
 	v1Patient.PUT("/:patient_id", sysRoute.patientHandler.EditPatient)
 	v1Patient.DELETE("/:patient_id", sysRoute.patientHandler.DeleteById)
+
+	//booking
+	v1Booking := v1.Group("/booking")
+	v1Booking.POST("", sysRoute.bookingHandler.Create())
+	v1Booking.PUT("", sysRoute.bookingHandler.Update())
+	v1Booking.POST("/delete", sysRoute.bookingHandler.Delete())
+	v1Booking.GET("/list", sysRoute.bookingHandler.GetAll())
 }
