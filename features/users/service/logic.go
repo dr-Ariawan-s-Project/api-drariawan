@@ -5,6 +5,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/users"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/encrypt"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/validation"
@@ -23,8 +24,8 @@ func New(ur users.Data) users.Service {
 // Insert implements users.UserService.
 func (us *userServ) Insert(data users.UsersCore, role string) (users.UsersCore, error) {
 	log.Println(role)
-	if strings.ToLower(role) != "admin" {
-		return users.UsersCore{}, errors.New("invalid access")
+	if strings.ToLower(role) != config.VAL_AdminAccess {
+		return users.UsersCore{}, errors.New(config.VAL_InvalidValidation)
 	}
 	err := validation.RegistrationValidate(data)
 	if err != nil {

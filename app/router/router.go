@@ -17,6 +17,10 @@ import (
 	"gorm.io/gorm"
 )
 
+var (
+	USEJWT = echojwt.WithConfig(echojwt.Config{SigningMethod: "HS256", SigningKey: []byte(config.InitConfig().JWT_SECRET)})
+)
+
 type appsFactory struct {
 	questionaireHandler *_questionaireAPI.QuestionaireHandler
 	authHandler         *_authAPI.AuthHandler
@@ -43,8 +47,8 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 
 	// users
 	v1User := v1.Group("/user")
-	v1User.POST("", sysRoute.userHandler.Insert(), echojwt.WithConfig(echojwt.Config{SigningMethod: "HS256", SigningKey: []byte(config.InitConfig().JWT_SECRET)}))
-	v1User.PUT("", sysRoute.userHandler.Update(), echojwt.WithConfig(echojwt.Config{SigningMethod: "HS256", SigningKey: []byte(config.InitConfig().JWT_SECRET)}))
+	v1User.POST("", sysRoute.userHandler.Insert(), USEJWT)
+	v1User.PUT("", sysRoute.userHandler.Update(), USEJWT)
 	v1User.POST("/deactive", sysRoute.userHandler.Delete())
 	v1User.GET("", sysRoute.userHandler.FindById())
 	v1User.GET("/list", sysRoute.userHandler.FindAll())
