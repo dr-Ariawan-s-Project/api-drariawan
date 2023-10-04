@@ -2,8 +2,6 @@ package schedule
 
 import (
 	"time"
-
-	"github.com/labstack/echo/v4"
 )
 
 type Core struct {
@@ -26,13 +24,6 @@ type User struct {
 	Phone          string
 	UrlPicture     string
 	Specialization string
-}
-
-type ScheduleHandler interface {
-	Create() echo.HandlerFunc
-	Update() echo.HandlerFunc
-	Delete() echo.HandlerFunc
-	GetAll() echo.HandlerFunc
 }
 
 type ScheduleService interface {

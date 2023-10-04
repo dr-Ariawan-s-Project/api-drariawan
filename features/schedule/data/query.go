@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/schedule"
 	"gorm.io/gorm"
 )
@@ -23,10 +24,8 @@ func (sq *scheduleQuery) CheckDuplUserID(userId int) error {
 	check := Schedules{}
 	err := sq.db.Where("user_id = ?", userId).First(&check).Error
 	if err == nil {
-		log.Println("sudah ada")
-		return errors.New("user already have a schedule")
+		return err
 	} else {
-		log.Println("belum ada")
 		return nil
 	}
 }
@@ -34,7 +33,7 @@ func (sq *scheduleQuery) CheckDuplUserID(userId int) error {
 // Create implements schedule.ScheduleData.
 func (sq *scheduleQuery) Create(data schedule.Core) error {
 	if err := sq.CheckDuplUserID(data.UserId); err != nil {
-		return errors.New("user already have a schedule")
+		return errors.New(config.DB_ERR_DUPLICATE_SCHEDULE)
 	}
 	qry := CoreToData(data)
 	qry.DeletedAt = nil
@@ -48,7 +47,7 @@ func (sq *scheduleQuery) Create(data schedule.Core) error {
 // Update implements schedule.ScheduleData.
 func (sq *scheduleQuery) Update(id int, data schedule.Core) error {
 	if err := sq.CheckDuplUserID(data.UserId); err != nil {
-		return errors.New("user already have a schedule")
+		return errors.New(config.DB_ERR_DUPLICATE_SCHEDULE)
 	}
 
 	cnv := CoreToData(data)
