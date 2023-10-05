@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"log"
 	"strings"
 
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
@@ -23,7 +22,6 @@ func New(ur users.Data) users.Service {
 
 // Insert implements users.UserService.
 func (us *userServ) Insert(data users.UsersCore, role string) (users.UsersCore, error) {
-	log.Println(role)
 	if strings.ToLower(role) != config.VAL_AdminAccess {
 		return users.UsersCore{}, errors.New(config.VAL_InvalidValidation)
 	}
