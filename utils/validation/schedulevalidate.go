@@ -2,7 +2,6 @@ package validation
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/dr-ariawan-s-project/api-drariawan/features/schedule"
@@ -31,17 +30,17 @@ func CreateValidate(data schedule.Core) error {
 	val := CoreToRegVal(data)
 	if err := validate.Struct(val); err != nil {
 		for _, e := range err.(validator.ValidationErrors) {
-			vlderror := ""
+			// vlderror := ""
 			if e.Field() == "Password" && e.Value() != "" {
-				vlderror = fmt.Sprintf("%s is not %s", e.Value(), e.Tag())
-				return errors.New(vlderror)
+				// vlderror = fmt.Sprintf("%s is not %s", e.Value(), e.Tag())
+				return errors.New(err.Error())
 			}
 			if e.Value() == "" {
-				vlderror = fmt.Sprintf("%s is %s", e.Field(), e.Tag())
-				return errors.New(vlderror)
+				// vlderror = fmt.Sprintf("%s is %s", e.Field(), e.Tag())
+				return errors.New(err.Error())
 			} else {
-				vlderror = fmt.Sprintf("%s is not %s", e.Value(), e.Tag())
-				return errors.New(vlderror)
+				// vlderror = fmt.Sprintf("%s is not %s", e.Value(), e.Tag())
+				return errors.New(err.Error())
 			}
 		}
 	}
@@ -54,9 +53,9 @@ func TimeValidation(time string) error {
 	if time != "" && strings.Contains(time, ":") {
 		err := validate.Var(timeCheck, "numeric")
 		if err != nil {
-			e := err.(validator.ValidationErrors)[0]
-			vlderror := fmt.Sprintf("%s is not %s", time, e.Tag())
-			return errors.New(vlderror)
+			// e := err.(validator.ValidationErrors)[0]
+			// vlderror := fmt.Sprintf("%s is not %s", time, e.Tag())
+			return errors.New(err.Error())
 		}
 	}
 	return nil
@@ -80,19 +79,11 @@ func UpdateScheduleCheckValidation(data schedule.Core) error {
 		return nil
 	}
 	if data.UserId != 0 {
-		err := validate.Var(data.UserId, "alpha")
+		err := validate.Var(data.UserId, "numeric")
 		if err != nil {
-			e := err.(validator.ValidationErrors)[0]
-			vlderror := fmt.Sprintf("UserId %d is not %s", data.UserId, e.Tag())
-			return errors.New(vlderror)
-		}
-	}
-	if data.HealthcareAddress != "" {
-		err := validate.Var(data.HealthcareAddress, "alpha")
-		if err != nil {
-			e := err.(validator.ValidationErrors)[0]
-			vlderror := fmt.Sprintf("HealthcareAddress %s is not %s", data.HealthcareAddress, e.Tag())
-			return errors.New(vlderror)
+			// e := err.(validator.ValidationErrors)[0]
+			// vlderror := fmt.Sprintf("UserId %d is not %s", data.UserId, e.Tag())
+			return errors.New(err.Error())
 		}
 	}
 	if data.TimeStart != "" {

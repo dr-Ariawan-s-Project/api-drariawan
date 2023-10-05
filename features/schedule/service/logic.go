@@ -36,7 +36,15 @@ func (ss *ScheduleService) Create(data schedule.Core) error {
 
 // Update implements schedule.ScheduleService.
 func (ss *ScheduleService) Update(id int, data schedule.Core) error {
-	err := ss.qry.Update(id, data)
+	err := validation.TimesValidation(data.TimeStart, data.TimeEnd)
+	if err != nil {
+		return errors.New(err.Error())
+	}
+	err = validation.UpdateScheduleCheckValidation(data)
+	if err != nil {
+		return errors.New(err.Error())
+	}
+	err = ss.qry.Update(id, data)
 	if err != nil {
 		return errors.New(err.Error())
 	}
