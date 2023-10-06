@@ -63,9 +63,9 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 
 	// users
 	v1User := v1.Group("/user")
-	v1User.POST("", sysRoute.userHandler.Insert(), JWTMiddleware())
-	v1User.PUT("", sysRoute.userHandler.Update(), JWTMiddleware())
-	v1User.POST("/deactive", sysRoute.userHandler.Delete())
+	v1User.POST("", sysRoute.userHandler.Insert())
+	v1User.PUT("", sysRoute.userHandler.Update(), echojwt.WithConfig(echojwt.Config{SigningMethod: "HS256", SigningKey: []byte(config.InitConfig().JWT_SECRET)}))
+	v1User.DELETE("/deactive", sysRoute.userHandler.Delete())
 	v1User.GET("", sysRoute.userHandler.FindById())
 	v1User.GET("/profile", sysRoute.userHandler.GetProfile(), JWTMiddleware())
 	v1User.GET("/list", sysRoute.userHandler.FindAll())
@@ -74,7 +74,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	v1Schedule := v1.Group("/schedule")
 	v1Schedule.POST("", sysRoute.scheduleHandler.Create())
 	v1Schedule.PUT("", sysRoute.scheduleHandler.Update())
-	v1Schedule.POST("/delete", sysRoute.scheduleHandler.Delete())
+	v1Schedule.DELETE("/delete", sysRoute.scheduleHandler.Delete())
 	v1Schedule.GET("/list", sysRoute.scheduleHandler.GetAll())
 
 	v1Patient := v1.Group("/patients")
@@ -89,7 +89,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	v1Booking := v1.Group("/booking")
 	v1Booking.POST("", sysRoute.bookingHandler.Create())
 	v1Booking.PUT("", sysRoute.bookingHandler.Update())
-	v1Booking.POST("/delete", sysRoute.bookingHandler.Delete())
+	v1Booking.DELETE("/delete", sysRoute.bookingHandler.Delete())
 	v1Booking.GET("/list", sysRoute.bookingHandler.GetAll())
 	v1Patient.GET("/profile", sysRoute.patientHandler.GetProfile, JWTMiddleware())
 }
