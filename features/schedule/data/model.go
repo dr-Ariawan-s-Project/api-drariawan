@@ -28,7 +28,7 @@ func CoreToData(core schedule.Core) Schedules {
 		TimeEnd:           core.TimeEnd,
 		CreatedAt:         core.CreatedAt,
 		UpdatedAt:         core.UpdatedAt,
-		DeletedAt:         &core.UpdatedAt,
+		DeletedAt:         core.DeletedAt,
 	}
 }
 
@@ -42,7 +42,7 @@ func DataToCore(data Schedules) schedule.Core {
 		TimeEnd:           data.TimeEnd,
 		CreatedAt:         data.CreatedAt,
 		UpdatedAt:         data.UpdatedAt,
-		DeletedAt:         &data.UpdatedAt,
+		DeletedAt:         data.DeletedAt,
 	}
 }
 

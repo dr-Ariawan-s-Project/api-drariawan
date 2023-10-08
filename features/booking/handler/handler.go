@@ -91,3 +91,18 @@ func (bh *BookingHandler) GetAll() echo.HandlerFunc {
 
 	}
 }
+
+func (bh *BookingHandler) GetByUserID() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		strIdParam := c.QueryParam("id")
+		userID, _ := strconv.Atoi(strIdParam)
+		res, err := bh.srv.GetByUserID(userID)
+		if err != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": res})
+		return c.JSON(httpCode, mapResponse)
+
+	}
+}

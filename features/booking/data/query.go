@@ -71,10 +71,22 @@ func (bq *bookingQuery) Delete(id int) error {
 // GetAll implements schedule.ScheduleData.
 func (bq *bookingQuery) GetAll() ([]booking.Core, error) {
 	qry := []Bookings{}
-	err := bq.db.Where("deleted_at is null").Preload("Patient").Preload("Schedule").Preload("Schedule.User").Find(&qry).Error
+	err := bq.db.Where("deleted_at IS NULL").Preload("Patient").Preload("Schedule").Preload("Schedule.User").Find(&qry).Error
 	if err != nil {
 		log.Println("query error", err.Error())
 		return []booking.Core{}, errors.New(err.Error())
 	}
+	return DataToCoreArray(qry), nil
+}
+
+// GetByUserID implements booking.Data.
+func (bq *bookingQuery) GetByUserID(userID int) ([]booking.Core, error) {
+	qry := []Bookings{}
+	err := bq.db.Joins("JOIN schedules ON bookings.schedule_id = schedules.id").Where("schedules.user_id = ? AND bookings.deleted_at is null", userID).Preload("Patient").Preload("Schedule").Preload("Schedule.User").Find(&qry).Error
+	if err != nil {
+		log.Println("query error", err.Error())
+		return []booking.Core{}, errors.New(err.Error())
+	}
+	log.Println(qry)
 	return DataToCoreArray(qry), nil
 }

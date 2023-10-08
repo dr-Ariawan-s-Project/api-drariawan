@@ -45,7 +45,7 @@ func CoreToData(core booking.Core) Bookings {
 		ScheduleId: core.ScheduleId,
 		CreatedAt:  core.CreatedAt,
 		UpdatedAt:  core.UpdatedAt,
-		DeletedAt:  &core.UpdatedAt,
+		DeletedAt:  core.DeletedAt,
 		Patient: Patients{
 			ID:   core.Patient.ID,
 			Name: core.Patient.Name,
@@ -74,7 +74,7 @@ func DataToCore(data Bookings) booking.Core {
 		ScheduleId: data.ScheduleId,
 		CreatedAt:  data.CreatedAt,
 		UpdatedAt:  data.UpdatedAt,
-		DeletedAt:  &data.UpdatedAt,
+		DeletedAt:  data.DeletedAt,
 		Patient: booking.Patients{
 			ID:   data.Patient.ID,
 			Name: data.Patient.Name,

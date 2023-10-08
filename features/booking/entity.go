@@ -41,10 +41,12 @@ type Service interface {
 	Update(id int, data Core) error
 	Delete(id int) error
 	GetAll() ([]Core, error)
+	GetByUserID(userID int) ([]Core, error)
 }
 type Data interface {
 	Create(data Core) error
 	Update(id int, data Core) error
 	Delete(id int) error
 	GetAll() ([]Core, error)
+	GetByUserID(userID int) ([]Core, error)
 }
