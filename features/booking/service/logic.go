@@ -51,3 +51,12 @@ func (bs *bookingService) GetAll() ([]booking.Core, error) {
 	}
 	return res, nil
 }
+
+// GetByUserID implements booking.Service.
+func (bs *bookingService) GetByUserID(userID int) ([]booking.Core, error) {
+	res, err := bs.qry.GetByUserID(userID)
+	if err != nil {
+		return []booking.Core{}, errors.New(err.Error())
+	}
+	return res, nil
+}
