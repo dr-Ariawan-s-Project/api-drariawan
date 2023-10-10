@@ -2,8 +2,6 @@ package schedule
 
 import (
 	"time"
-
-	"github.com/labstack/echo/v4"
 )
 
 type Core struct {
@@ -16,13 +14,16 @@ type Core struct {
 	CreatedAt         time.Time  `json:"created_at"`
 	UpdatedAt         time.Time  `json:"updated_at"`
 	DeletedAt         *time.Time `json:"deleted_at"`
+	User              User
 }
 
-type ScheduleHandler interface {
-	Create() echo.HandlerFunc
-	Update() echo.HandlerFunc
-	Delete() echo.HandlerFunc
-	GetAll() echo.HandlerFunc
+type User struct {
+	ID             int
+	Name           string
+	Email          string
+	Phone          string
+	UrlPicture     string
+	Specialization string
 }
 
 type ScheduleService interface {

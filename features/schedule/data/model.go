@@ -16,6 +16,16 @@ type Schedules struct {
 	CreatedAt         time.Time
 	UpdatedAt         time.Time
 	DeletedAt         *time.Time
+	User              Users
+}
+
+type Users struct {
+	ID             int
+	Name           string
+	Email          string
+	Phone          string
+	UrlPicture     string
+	Specialization string
 }
 
 func CoreToData(core schedule.Core) Schedules {
@@ -29,6 +39,14 @@ func CoreToData(core schedule.Core) Schedules {
 		CreatedAt:         core.CreatedAt,
 		UpdatedAt:         core.UpdatedAt,
 		DeletedAt:         &core.UpdatedAt,
+		User: Users{
+			ID:             core.User.ID,
+			Name:           core.User.Name,
+			Email:          core.User.Email,
+			Phone:          core.User.Phone,
+			UrlPicture:     core.User.UrlPicture,
+			Specialization: core.User.Specialization,
+		},
 	}
 }
 
@@ -43,6 +61,14 @@ func DataToCore(data Schedules) schedule.Core {
 		CreatedAt:         data.CreatedAt,
 		UpdatedAt:         data.UpdatedAt,
 		DeletedAt:         &data.UpdatedAt,
+		User: schedule.User{
+			ID:             data.User.ID,
+			Name:           data.User.Name,
+			Email:          data.User.Email,
+			Phone:          data.User.Phone,
+			UrlPicture:     data.User.UrlPicture,
+			Specialization: data.User.Specialization,
+		},
 	}
 }
 
