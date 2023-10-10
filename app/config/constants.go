@@ -81,3 +81,8 @@ const (
 const (
 	VAL_InvalidValidation string = "validation error"
 )
+
+// validation role
+const (
+	VAL_AdminAccess string = "admin"
+)

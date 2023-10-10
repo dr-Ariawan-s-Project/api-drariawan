@@ -2,9 +2,12 @@ package service
 
 import (
 	"errors"
+	"strings"
 
+	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/users"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/encrypt"
+	"github.com/dr-ariawan-s-project/api-drariawan/utils/validation"
 )
 
 type userServ struct {
@@ -18,7 +21,14 @@ func New(ur users.Data) users.Service {
 }
 
 // Insert implements users.UserService.
-func (us *userServ) Insert(data users.UsersCore) (users.UsersCore, error) {
+func (us *userServ) Insert(data users.UsersCore, role string) (users.UsersCore, error) {
+	if strings.ToLower(role) != config.VAL_AdminAccess {
+		return users.UsersCore{}, errors.New(config.VAL_InvalidValidation)
+	}
+	err := validation.RegistrationValidate(data)
+	if err != nil {
+		return users.UsersCore{}, errors.New(err.Error())
+	}
 	hash, err := encrypt.HashPassword(data.Password)
 	if err != nil {
 		return users.UsersCore{}, errors.New(err.Error())
@@ -33,6 +43,10 @@ func (us *userServ) Insert(data users.UsersCore) (users.UsersCore, error) {
 
 // Update implements users.UserService.
 func (us *userServ) Update(data users.UsersCore, id int) error {
+	err := validation.UpdateUserCheckValidation(data)
+	if err != nil {
+		return errors.New(err.Error())
+	}
 	if data.Password != "" {
 		hash, err := encrypt.HashPassword(data.Password)
 		if err != nil {
@@ -40,7 +54,7 @@ func (us *userServ) Update(data users.UsersCore, id int) error {
 		}
 		data.Password = hash
 	}
-	err := us.userRepo.Update(data, id)
+	err = us.userRepo.Update(data, id)
 	if err != nil {
 		return errors.New(err.Error())
 	}
