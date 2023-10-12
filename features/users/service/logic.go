@@ -19,6 +19,7 @@ type userServ struct {
 func New(ur users.Data) users.Service {
 	return &userServ{
 		userRepo: ur,
+		validate: validator.New(),
 	}
 }
 
