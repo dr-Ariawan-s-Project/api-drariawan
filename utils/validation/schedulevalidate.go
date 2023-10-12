@@ -16,7 +16,7 @@ type ScheduleValidate struct {
 	TimeEnd           string `validate:"required"`
 }
 
-func CoreToRegVal(data schedule.Core) ScheduleValidate {
+func CoreToRegValSche(data schedule.Core) ScheduleValidate {
 	return ScheduleValidate{
 		UserId:            data.UserId,
 		HealthcareAddress: data.HealthcareAddress,
@@ -27,7 +27,7 @@ func CoreToRegVal(data schedule.Core) ScheduleValidate {
 }
 func CreateValidate(data schedule.Core) error {
 	validate := validator.New()
-	val := CoreToRegVal(data)
+	val := CoreToRegValSche(data)
 	if err := validate.Struct(val); err != nil {
 		for _, e := range err.(validator.ValidationErrors) {
 			// vlderror := ""
