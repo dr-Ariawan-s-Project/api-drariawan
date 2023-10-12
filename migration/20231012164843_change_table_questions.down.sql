@@ -1,0 +1,8 @@
+ALTER TABLE questions 
+MODIFY type VARCHAR(50) NOT NULL;
+ALTER TABLE questions
+MODIFY question VARCHAR(255) NOT NULL;
+ALTER TABLE questions
+DROP COLUMN url_video;
+ALTER TABLE questions
+DROP COLUMN section;
