@@ -46,3 +46,32 @@ func (service *authService) Login(email string, password string) (string, error)
 	}
 	return "", errors.New(config.ERR_AuthWrongCredentials)
 }
+
+// LoginPatient implements auth.AuthServiceInterface.
+func (service *authService) LoginPatient(email string, password string) (string, error) {
+	dataLogin := auth.PatientCore{
+		Email:    email,
+		Password: password,
+	}
+	errValidate := validation.ValidateStruct(service.validate, dataLogin)
+	if errValidate != nil {
+		return "", errValidate
+	}
+
+	data, err := service.authData.GetPatientByEmail(email)
+	if err != nil {
+		return "", err
+	}
+	if data.Password == "" {
+		return "", errors.New(config.VAL_PasswordNotSet)
+	}
+
+	if encrypt.CheckPasswordHash(data.Password, password) {
+		token, err := service.authData.CreateToken(data.Id, config.VAL_PatientAccess)
+		if err != nil {
+			return "", errors.New(config.JWT_FailedCreateToken)
+		}
+		return token, nil
+	}
+	return "", errors.New(config.ERR_AuthWrongCredentials)
+}

@@ -81,9 +81,11 @@ const (
 // validation input
 const (
 	VAL_InvalidValidation string = "validation error"
+	VAL_PasswordNotSet    string = "anda belum membuat password, silakan atur password anda terlebih dahulu melalui fitur forgot password."
 )
 
 // validation role
 const (
-	VAL_AdminAccess string = "admin"
+	VAL_AdminAccess   string = "admin"
+	VAL_PatientAccess string = "patient"
 )
