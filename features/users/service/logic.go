@@ -8,15 +8,18 @@ import (
 	"github.com/dr-ariawan-s-project/api-drariawan/features/users"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/encrypt"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/validation"
+	"github.com/go-playground/validator/v10"
 )
 
 type userServ struct {
 	userRepo users.Data
+	validate *validator.Validate
 }
 
 func New(ur users.Data) users.Service {
 	return &userServ{
 		userRepo: ur,
+		validate: validator.New(),
 	}
 }
 

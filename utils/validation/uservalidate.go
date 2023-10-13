@@ -17,7 +17,7 @@ type UserValidate struct {
 	Password       string `validate:"required,min=5,alphanum"`
 }
 
-func CoreToRegVal(data users.UsersCore) UserValidate {
+func CoreToRegValUser(data users.UsersCore) UserValidate {
 	return UserValidate{
 		Name:           data.Name,
 		Email:          data.Email,
@@ -29,7 +29,7 @@ func CoreToRegVal(data users.UsersCore) UserValidate {
 }
 func RegistrationValidate(data users.UsersCore) error {
 	validate := validator.New()
-	val := CoreToRegVal(data)
+	val := CoreToRegValUser(data)
 	if err := validate.Struct(val); err != nil {
 		for _, e := range err.(validator.ValidationErrors) {
 			vlderror := ""
