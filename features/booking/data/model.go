@@ -7,14 +7,16 @@ import (
 )
 
 type Bookings struct {
-	ID         int
-	PatientId  string
-	ScheduleId int
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	DeletedAt  *time.Time
-	Patient    Patients
-	Schedule   Schedules
+	ID          int
+	PatientId   string
+	ScheduleId  int
+	BookingDate string
+	State       string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   *time.Time
+	Patient     Patients
+	Schedule    Schedules
 }
 
 type Patients struct {
@@ -40,12 +42,14 @@ type Users struct {
 
 func CoreToData(core booking.Core) Bookings {
 	return Bookings{
-		ID:         core.ID,
-		PatientId:  core.PatientId,
-		ScheduleId: core.ScheduleId,
-		CreatedAt:  core.CreatedAt,
-		UpdatedAt:  core.UpdatedAt,
-		DeletedAt:  core.DeletedAt,
+		ID:          core.ID,
+		PatientId:   core.PatientId,
+		ScheduleId:  core.ScheduleId,
+		BookingDate: core.BookingDate,
+		State:       core.State,
+		CreatedAt:   core.CreatedAt,
+		UpdatedAt:   core.UpdatedAt,
+		DeletedAt:   core.DeletedAt,
 		Patient: Patients{
 			ID:   core.Patient.ID,
 			Name: core.Patient.Name,
@@ -69,12 +73,14 @@ func CoreToData(core booking.Core) Bookings {
 
 func DataToCore(data Bookings) booking.Core {
 	return booking.Core{
-		ID:         data.ID,
-		PatientId:  data.PatientId,
-		ScheduleId: data.ScheduleId,
-		CreatedAt:  data.CreatedAt,
-		UpdatedAt:  data.UpdatedAt,
-		DeletedAt:  data.DeletedAt,
+		ID:          data.ID,
+		PatientId:   data.PatientId,
+		ScheduleId:  data.ScheduleId,
+		BookingDate: data.BookingDate,
+		State:       data.State,
+		CreatedAt:   data.CreatedAt,
+		UpdatedAt:   data.UpdatedAt,
+		DeletedAt:   data.DeletedAt,
 		Patient: booking.Patients{
 			ID:   data.Patient.ID,
 			Name: data.Patient.Name,

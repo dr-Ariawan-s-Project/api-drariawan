@@ -5,14 +5,16 @@ import (
 )
 
 type Core struct {
-	ID         int        `json:"id"`
-	PatientId  string     `json:"patient_id"`
-	ScheduleId int        `json:"schedule_id"`
-	CreatedAt  time.Time  `json:"created_at"`
-	UpdatedAt  time.Time  `json:"updated_at"`
-	DeletedAt  *time.Time `json:"deleted_at"`
-	Patient    Patients
-	Schedule   Schedules
+	ID          int        `json:"id"`
+	PatientId   string     `json:"patient_id"`
+	ScheduleId  int        `json:"schedule_id"`
+	BookingDate string     `json:"booking_date"`
+	State       string     `json:"state"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	DeletedAt   *time.Time `json:"deleted_at"`
+	Patient     Patients
+	Schedule    Schedules
 }
 
 type Patients struct {
