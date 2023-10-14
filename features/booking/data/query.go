@@ -5,7 +5,9 @@ import (
 	"log"
 	"time"
 
+	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/booking"
+	"github.com/dr-ariawan-s-project/api-drariawan/utils/validation"
 	"gorm.io/gorm"
 )
 
@@ -22,10 +24,28 @@ func New(db *gorm.DB) booking.Data {
 // Create implements schedule.ScheduleData.
 func (bq *bookingQuery) Create(data booking.Core) error {
 	qry := CoreToData(data)
-	qry.DeletedAt = nil
-	err := bq.db.Create(&qry).Error
+	qry.State = "confirmed"
+
+	// CEK APAKAH SUDAH PERNAH BOOKING
+	err := bq.db.Where("booking_date = ? AND schedule_id = ? ", qry.BookingDate, qry.ScheduleId).First(&qry).Error
+	if err == nil {
+		return errors.New(config.DB_ERR_DUPLICATE_BOOKING)
+	}
+
+	// CEK APAKAH DALAM SATU MINGGU SUDAH PERNAH BOOKING
+	sevenDaysLaterStr, sevenDaysAgoStr, err := validation.SevenDayLimitVal(qry.BookingDate)
 	if err != nil {
-		log.Println("query error", err.Error())
+		return errors.New(err.Error())
+	}
+	err = bq.db.Where("booking_date >= ? AND booking_date <= ? AND patient_id = ?", sevenDaysAgoStr, sevenDaysLaterStr, qry.PatientId).First(&qry).Error
+	if err == nil {
+		log.Println("already booked")
+		return errors.New(config.DB_ERR_LIMIT_BOOKING_SEVDAY)
+	}
+
+	qry.DeletedAt = nil
+	err = bq.db.Create(&qry).Error
+	if err != nil {
 		return errors.New(err.Error())
 	}
 	return nil
@@ -43,7 +63,6 @@ func (bq *bookingQuery) Update(id int, data booking.Core) error {
 	}
 	err := qry.Error
 	if err != nil {
-		log.Println("update user query error", err.Error())
 		return errors.New(err.Error())
 	}
 	return nil
@@ -62,7 +81,6 @@ func (bq *bookingQuery) Delete(id int) error {
 	}
 	err := qry.Error
 	if err != nil {
-		log.Println("update user query error", err.Error())
 		return errors.New(err.Error())
 	}
 	return nil
@@ -73,7 +91,6 @@ func (bq *bookingQuery) GetAll() ([]booking.Core, error) {
 	qry := []Bookings{}
 	err := bq.db.Where("deleted_at IS NULL").Order("created_at DESC").Preload("Patient").Preload("Schedule").Preload("Schedule.User").Find(&qry).Error
 	if err != nil {
-		log.Println("query error", err.Error())
 		return []booking.Core{}, errors.New(err.Error())
 	}
 	return DataToCoreArray(qry), nil
@@ -84,7 +101,6 @@ func (bq *bookingQuery) GetByUserID(userID int) ([]booking.Core, error) {
 	qry := []Bookings{}
 	err := bq.db.Joins("JOIN schedules ON bookings.schedule_id = schedules.id").Where("schedules.user_id = ? AND bookings.deleted_at is null", userID).Order("bookings.created_at DESC").Preload("Patient").Preload("Schedule").Preload("Schedule.User").Find(&qry).Error
 	if err != nil {
-		log.Println("query error", err.Error())
 		return []booking.Core{}, errors.New(err.Error())
 	}
 	log.Println(qry)
