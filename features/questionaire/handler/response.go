@@ -7,6 +7,8 @@ type QuestionResponse struct {
 	Type            string           `json:"type"`
 	Question        string           `json:"question"`
 	Description     string           `json:"description"`
+	UrlVideo        string           `json:"url_video"`
+	Section         string           `json:"section"`
 	ChoiceResponses []ChoiceResponse `json:"choices"`
 	Goto            *uint            `json:"goto"`
 }
@@ -41,6 +43,8 @@ func CoreToResponse(dataCore questionaire.Core) QuestionResponse {
 		Type:            dataCore.Type,
 		Question:        dataCore.Question,
 		Description:     dataCore.Description,
+		UrlVideo:        dataCore.UrlVideo,
+		Section:         dataCore.Section,
 		ChoiceResponses: CoreChoicesToResponse(dataCore.Choices),
 		Goto:            dataCore.Goto,
 	}

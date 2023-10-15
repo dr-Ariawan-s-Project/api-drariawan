@@ -7,6 +7,8 @@ type Core struct {
 	Type        string
 	Question    string
 	Description string
+	UrlVideo    string
+	Section     string
 	Goto        *uint
 	Choices     []Choice
 }

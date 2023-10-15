@@ -16,6 +16,8 @@ type Question struct {
 	Type               string
 	Question           string
 	Description        string
+	UrlVideo           string
+	Section            string
 	Choices            []Choice   `gorm:"foreignKey:QuestionId"`
 	GotoQuestion       []Question `gorm:"foreignKey:goto;references:ID"`
 	GotoChoiceQuestion []Choice   `gorm:"foreignKey:goto;references:ID"`
@@ -85,6 +87,8 @@ func ModelToCore(dataModel Question) questionaire.Core {
 		Type:        dataModel.Type,
 		Question:    dataModel.Question,
 		Description: dataModel.Description,
+		UrlVideo:    dataModel.UrlVideo,
+		Section:     dataModel.Section,
 		Goto:        dataModel.Goto,
 		Choices:     ModelChoiceToCoreList(dataModel.Choices),
 	}
