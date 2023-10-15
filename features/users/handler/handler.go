@@ -118,3 +118,21 @@ func (uh *UserHandler) FindById() echo.HandlerFunc {
 		return c.JSON(httpCode, mapResponse)
 	}
 }
+
+// FindById implements users.UserHandler.
+func (uh *UserHandler) GetProfile() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userID, _, err := encrypt.ExtractToken(c.Get("user"))
+		if err != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+		res, err := uh.srv.FindById(userID)
+		if err != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": CoreToResponse(res)})
+		return c.JSON(httpCode, mapResponse)
+	}
+}
