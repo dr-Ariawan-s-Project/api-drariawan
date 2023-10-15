@@ -1,2 +1,10 @@
 ALTER TABLE test_attempt
 DROP COLUMN diagnosis;
+ALTER TABLE test_attempt
+DROP COLUMN ai_diagnosis;
+ALTER TABLE test_attempt
+DROP COLUMN ai_probability;
+ALTER TABLE test_attempt
+DROP COLUMN ai_accuracy;
+ALTER TABLE test_attempt
+DROP COLUMN status;
