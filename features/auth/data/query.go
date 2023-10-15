@@ -24,7 +24,7 @@ func New(db *gorm.DB, cfg *config.AppConfig) auth.AuthDataInterface {
 }
 
 // CreateToken implements auth.AuthDataInterface.
-func (repo *authQuery) CreateToken(id int, role string) (token string, err error) {
+func (repo *authQuery) CreateToken(id any, role string) (token string, err error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["userId"] = id
@@ -44,6 +44,20 @@ func (repo *authQuery) GetUserByEmail(email string) (auth.UserCore, error) {
 
 	if tx.RowsAffected == 0 {
 		return auth.UserCore{}, errors.New(config.DB_ERR_RECORD_NOT_FOUND)
+	}
+	return record, nil
+}
+
+// GetPatientByEmail implements auth.AuthDataInterface.
+func (repo *authQuery) GetPatientByEmail(email string) (auth.PatientCore, error) {
+	var record auth.PatientCore
+	tx := repo.db.Table("patients").Select("id", "email", "password", "name", "phone").Where("email = ?", email).Scan(&record)
+	if tx.Error != nil {
+		return auth.PatientCore{}, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+
+	if tx.RowsAffected == 0 {
+		return auth.PatientCore{}, errors.New(config.DB_ERR_RECORD_NOT_FOUND)
 	}
 	return record, nil
 }

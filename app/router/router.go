@@ -65,6 +65,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 
 	v1Patient := v1.Group("/patients")
 	v1Patient.POST("", sysRoute.patientHandler.AddPatient)
+	v1Patient.POST("/login", sysRoute.authHandler.LoginPatient)
 	v1Patient.GET("", sysRoute.patientHandler.GetAll)
 	v1Patient.GET("/:patient_id", sysRoute.patientHandler.GetById)
 	v1Patient.PUT("/:patient_id", sysRoute.patientHandler.EditPatient)
