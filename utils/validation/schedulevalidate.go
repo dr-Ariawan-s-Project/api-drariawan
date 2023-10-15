@@ -28,7 +28,7 @@ func CoreToRegValSche(data schedule.Core) ScheduleValidate {
 		TimeEnd:           data.TimeEnd,
 	}
 }
-func ScheCreateValidate(data schedule.Core) error {
+func CreateScheduleValidate(data schedule.Core) error {
 	validate := validator.New()
 	val := CoreToRegValSche(data)
 	if err := validate.Struct(val); err != nil {
@@ -105,7 +105,7 @@ func UpdateScheduleCheckValidation(data schedule.Core) error {
 	return nil
 }
 
-func TimeCheckerVal(timeStart, timeEnd string) error {
+func TimeCheckerValidate(timeStart, timeEnd string) error {
 	strPemisah := ":"
 
 	// Memisahkan hour dan minute time start
