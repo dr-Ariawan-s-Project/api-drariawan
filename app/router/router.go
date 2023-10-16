@@ -54,6 +54,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	v1User.PUT("", sysRoute.userHandler.Update(), JWTMiddleware())
 	v1User.POST("/deactive", sysRoute.userHandler.Delete())
 	v1User.GET("", sysRoute.userHandler.FindById())
+	v1User.GET("/profile", sysRoute.userHandler.GetProfile(), JWTMiddleware())
 	v1User.GET("/list", sysRoute.userHandler.FindAll())
 
 	// schedules

@@ -3,6 +3,7 @@ package handler
 import "github.com/dr-ariawan-s-project/api-drariawan/features/users"
 
 type UserResponse struct {
+	ID             int    `json:"id"`
 	Name           string `json:"name" `
 	Email          string `json:"email"`
 	Phone          string `json:"phone"`
@@ -13,6 +14,7 @@ type UserResponse struct {
 
 func CoreToResponse(core users.UsersCore) UserResponse {
 	return UserResponse{
+		ID:             core.ID,
 		Name:           core.Name,
 		Email:          core.Email,
 		Phone:          core.Phone,
