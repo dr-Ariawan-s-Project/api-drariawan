@@ -91,9 +91,9 @@ func (r *EmailRequest) SendMail(gmailPass string) error {
 	}
 
 	var to = r.to
-	body := "From: " + CONFIG_SENDER_NAME + "\n" +
-		"To: " + strings.Join(to, ",") + "\n" +
-		"Subject: " + r.subject + "\n\n" +
+	body := "From: " + CONFIG_SENDER_NAME + "\r\n" +
+		"To: " + strings.Join(to, ",") + "\r\n" +
+		"Subject: " + r.subject + "\r\n" +
 		mime + "\n" + r.body
 
 	auth := smtp.PlainAuth("", CONFIG_AUTH_EMAIL, CONFIG_AUTH_PASSWORD, CONFIG_SMTP_HOST)
