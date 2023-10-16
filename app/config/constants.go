@@ -24,8 +24,12 @@ const (
 
 // questioner test attempt
 const (
-	QUESTIONER_ATTEMPT_SELF    = "myself"
-	QUESTIONER_ATTEMPT_PARTNER = "partner"
+	QUESTIONER_ATTEMPT_SELF               = "myself"
+	QUESTIONER_ATTEMPT_PARTNER            = "partner"
+	QUESTIONER_ATTEMPT_STATUS_VALIDATED   = "validated"
+	QUESTIONER_ATTEMPT_STATUS_PENDING     = "pending"
+	QUESTIONER_ATTEMPT_STATUS_AI_ANALYZED = "ai_analyzed"
+	QUESTIONER_ATTEMPT_STATUS_AI_ERROR    = "ai_error"
 )
 
 // const db error

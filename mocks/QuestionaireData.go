@@ -12,6 +12,78 @@ type QuestionaireData struct {
 	mock.Mock
 }
 
+// CountAttemptByMonth provides a mock function with given fields: month
+func (_m *QuestionaireData) CountAttemptByMonth(month int) (int, error) {
+	ret := _m.Called(month)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(int) (int, error)); ok {
+		return rf(month)
+	}
+	if rf, ok := ret.Get(0).(func(int) int); ok {
+		r0 = rf(month)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(month)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// CountAttemptByStatusAssessment provides a mock function with given fields: status
+func (_m *QuestionaireData) CountAttemptByStatusAssessment(status string) (int, error) {
+	ret := _m.Called(status)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (int, error)); ok {
+		return rf(status)
+	}
+	if rf, ok := ret.Get(0).(func(string) int); ok {
+		r0 = rf(status)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(status)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// CountQuestionerAttempt provides a mock function with given fields:
+func (_m *QuestionaireData) CountQuestionerAttempt() (int, error) {
+	ret := _m.Called()
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func() (int, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() int); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // CountTestAttempt provides a mock function with given fields: patientId
 func (_m *QuestionaireData) CountTestAttempt(patientId string) (int, error) {
 	ret := _m.Called(patientId)

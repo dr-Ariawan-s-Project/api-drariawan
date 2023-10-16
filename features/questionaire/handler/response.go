@@ -22,6 +22,12 @@ type ChoiceResponse struct {
 	Goto       *uint  `json:"goto"`
 }
 
+type DashboardQuestionerResponse struct {
+	AllQuestioner   int `json:"questioner_all"`
+	NeedAssess      int `json:"questioner_need_assess"`
+	MonthQuestioner int `json:"questioner_this_month"`
+}
+
 func CoreChoicesToResponse(dataCore []questionaire.Choice) []ChoiceResponse {
 	var response []ChoiceResponse
 	for _, v := range dataCore {

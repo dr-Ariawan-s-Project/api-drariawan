@@ -74,3 +74,20 @@ func (handler *QuestionaireHandler) GetAllQuestion(c echo.Context) error {
 	mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_QUESTIONAIRE_CODE, questionRespose)
 	return c.JSON(httpCode, mapResponse)
 }
+
+func (handler *QuestionaireHandler) GetDashboardQuestioner(c echo.Context) error {
+	results, err := handler.questionaireService.GetDashboard()
+
+	if err != nil {
+		jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_QUESTIONAIRE_CODE)
+		return c.JSON(httpCode, jsonResponse)
+	}
+
+	var questionerDashboardRespose = DashboardQuestionerResponse{
+		AllQuestioner:   results.AllQuestioner,
+		NeedAssess:      results.NeedAssessQuestioner,
+		MonthQuestioner: results.MonthQuestioner,
+	}
+	mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_QUESTIONAIRE_CODE, questionerDashboardRespose)
+	return c.JSON(httpCode, mapResponse)
+}
