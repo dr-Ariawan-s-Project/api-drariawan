@@ -84,7 +84,7 @@ func (r *EmailRequest) SendMail(gmailPass string) error {
 	const CONFIG_AUTH_EMAIL = "drariawan.app@gmail.com"
 	var CONFIG_AUTH_PASSWORD = gmailPass
 
-	mime := "MIME-version: 1.0;\nContent-Type: text/plain; charset=\"UTF-8\";\n\n"
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 
 	if r.subject == "" {
 		return errors.New("subject must be fill")
