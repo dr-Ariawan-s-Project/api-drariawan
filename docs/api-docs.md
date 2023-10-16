@@ -41,72 +41,35 @@
         {
             "id": 1,
             "type": "text",
-            "question": "https://linkto.com/video.mp4",
-            "description": "berapa tinggi badan anda?",
+            "question": "Silakan memberi masukkan dan saran. (Bila tidak ada harap isi dg \"-\".)",
+            "description": "",
+            "url_video": "",
+            "section": "saran",
             "choices": null,
             "goto": 2
         },
         {
             "id": 2,
             "type": "choices",
-            "question": "https://linkto.com/video.mp4",
-            "description": "seberapa sering anda menggunakan celana ketat?",
+            "question": "Saya telah mengerti dan memahami maksud dan tujuan pengisian kuesioner ini.\nDengan ini saya sukarela bersedia untuk menjadi responden dalam penelitian ini\ntanpa adanya paksaan atau tekanan dari siapapun.",
+            "description": "",
+            "url_video": "",
+            "section": "konfirmasi",
             "choices": [
                 {
                     "id": 1,
-                    "question_id": 2,
-                    "option": "1 (tidak pernah sama sekali)",
-                    "slugs": "tidak;no;",
+                    "question_id": 1,
+                    "option": "Setuju",
+                    "slugs": "setuju;ya;",
                     "score": 0,
-                    "goto": 3
+                    "goto": 2
                 },
                 {
                     "id": 2,
-                    "question_id": 2,
-                    "option": "2 (pernah)",
-                    "slugs": "pernah;jarang;",
-                    "score": 2,
-                    "goto": 3
-                },
-                {
-                    "id": 3,
-                    "question_id": 2,
-                    "option": "3 (cukup sering)",
-                    "slugs": "sering;beberapa kali;",
-                    "score": 5,
-                    "goto": 3
-                },
-                {
-                    "id": 4,
-                    "question_id": 2,
-                    "option": "4 (setiap hari)",
-                    "slugs": "setiap hari;",
-                    "score": 10,
-                    "goto": 3
-                }
-            ],
-            "goto": null
-        },
-        {
-            "id": 3,
-            "type": "choices",
-            "question": "https://linkto.com/video.mp4",
-            "description": "apakah anda merokok?",
-            "choices": [
-                {
-                    "id": 5,
-                    "question_id": 3,
-                    "option": "Ya",
-                    "slugs": "ya;yes;iya;",
-                    "score": 10,
-                    "goto": null
-                },
-                {
-                    "id": 6,
-                    "question_id": 3,
-                    "option": "Tidak",
-                    "slugs": "tidak;no;",
-                    "score": 0,
+                    "question_id": 1,
+                    "option": "Tidak setuju",
+                    "slugs": "tidak;",
+                    "score": 1,
                     "goto": null
                 }
             ],
@@ -419,6 +382,31 @@
         "status": "success"
     }
     }
+    ```
+</details>
+<!-- ==== End Of Section -->
+
+<details>
+  <summary><kbd>GET /v1/dashboard</kbd></summary>
+    > Dashboard feature
+    <br>
+
+-  <kbd>Response Body</kbd>
+    ```json
+   {
+    "data": {
+        "questioner_all": 7,
+        "questioner_need_assess": 6,
+        "questioner_this_month": 1
+    },
+    "messages": [
+        "[success] read data"
+    ],
+    "meta": {
+        "code": "200-003-OK",
+        "status": "success"
+    }
+  }      
     ```
 </details>
 <!-- ==== End Of Section -->
