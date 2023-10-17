@@ -126,3 +126,14 @@ func AttempCoreToModel(core questionaire.CoreAttempt) TestAttempt {
 		CodeAttempt: core.CodeAttempt,
 	}
 }
+
+func (data TestAttempt) ModelToCore() questionaire.CoreAttempt {
+	return questionaire.CoreAttempt{
+		Id:           data.ID,
+		PatientId:    data.PatientId,
+		CodeAttempt:  data.CodeAttempt,
+		NotesAttempt: data.NotesAttempt,
+		Score:        data.Score,
+		Feedback:     data.Feedback,
+	}
+}

@@ -56,6 +56,9 @@ func CheckHandlerErrorCode(err error) (responseCode int, layerCode string, errCo
 	case config.VAL_InvalidValidation:
 		return http.StatusBadRequest, config.LAYER_SERVICE_CODE, err
 
+	case config.VAL_IncompleteAnswer:
+		return http.StatusBadRequest, config.LAYER_SERVICE_CODE, err
+
 	case config.VAL_PasswordNotSet:
 		return http.StatusBadRequest, config.LAYER_SERVICE_CODE, err
 
