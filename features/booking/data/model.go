@@ -7,7 +7,8 @@ import (
 )
 
 type Bookings struct {
-	ID          int
+	ID          string
+	BookingCode string
 	PatientId   string
 	ScheduleId  int
 	BookingDate string
@@ -43,6 +44,7 @@ type Users struct {
 func CoreToData(core booking.Core) Bookings {
 	return Bookings{
 		ID:          core.ID,
+		BookingCode: core.BookingCode,
 		PatientId:   core.PatientId,
 		ScheduleId:  core.ScheduleId,
 		BookingDate: core.BookingDate,
@@ -74,6 +76,7 @@ func CoreToData(core booking.Core) Bookings {
 func DataToCore(data Bookings) booking.Core {
 	return booking.Core{
 		ID:          data.ID,
+		BookingCode: data.BookingCode,
 		PatientId:   data.PatientId,
 		ScheduleId:  data.ScheduleId,
 		BookingDate: data.BookingDate,

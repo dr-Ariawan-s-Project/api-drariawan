@@ -5,7 +5,8 @@ import (
 )
 
 type Core struct {
-	ID          int        `json:"id"`
+	ID          string     `json:"id"`
+	BookingCode string     `json:"booking_code"`
 	PatientId   string     `json:"patient_id"`
 	ScheduleId  int        `json:"schedule_id"`
 	BookingDate string     `json:"booking_date"`

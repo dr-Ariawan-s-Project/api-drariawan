@@ -1,8 +1,9 @@
 CREATE TABLE `bookings`(
-    id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    id varchar(255) NOT NULL PRIMARY KEY,
+    booking_code varchar(12) UNIQUE NOT NULL,
     patient_id varchar(255) NOT NULL,
     schedule_id  INT NOT NULL,
-    booking_date DATETIME,
+    booking_date DATETIME  NOT NULL,
     state  varchar(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  
