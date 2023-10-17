@@ -3,8 +3,11 @@ package data
 import (
 	"errors"
 	"log"
+	"strconv"
+	"strings"
 	"time"
 
+	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/schedule"
 	"gorm.io/gorm"
 )
@@ -33,7 +36,30 @@ func (sq *scheduleQuery) CheckDuplUserID(userId int) error {
 func (sq *scheduleQuery) Create(data schedule.Core) error {
 	qry := CoreToData(data)
 	qry.DeletedAt = nil
-	err := sq.db.Create(&qry).Error
+	ckData := []Schedules{}
+	err := sq.db.Where("day = ? AND user_id = ?", qry.Day, qry.UserId).Find(&ckData).Error
+	if err != nil {
+		return errors.New(err.Error())
+	}
+	intInputTimeStart, _ := strconv.Atoi(strings.Replace(qry.TimeStart, ":", "", -1))
+	intInputTimeEnd, _ := strconv.Atoi(strings.Replace(qry.TimeEnd, ":", "", -1))
+	if len(ckData) > 0 {
+		for _, val := range ckData {
+			intTimeStart, _ := strconv.Atoi(strings.Replace(val.TimeStart, ":", "", -1))
+			intTimeEnd, _ := strconv.Atoi(strings.Replace(val.TimeEnd, ":", "", -1))
+			if intInputTimeStart >= intTimeStart && intInputTimeStart <= intTimeEnd {
+				return errors.New(config.DB_ERR_DUPLICATE_SCHEDULE)
+			} else if intInputTimeEnd >= intTimeStart && intInputTimeEnd <= intTimeEnd {
+				return errors.New(config.DB_ERR_DUPLICATE_SCHEDULE)
+			} else if intTimeStart >= intInputTimeStart && intTimeStart <= intInputTimeEnd {
+				return errors.New(config.DB_ERR_DUPLICATE_SCHEDULE)
+			} else if intTimeEnd >= intInputTimeStart && intTimeEnd <= intInputTimeEnd {
+				return errors.New(config.DB_ERR_DUPLICATE_SCHEDULE)
+			}
+		}
+	}
+
+	err = sq.db.Create(&qry).Error
 	if err != nil {
 		return errors.New(err.Error())
 	}

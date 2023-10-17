@@ -2,8 +2,11 @@ package validation
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
 	"strings"
 
+	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/schedule"
 	"github.com/go-playground/validator/v10"
 )
@@ -25,7 +28,7 @@ func CoreToRegValSche(data schedule.Core) ScheduleValidate {
 		TimeEnd:           data.TimeEnd,
 	}
 }
-func CreateValidate(data schedule.Core) error {
+func CreateScheduleValidate(data schedule.Core) error {
 	validate := validator.New()
 	val := CoreToRegValSche(data)
 	if err := validate.Struct(val); err != nil {
@@ -99,5 +102,49 @@ func UpdateScheduleCheckValidation(data schedule.Core) error {
 		}
 	}
 
+	return nil
+}
+
+func TimeCheckerValidate(timeStart, timeEnd string) error {
+	strPemisah := ":"
+
+	// Memisahkan hour dan minute time start
+	tsHour := timeStart[:strings.Index(timeStart, strPemisah)]
+	tsMin := timeStart[(strings.Index(timeStart, strPemisah) + 1):]
+	if len(tsHour) < 2 {
+		tsHour = fmt.Sprintf("0%s", tsHour)
+	}
+	if len(tsMin) < 2 {
+		tsMin = fmt.Sprintf("0%s", tsMin)
+	}
+
+	// Memisahkan hour dan minute time end
+	teHour := timeEnd[:strings.Index(timeEnd, strPemisah)]
+	teMin := timeEnd[(strings.Index(timeEnd, strPemisah) + 1):]
+	if len(teHour) < 2 {
+		teHour = fmt.Sprintf("0%s", teHour)
+	}
+	if len(teMin) < 2 {
+		teMin = fmt.Sprintf("0%s", teMin)
+	}
+
+	// cek apakah hour lebih dari 23 dan min lebih dari 59
+	intTSHour, _ := strconv.Atoi(tsHour)
+	intTEHour, _ := strconv.Atoi(teHour)
+	intTSMin, _ := strconv.Atoi(tsMin)
+	intTEMin, _ := strconv.Atoi(teMin)
+	if int(intTSHour) > 23 || int(intTEHour) > 23 || int(intTEHour) < 0 || int(intTSHour) < 0 {
+		return errors.New(config.TIME_ERR_FORMAT_HOUR)
+	}
+	if int(intTSMin) > 59 || int(intTEMin) > 59 || int(intTSMin) < 0 || int(intTEMin) < 0 {
+		return errors.New(config.TIME_ERR_FORMAT_MINUTE)
+	}
+
+	// cek apakah time end lebih kecil dari time start
+	intTimeStart, _ := strconv.Atoi(strings.Replace(timeStart, ":", "", -1))
+	intTimeEnd, _ := strconv.Atoi(strings.Replace(timeEnd, ":", "", -1))
+	if intTimeEnd <= intTimeStart {
+		return errors.New(config.TIME_ERR_INVALID_TIME)
+	}
 	return nil
 }

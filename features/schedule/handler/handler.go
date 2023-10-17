@@ -28,7 +28,7 @@ func (sh *ScheduleHandler) Create() echo.HandlerFunc {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		
+
 		err = sh.srv.Create(*ReqToCore(requestBody))
 		if err != nil {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)

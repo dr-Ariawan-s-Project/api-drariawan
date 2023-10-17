@@ -23,7 +23,11 @@ func (ss *ScheduleService) Create(data schedule.Core) error {
 	if err != nil {
 		return errors.New(err.Error())
 	}
-	err = validation.CreateValidate(data)
+	err = validation.CreateScheduleValidate(data)
+	if err != nil {
+		return errors.New(err.Error())
+	}
+	err = validation.TimeCheckerValidate(data.TimeStart, data.TimeEnd)
 	if err != nil {
 		return errors.New(err.Error())
 	}
