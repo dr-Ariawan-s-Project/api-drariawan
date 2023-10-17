@@ -16,6 +16,36 @@ func New(db *gorm.DB) questionaire.QuestionaireDataInterface {
 	}
 }
 
+// CountAttemptByMonth implements questionaire.QuestionaireDataInterface.
+func (repo *questionaireQuery) CountAttemptByMonth(month int) (int, error) {
+	var countAttemp int64
+	tx := repo.db.Model(&TestAttempt{}).Where("MONTH(created_at) = ?", month).Count(&countAttemp)
+	if tx.Error != nil {
+		return 0, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	return int(countAttemp), nil
+}
+
+// CountAttemptByStatusAssessment implements questionaire.QuestionaireDataInterface.
+func (repo *questionaireQuery) CountAttemptByStatusAssessment(status string) (int, error) {
+	var countAttemp int64
+	tx := repo.db.Model(&TestAttempt{}).Where("status != ? OR diagnosis IS NULL", status).Count(&countAttemp)
+	if tx.Error != nil {
+		return 0, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	return int(countAttemp), nil
+}
+
+// CountQuestionerAttempt implements questionaire.QuestionaireDataInterface.
+func (repo *questionaireQuery) CountQuestionerAttempt() (int, error) {
+	var countAttemp int64
+	tx := repo.db.Model(&TestAttempt{}).Count(&countAttemp)
+	if tx.Error != nil {
+		return 0, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	return int(countAttemp), nil
+}
+
 // CountTestAttemp implements questionaire.QuestionaireDataInterface.
 func (repo *questionaireQuery) CountTestAttempt(patientId string) (int, error) {
 	var countAttemp int64

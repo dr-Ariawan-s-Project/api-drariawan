@@ -43,6 +43,8 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	e.POST("/login", sysRoute.authHandler.Login)
 
 	v1 := e.Group("/v1")
+	v1.GET("/dashboard", sysRoute.questionaireHandler.GetDashboardQuestioner)
+
 	v1Questioner := v1.Group("/questioner")
 	v1Questioner.GET("", sysRoute.questionaireHandler.GetAllQuestion)
 	v1Questioner.POST("", sysRoute.questionaireHandler.AddAnswer)
