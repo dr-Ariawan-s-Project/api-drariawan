@@ -77,8 +77,8 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	//booking
 	v1Booking := v1.Group("/booking")
 	v1Booking.POST("", sysRoute.bookingHandler.Create())
-	v1Booking.PUT("", sysRoute.bookingHandler.Update())
-	v1Booking.DELETE("/delete", sysRoute.bookingHandler.Delete())
+	v1Booking.PUT("/:bookingid", sysRoute.bookingHandler.Update())
+	v1Booking.DELETE("/delete/:bookingid", sysRoute.bookingHandler.Delete())
 	v1Booking.GET("/list", sysRoute.bookingHandler.GetAll())
-	v1Booking.GET("/user", sysRoute.bookingHandler.GetByUserID())
+	v1Booking.GET("/user/:userid", sysRoute.bookingHandler.GetByUserID())
 }

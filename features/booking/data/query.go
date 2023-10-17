@@ -7,6 +7,7 @@ import (
 
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/booking"
+	"github.com/dr-ariawan-s-project/api-drariawan/utils/helpers"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/validation"
 	"gorm.io/gorm"
 )
@@ -25,6 +26,8 @@ func New(db *gorm.DB) booking.Data {
 func (bq *bookingQuery) Create(data booking.Core) error {
 	qry := CoreToData(data)
 	qry.State = "confirmed"
+	qry.ID = helpers.UUIDGenerate()
+	qry.BookingCode = helpers.RandomStringAlphabetNumeric()
 
 	// CEK APAKAH SUDAH PERNAH BOOKING
 	err := bq.db.Where("booking_date = ? AND schedule_id = ? ", qry.BookingDate, qry.ScheduleId).First(&qry).Error

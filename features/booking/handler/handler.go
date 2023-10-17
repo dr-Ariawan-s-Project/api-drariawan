@@ -25,17 +25,17 @@ func (bh *BookingHandler) Create() echo.HandlerFunc {
 		requestBody := BookingRequest{}
 		err := c.Bind(&requestBody)
 		if err != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_BOOKING_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 
 		err = bh.srv.Create(*ReqToCore(requestBody))
 		if err != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_BOOKING_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": "string"})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_BOOKING_CODE, map[string]interface{}{"data": nil})
 		return c.JSON(httpCode, mapResponse)
 
 	}
@@ -44,20 +44,20 @@ func (bh *BookingHandler) Create() echo.HandlerFunc {
 // Update implements Booking.BookingHandler.
 func (bh *BookingHandler) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		bookID, _ := strconv.Atoi(c.QueryParam("id"))
+		bookID, _ := strconv.Atoi(c.Param("bookingid"))
 		requestBody := BookingRequest{}
 		err := c.Bind(&requestBody)
 		if err != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_BOOKING_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 		err = bh.srv.Update(bookID, *ReqToCore(requestBody))
 		if err != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_BOOKING_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": "string"})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_BOOKING_CODE, map[string]interface{}{"data": nil})
 		return c.JSON(httpCode, mapResponse)
 
 	}
@@ -66,14 +66,14 @@ func (bh *BookingHandler) Update() echo.HandlerFunc {
 // Delete implements Booking.BookingHandler.
 func (bh *BookingHandler) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		strIdParam := c.QueryParam("id")
+		strIdParam := c.Param("bookingid")
 		bookID, _ := strconv.Atoi(strIdParam)
 		err := bh.srv.Delete(bookID)
 		if err != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_BOOKING_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": "string"})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_BOOKING_CODE, map[string]interface{}{"data": nil})
 		return c.JSON(httpCode, mapResponse)
 	}
 }
@@ -83,10 +83,10 @@ func (bh *BookingHandler) GetAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		res, err := bh.srv.GetAll()
 		if err != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_BOOKING_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": res})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_BOOKING_CODE, map[string]interface{}{"data": res})
 		return c.JSON(httpCode, mapResponse)
 
 	}
@@ -94,14 +94,14 @@ func (bh *BookingHandler) GetAll() echo.HandlerFunc {
 
 func (bh *BookingHandler) GetByUserID() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		strIdParam := c.QueryParam("id")
+		strIdParam := c.Param("userid")
 		userID, _ := strconv.Atoi(strIdParam)
 		res, err := bh.srv.GetByUserID(userID)
 		if err != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_BOOKING_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": res})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_BOOKING_CODE, map[string]interface{}{"data": res})
 		return c.JSON(httpCode, mapResponse)
 
 	}

@@ -11,6 +11,8 @@ const (
 	FEAT_AUTH_CODE         = "002"
 	FEAT_QUESTIONAIRE_CODE = "003"
 	FEAT_PATIENT_CODE      = "004"
+	FEAT_SCHEDULE_CODE     = "005"
+	FEAT_BOOKING_CODE      = "006"
 )
 
 // const code layer
