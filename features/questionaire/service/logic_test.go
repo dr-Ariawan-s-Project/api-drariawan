@@ -38,8 +38,9 @@ func TestValidate(t *testing.T) {
 			Email: "test@mail.com",
 			Phone: "081234",
 		}
+
 		patientServ.On("CheckByEmailAndPhone", inputData.Email, inputData.Phone).Return(responseData, nil).Once()
-		questionaireRepo.On("CountTestAttempt", responseData.ID).Return(0, errors.New("error count test attempt")).Once()
+		questionaireRepo.On("CountTestAttempt", responseData.ID).Return(questionaire.CoreAttempt{}, 0, errors.New("error count test attempt")).Once()
 		questionaireService := New(questionaireRepo, patientServ, config.InitConfig())
 		inputAs := "myself"
 		inputPartnerEmail := ""
@@ -54,8 +55,18 @@ func TestValidate(t *testing.T) {
 			Email: "test@mail.com",
 			Phone: "081234",
 		}
+
+		resultTestAttempt := questionaire.CoreAttempt{
+			Id:           "TEST-0001",
+			PatientId:    "0001",
+			CodeAttempt:  "CODE-0001",
+			NotesAttempt: "notes",
+			Score:        0,
+			Feedback:     "feedback",
+		}
 		patientServ.On("CheckByEmailAndPhone", inputData.Email, inputData.Phone).Return(responseData, nil).Once()
-		questionaireRepo.On("CountTestAttempt", responseData.ID).Return(1, nil).Once()
+		questionaireRepo.On("CountTestAttempt", responseData.ID).Return(resultTestAttempt, 1, nil).Once()
+		questionaireRepo.On("CheckCountAttemptAnswer", responseData.ID).Return(1, nil).Once()
 		questionaireService := New(questionaireRepo, patientServ, config.InitConfig())
 		inputAs := "myself"
 		inputPartnerEmail := ""
@@ -153,6 +164,7 @@ func TestInsertAnswer(t *testing.T) {
 
 	t.Run("Success InsertAnswer", func(t *testing.T) {
 		repo.On("InsertAnswer", idAttempt, insertData).Return(nil).Once()
+		repo.On("CountAllQuestion").Return(1, nil).Once()
 		srv := New(repo, patientService, config.InitConfig())
 		codeAttempt := "dFL1UYyVMGuVBJeIuuCoICkqeeanN8NKFT459RojjXCWVVDLyQ=="
 		err := srv.InsertAnswer(codeAttempt, insertData)

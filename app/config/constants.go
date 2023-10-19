@@ -92,7 +92,8 @@ const (
 // validation input
 const (
 	VAL_InvalidValidation string = "validation error"
-	VAL_PasswordNotSet    string = "anda belum membuat password, silakan atur password anda terlebih dahulu melalui fitur forgot password."
+	VAL_IncompleteAnswer  string = "jawaban tidak lengkap, pastikan anda menjawab semua pertanyaan"
+	VAL_PasswordNotSet    string = "anda belum membuat password, silakan atur password anda terlebih dahulu melalui fitur forgot password"
 )
 
 // validation role

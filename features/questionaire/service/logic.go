@@ -58,12 +58,26 @@ func (service *questionaireService) Validate(patientData questionaire.Patient, a
 	//data patient / partner already registered or found
 	if patientFound.ID != "" {
 		// count test attempt
-		countAttempt, errCountAttempt := service.questionaireData.CountTestAttempt(patientFound.ID)
+		dataAttempt, countAttempt, errCountAttempt := service.questionaireData.CountTestAttempt(patientFound.ID)
 		if errCountAttempt != nil {
 			return "", countAttempt, errCountAttempt
 		}
+		// if patient / partner already take test attempt
 		if countAttempt != 0 {
-			return "", countAttempt, errors.New(config.VAL_InvalidValidation)
+			countAttemptAnswer, errCountAttemptAnswer := service.questionaireData.CheckCountAttemptAnswer(patientFound.ID)
+			if errCountAttemptAnswer != nil {
+				return "", countAttempt, errCountAttemptAnswer
+			}
+
+			// if patient / partner have take test attempt and they have already answer questioner
+			if countAttemptAnswer != 0 {
+				return "", countAttempt, errors.New(config.VAL_InvalidValidation)
+			}
+
+			//else if patient / partner already take test attempt, but they haven't filled the answer yet
+			//send email invitation link again
+			go helpers.SendMailQuestionerLink(patientFound.Email, dataAttempt.CodeAttempt, service.cfg.GMAIL_APP_PASSWORD)
+			return dataAttempt.CodeAttempt, countAttempt, nil
 		}
 	} else {
 		data := patient.Core{
@@ -102,6 +116,16 @@ func (service *questionaireService) Validate(patientData questionaire.Patient, a
 func (service *questionaireService) InsertAnswer(codeAttempt string, data []questionaire.CoreAnswer) error {
 	if codeAttempt == "" {
 		return errors.New(config.VAL_InvalidValidation)
+	}
+
+	sumAllQuestions, errSumAllQuestions := service.questionaireData.CountAllQuestion()
+	if errSumAllQuestions != nil {
+		return errSumAllQuestions
+	}
+
+	//validate apakah jumlah jawaban yang dikirim client sudah sama dengan banyaknya pertanyaan
+	if len(data) != sumAllQuestions {
+		return errors.New(config.VAL_IncompleteAnswer)
 	}
 	// decrypt codeAttempt to idAttempt
 	idAttempt := encrypt.DecryptText(codeAttempt, service.cfg.AES_GCM_SECRET)

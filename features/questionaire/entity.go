@@ -66,8 +66,10 @@ type DashboardCore struct {
 type QuestionaireDataInterface interface {
 	SelectAll() ([]Core, error)
 	InsertAnswer(idAttempt string, data []CoreAnswer) error
-	CountTestAttempt(patientId string) (int, error)
+	CountTestAttempt(patientId string) (dataAttempt CoreAttempt, count int, err error)
+	CheckCountAttemptAnswer(patientId string) (int, error)
 	InsertTestAttempt(data CoreAttempt) error
+	CountAllQuestion() (int, error)
 	CountQuestionerAttempt() (int, error)
 	CountAttemptByMonth(month int) (int, error)
 	CountAttemptByStatusAssessment(status string) (int, error)
