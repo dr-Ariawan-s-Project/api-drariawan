@@ -35,7 +35,7 @@ func (sh *ScheduleHandler) Create() echo.HandlerFunc {
 			return c.JSON(httpCode, jsonResponse)
 		}
 
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_SCHEDULE_CODE, map[string]interface{}{"data": "string"})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] create data", config.FEAT_SCHEDULE_CODE, map[string]interface{}{"data": "string"})
 		return c.JSON(httpCode, mapResponse)
 
 	}
@@ -57,7 +57,7 @@ func (sh *ScheduleHandler) Update() echo.HandlerFunc {
 			return c.JSON(httpCode, jsonResponse)
 		}
 
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_SCHEDULE_CODE, map[string]interface{}{"data": "string"})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] update data", config.FEAT_SCHEDULE_CODE, map[string]interface{}{"data": "string"})
 		return c.JSON(httpCode, mapResponse)
 
 	}
@@ -73,7 +73,7 @@ func (sh *ScheduleHandler) Delete() echo.HandlerFunc {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_SCHEDULE_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_SCHEDULE_CODE, map[string]interface{}{"data": "string"})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] delete data", config.FEAT_SCHEDULE_CODE, map[string]interface{}{"data": "string"})
 		return c.JSON(httpCode, mapResponse)
 	}
 }
