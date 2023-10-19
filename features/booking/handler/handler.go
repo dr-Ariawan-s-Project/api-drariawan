@@ -35,7 +35,7 @@ func (bh *BookingHandler) Create() echo.HandlerFunc {
 			return c.JSON(httpCode, jsonResponse)
 		}
 
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_BOOKING_CODE, map[string]interface{}{"data": nil})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] create data", config.FEAT_BOOKING_CODE, map[string]interface{}{"data": nil})
 		return c.JSON(httpCode, mapResponse)
 
 	}
@@ -57,7 +57,7 @@ func (bh *BookingHandler) Update() echo.HandlerFunc {
 			return c.JSON(httpCode, jsonResponse)
 		}
 
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_BOOKING_CODE, map[string]interface{}{"data": nil})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] update data", config.FEAT_BOOKING_CODE, map[string]interface{}{"data": nil})
 		return c.JSON(httpCode, mapResponse)
 
 	}
@@ -73,7 +73,7 @@ func (bh *BookingHandler) Delete() echo.HandlerFunc {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_BOOKING_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_BOOKING_CODE, map[string]interface{}{"data": nil})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] delete data", config.FEAT_BOOKING_CODE, map[string]interface{}{"data": nil})
 		return c.JSON(httpCode, mapResponse)
 	}
 }
