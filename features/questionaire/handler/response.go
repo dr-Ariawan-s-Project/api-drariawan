@@ -1,6 +1,10 @@
 package handler
 
-import "github.com/dr-ariawan-s-project/api-drariawan/features/questionaire"
+import (
+	"time"
+
+	"github.com/dr-ariawan-s-project/api-drariawan/features/questionaire"
+)
 
 type QuestionResponse struct {
 	Id              uint             `json:"id"`
@@ -22,10 +26,27 @@ type ChoiceResponse struct {
 	Goto       *uint  `json:"goto"`
 }
 
-type DashboardQuestionerResponse struct {
-	AllQuestioner   int `json:"questioner_all"`
-	NeedAssess      int `json:"questioner_need_assess"`
-	MonthQuestioner int `json:"questioner_this_month"`
+type QuestionerAttemptResponse struct {
+	Id            string          `json:"id"`
+	PatientId     string          `json:"patient_id"`
+	CodeAttempt   string          `json:"code_attempt"`
+	NotesAttempt  string          `json:"notes_attempt"`
+	Score         int             `json:"score"`
+	AIAccuracy    float64         `json:"ai_accuracy"`
+	AIProbability float64         `json:"ai_probability"`
+	AIDiagnosis   string          `json:"ai_diagnosis"`
+	Diagnosis     string          `json:"diagnosis"`
+	Feedback      string          `json:"feedback"`
+	Status        string          `json:"status"`
+	CreatedAt     time.Time       `json:"created_at"`
+	UpdatedAt     time.Time       `json:"updated_at"`
+	Patient       PatientResponse `json:"patient"`
+}
+
+type PatientResponse struct {
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 func CoreChoicesToResponse(dataCore []questionaire.Choice) []ChoiceResponse {
@@ -60,6 +81,37 @@ func CoreToResponseList(dataCore []questionaire.Core) []QuestionResponse {
 	var result []QuestionResponse
 	for _, v := range dataCore {
 		result = append(result, CoreToResponse(v))
+	}
+	return result
+}
+
+func AttemptCoreToResponse(dataCore questionaire.CoreAttempt) QuestionerAttemptResponse {
+	return QuestionerAttemptResponse{
+		Id:            dataCore.Id,
+		PatientId:     dataCore.PatientId,
+		CodeAttempt:   dataCore.CodeAttempt,
+		NotesAttempt:  dataCore.NotesAttempt,
+		Score:         dataCore.Score,
+		AIAccuracy:    dataCore.AIAccuracy,
+		AIProbability: dataCore.AIProbability,
+		AIDiagnosis:   dataCore.AIDiagnosis,
+		Diagnosis:     dataCore.Diagnosis,
+		Feedback:      dataCore.Feedback,
+		Status:        dataCore.Status,
+		CreatedAt:     dataCore.CreatedAt,
+		UpdatedAt:     dataCore.UpdatedAt,
+		Patient: PatientResponse{
+			ID:    dataCore.Patient.ID,
+			Name:  dataCore.Patient.Name,
+			Email: dataCore.Patient.Email,
+		},
+	}
+}
+
+func ListAttemptCoreToResponse(dataCore []questionaire.CoreAttempt) []QuestionerAttemptResponse {
+	var result []QuestionerAttemptResponse
+	for _, v := range dataCore {
+		result = append(result, AttemptCoreToResponse(v))
 	}
 	return result
 }

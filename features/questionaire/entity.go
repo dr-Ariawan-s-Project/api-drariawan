@@ -33,12 +33,20 @@ type CoreAnswer struct {
 }
 
 type CoreAttempt struct {
-	Id           string
-	PatientId    string
-	CodeAttempt  string
-	NotesAttempt string
-	Score        int
-	Feedback     string
+	Id            string
+	PatientId     string
+	CodeAttempt   string
+	NotesAttempt  string
+	Score         int
+	AIAccuracy    float64
+	AIProbability float64
+	AIDiagnosis   string
+	Diagnosis     string
+	Feedback      string
+	Status        string
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	Patient       Patient
 }
 
 type Patient struct {
@@ -63,6 +71,7 @@ type QuestionaireDataInterface interface {
 	CountTestAttempt(patientId string) (dataAttempt CoreAttempt, count int, err error)
 	CheckCountAttemptAnswer(patientId string) (int, error)
 	InsertTestAttempt(data CoreAttempt) error
+	FindTestAttempt(status string, offset int, limit int) (dataAttempt []CoreAttempt, err error)
 	CountAllQuestion() (int, error)
 	CountQuestionerAttempt() (int, error)
 }
@@ -71,5 +80,6 @@ type QuestionaireServiceInterface interface {
 	GetAll() ([]Core, error)
 	InsertAnswer(codeAttempt string, data []CoreAnswer) error
 	Validate(patient Patient, as string, partnerEmail string) (codeAttempt string, countAttempt int, err error)
+	GetTestAttempt(status string, page int, perPage int) (dataAttempt []CoreAttempt, err error)
 	CountQuestionerAttempt() (int, error)
 }

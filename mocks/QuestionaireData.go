@@ -60,54 +60,6 @@ func (_m *QuestionaireData) CountAllQuestion() (int, error) {
 	return r0, r1
 }
 
-// CountAttemptByMonth provides a mock function with given fields: month
-func (_m *QuestionaireData) CountAttemptByMonth(month int) (int, error) {
-	ret := _m.Called(month)
-
-	var r0 int
-	var r1 error
-	if rf, ok := ret.Get(0).(func(int) (int, error)); ok {
-		return rf(month)
-	}
-	if rf, ok := ret.Get(0).(func(int) int); ok {
-		r0 = rf(month)
-	} else {
-		r0 = ret.Get(0).(int)
-	}
-
-	if rf, ok := ret.Get(1).(func(int) error); ok {
-		r1 = rf(month)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// CountAttemptByStatusAssessment provides a mock function with given fields: status
-func (_m *QuestionaireData) CountAttemptByStatusAssessment(status string) (int, error) {
-	ret := _m.Called(status)
-
-	var r0 int
-	var r1 error
-	if rf, ok := ret.Get(0).(func(string) (int, error)); ok {
-		return rf(status)
-	}
-	if rf, ok := ret.Get(0).(func(string) int); ok {
-		r0 = rf(status)
-	} else {
-		r0 = ret.Get(0).(int)
-	}
-
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(status)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
 // CountQuestionerAttempt provides a mock function with given fields:
 func (_m *QuestionaireData) CountQuestionerAttempt() (int, error) {
 	ret := _m.Called()
@@ -161,6 +113,32 @@ func (_m *QuestionaireData) CountTestAttempt(patientId string) (questionaire.Cor
 	}
 
 	return r0, r1, r2
+}
+
+// FindTestAttempt provides a mock function with given fields: status, offset, limit
+func (_m *QuestionaireData) FindTestAttempt(status string, offset int, limit int) ([]questionaire.CoreAttempt, error) {
+	ret := _m.Called(status, offset, limit)
+
+	var r0 []questionaire.CoreAttempt
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, int, int) ([]questionaire.CoreAttempt, error)); ok {
+		return rf(status, offset, limit)
+	}
+	if rf, ok := ret.Get(0).(func(string, int, int) []questionaire.CoreAttempt); ok {
+		r0 = rf(status, offset, limit)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]questionaire.CoreAttempt)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, int, int) error); ok {
+		r1 = rf(status, offset, limit)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // InsertAnswer provides a mock function with given fields: idAttempt, data
