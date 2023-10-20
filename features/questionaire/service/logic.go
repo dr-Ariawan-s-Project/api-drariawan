@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"time"
 
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/patient"
@@ -26,26 +25,11 @@ func New(repo questionaire.QuestionaireDataInterface, patientServ patient.Patien
 	}
 }
 
-// GetDashboard implements questionaire.QuestionaireServiceInterface.
-func (service *questionaireService) GetDashboard() (questionaire.DashboardCore, error) {
-	var dashboardData questionaire.DashboardCore
+// for dashboard
+// CountQuestionerAttempt implements questionaire.QuestionaireServiceInterface.
+func (service *questionaireService) CountQuestionerAttempt() (int, error) {
 	questAttemptCount, errQuestAttempt := service.questionaireData.CountQuestionerAttempt()
-	// get data from status validated
-	questAttemptNeedAssess, errQuestAttemptNeedAssess := service.questionaireData.CountAttemptByStatusAssessment(config.QUESTIONER_ATTEMPT_STATUS_VALIDATED)
-
-	// get data from this month
-	t := time.Now()
-	questAttemptMonth, errQuestAttemptMonth := service.questionaireData.CountAttemptByMonth(int(t.Month()))
-
-	if errQuestAttempt != nil || errQuestAttemptNeedAssess != nil || errQuestAttemptMonth != nil {
-		return dashboardData, errQuestAttempt
-	}
-	dashboardData.AllQuestioner = questAttemptCount
-	dashboardData.NeedAssessQuestioner = questAttemptNeedAssess
-	dashboardData.MonthQuestioner = questAttemptMonth
-
-	return dashboardData, nil
-
+	return questAttemptCount, errQuestAttempt
 }
 
 // Validate implements questionaire.QuestionaireServiceInterface.

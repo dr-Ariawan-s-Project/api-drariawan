@@ -57,12 +57,6 @@ type Patient struct {
 	UpdatedAt      time.Time
 }
 
-type DashboardCore struct {
-	AllQuestioner        int
-	MonthQuestioner      int
-	NeedAssessQuestioner int
-}
-
 type QuestionaireDataInterface interface {
 	SelectAll() ([]Core, error)
 	InsertAnswer(idAttempt string, data []CoreAnswer) error
@@ -71,13 +65,11 @@ type QuestionaireDataInterface interface {
 	InsertTestAttempt(data CoreAttempt) error
 	CountAllQuestion() (int, error)
 	CountQuestionerAttempt() (int, error)
-	CountAttemptByMonth(month int) (int, error)
-	CountAttemptByStatusAssessment(status string) (int, error)
 }
 
 type QuestionaireServiceInterface interface {
 	GetAll() ([]Core, error)
 	InsertAnswer(codeAttempt string, data []CoreAnswer) error
 	Validate(patient Patient, as string, partnerEmail string) (codeAttempt string, countAttempt int, err error)
-	GetDashboard() (DashboardCore, error)
+	CountQuestionerAttempt() (int, error)
 }
