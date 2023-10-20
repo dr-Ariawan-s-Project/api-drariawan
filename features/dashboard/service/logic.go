@@ -5,44 +5,46 @@ import (
 
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/dashboard"
-	"github.com/dr-ariawan-s-project/api-drariawan/features/patient"
-	"github.com/dr-ariawan-s-project/api-drariawan/features/questionaire"
 )
 
 type dashboardService struct {
-	questionaireServ questionaire.QuestionaireServiceInterface
-	patientServ      patient.PatientServiceInterface
+	dashboardData dashboard.DashboardDataInterface
 }
 
-func New(questionerServ questionaire.QuestionaireServiceInterface, patientServ patient.PatientServiceInterface) dashboard.DashboardServiceInterface {
+func New(dashboardData dashboard.DashboardDataInterface) dashboard.DashboardServiceInterface {
 	return &dashboardService{
-		questionaireServ: questionerServ,
-		patientServ:      patientServ,
+		dashboardData: dashboardData,
 	}
 }
 
 // GetDashboardStatistics implements dashboard.DashboardServiceInterface.
 func (service *dashboardService) GetDashboardStatistics() (dashboard.DashboardCore, error) {
-	var dashboardData dashboard.DashboardCore
-	questAttemptCount, errQuestAttempt := service.questionaireServ.CountQuestionerAttempt()
+	var dashboardResult dashboard.DashboardCore
+	questAttemptCount, errQuestAttempt := service.dashboardData.CountQuestionerAttempt()
 
 	// get data from status validated
-	questAttemptNeedAssess, errQuestAttemptNeedAssess := service.questionaireServ.CountAttemptByStatusAssessment(config.QUESTIONER_ATTEMPT_STATUS_VALIDATED)
+	questAttemptNeedAssess, errQuestAttemptNeedAssess := service.dashboardData.CountAttemptByStatusAssessment(config.QUESTIONER_ATTEMPT_STATUS_VALIDATED)
 
 	// get data from this month
 	t := time.Now()
-	questAttemptMonth, errQuestAttemptMonth := service.questionaireServ.CountAttemptByMonth(int(t.Month()))
+	questAttemptMonth, errQuestAttemptMonth := service.dashboardData.CountAttemptByMonth(int(t.Month()))
 
 	//get data all patient
-	patientCount, errPatientCount := service.patientServ.CountAllPatient()
+	patientCount, errPatientCount := service.dashboardData.CountAllPatient()
 
 	if errQuestAttempt != nil || errQuestAttemptNeedAssess != nil || errQuestAttemptMonth != nil || errPatientCount != nil {
-		return dashboardData, errQuestAttempt
+		return dashboardResult, errQuestAttempt
 	}
-	dashboardData.AllQuestioner = questAttemptCount
-	dashboardData.NeedAssessQuestioner = questAttemptNeedAssess
-	dashboardData.MonthQuestioner = questAttemptMonth
-	dashboardData.AllPatient = patientCount
+	dashboardResult.AllQuestioner = questAttemptCount
+	dashboardResult.NeedAssessQuestioner = questAttemptNeedAssess
+	dashboardResult.MonthQuestioner = questAttemptMonth
+	dashboardResult.AllPatient = patientCount
 
-	return dashboardData, nil
+	return dashboardResult, nil
+}
+
+// GetQuestionerAttemptPerMonth implements dashboard.DashboardServiceInterface.
+func (service *dashboardService) GetQuestionerAttemptPerMonth() ([]dashboard.DashboardAttemptCore, error) {
+	result, err := service.dashboardData.CountQuestionerAttemptPerMonth()
+	return result, err
 }

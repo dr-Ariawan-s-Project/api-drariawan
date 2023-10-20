@@ -26,21 +26,6 @@ func New(repo questionaire.QuestionaireDataInterface, patientServ patient.Patien
 }
 
 // for dashboard
-// CountAttemptByMonth implements questionaire.QuestionaireServiceInterface.
-func (service *questionaireService) CountAttemptByMonth(month int) (int, error) {
-	questAttemptMonth, errQuestAttemptMonth := service.questionaireData.CountAttemptByMonth(month)
-	return questAttemptMonth, errQuestAttemptMonth
-}
-
-// for dashboard
-// CountAttemptByStatusAssessment implements questionaire.QuestionaireServiceInterface.
-func (service *questionaireService) CountAttemptByStatusAssessment(status string) (int, error) {
-	// get data from status validated
-	questAttemptNeedAssess, errQuestAttemptNeedAssess := service.questionaireData.CountAttemptByStatusAssessment(status)
-	return questAttemptNeedAssess, errQuestAttemptNeedAssess
-}
-
-// for dashboard
 // CountQuestionerAttempt implements questionaire.QuestionaireServiceInterface.
 func (service *questionaireService) CountQuestionerAttempt() (int, error) {
 	questAttemptCount, errQuestAttempt := service.questionaireData.CountQuestionerAttempt()

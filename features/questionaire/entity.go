@@ -65,8 +65,6 @@ type QuestionaireDataInterface interface {
 	InsertTestAttempt(data CoreAttempt) error
 	CountAllQuestion() (int, error)
 	CountQuestionerAttempt() (int, error)
-	CountAttemptByMonth(month int) (int, error)
-	CountAttemptByStatusAssessment(status string) (int, error)
 }
 
 type QuestionaireServiceInterface interface {
@@ -74,6 +72,4 @@ type QuestionaireServiceInterface interface {
 	InsertAnswer(codeAttempt string, data []CoreAnswer) error
 	Validate(patient Patient, as string, partnerEmail string) (codeAttempt string, countAttempt int, err error)
 	CountQuestionerAttempt() (int, error)
-	CountAttemptByMonth(month int) (int, error)
-	CountAttemptByStatusAssessment(status string) (int, error)
 }
