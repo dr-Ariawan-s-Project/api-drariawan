@@ -4,6 +4,8 @@ import (
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	_authFactory "github.com/dr-ariawan-s-project/api-drariawan/features/auth/factory"
 	_authAPI "github.com/dr-ariawan-s-project/api-drariawan/features/auth/handler"
+	_dashboardFactory "github.com/dr-ariawan-s-project/api-drariawan/features/dashboard/factory"
+	_dashboardAPI "github.com/dr-ariawan-s-project/api-drariawan/features/dashboard/handler"
 	_patientFactory "github.com/dr-ariawan-s-project/api-drariawan/features/patient/factory"
 	_patientAPI "github.com/dr-ariawan-s-project/api-drariawan/features/patient/handler"
 	_questionaireFactory "github.com/dr-ariawan-s-project/api-drariawan/features/questionaire/factory"
@@ -30,6 +32,7 @@ type appsFactory struct {
 	userHandler         *_usersAPI.UserHandler
 	scheduleHandler     *_scheduleAPI.ScheduleHandler
 	patientHandler      *_patientAPI.PatientHandler
+	dashboardHandler    *_dashboardAPI.DashboardHandler
 }
 
 func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
@@ -39,11 +42,13 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 		userHandler:         _usersFactory.New(db),
 		scheduleHandler:     _scheduleFactory.New(db, cfg),
 		patientHandler:      _patientFactory.New(db, cfg),
+		dashboardHandler:    _dashboardFactory.New(db, cfg),
 	}
 	e.POST("/login", sysRoute.authHandler.Login)
 
 	v1 := e.Group("/v1")
-	v1.GET("/dashboard", sysRoute.questionaireHandler.GetDashboardQuestioner)
+	v1Dashboard := v1.Group("/dashboard")
+	v1Dashboard.GET("", sysRoute.dashboardHandler.GetDashboardQuestioner)
 
 	v1Questioner := v1.Group("/questioner")
 	v1Questioner.GET("", sysRoute.questionaireHandler.GetAllQuestion)

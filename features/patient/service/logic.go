@@ -21,6 +21,13 @@ func New(repo patient.PatientDataInterface, cfg *config.AppConfig) patient.Patie
 	}
 }
 
+// for dashboard
+// CountAllPatient implements patient.PatientServiceInterface.
+func (service *patientService) CountAllPatient() (int, error) {
+	patientCount, errPatientCount := service.patientData.CountAllPatient()
+	return patientCount, errPatientCount
+}
+
 // CountPartner implements patient.PatientServiceInterface.
 func (service *patientService) CountPartner(partnerId string) (int, error) {
 	if partnerId == "" {

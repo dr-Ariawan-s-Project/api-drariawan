@@ -38,6 +38,30 @@ func (_m *PatientService) CheckByEmailAndPhone(email string, phone string) (*pat
 	return r0, r1
 }
 
+// CountAllPatient provides a mock function with given fields:
+func (_m *PatientService) CountAllPatient() (int, error) {
+	ret := _m.Called()
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func() (int, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() int); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // CountPartner provides a mock function with given fields: partnerId
 func (_m *PatientService) CountPartner(partnerId string) (int, error) {
 	ret := _m.Called(partnerId)

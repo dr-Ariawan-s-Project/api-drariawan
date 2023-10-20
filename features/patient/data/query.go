@@ -17,6 +17,17 @@ func New(db *gorm.DB) patient.PatientDataInterface {
 	}
 }
 
+// for dashboard
+// CountAllPatient implements patient.PatientDataInterface.
+func (repo *patientQuery) CountAllPatient() (int, error) {
+	var countAttemp int64
+	tx := repo.db.Model(&Patient{}).Count(&countAttemp)
+	if tx.Error != nil {
+		return 0, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	return int(countAttemp), nil
+}
+
 // CountPartner implements patient.PatientDataInterface.
 func (repo *patientQuery) CountPartner(partnerId string) (int, error) {
 	var count int64
