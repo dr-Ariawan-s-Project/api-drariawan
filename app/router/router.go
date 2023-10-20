@@ -49,6 +49,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	v1 := e.Group("/v1")
 	v1Dashboard := v1.Group("/dashboard")
 	v1Dashboard.GET("", sysRoute.dashboardHandler.GetDashboardQuestioner)
+	v1Dashboard.GET("/questioner", sysRoute.dashboardHandler.GetQuestionerAttemptPerMonth)
 
 	v1Questioner := v1.Group("/questioner")
 	v1Questioner.GET("", sysRoute.questionaireHandler.GetAllQuestion)

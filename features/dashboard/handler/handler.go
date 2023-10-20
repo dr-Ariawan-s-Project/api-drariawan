@@ -34,3 +34,15 @@ func (handler *DashboardHandler) GetDashboardQuestioner(c echo.Context) error {
 	mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_DASHBOARD_CODE, questionerDashboardRespose)
 	return c.JSON(httpCode, mapResponse)
 }
+
+func (handler *DashboardHandler) GetQuestionerAttemptPerMonth(c echo.Context) error {
+	results, err := handler.dashboardService.GetQuestionerAttemptPerMonth()
+
+	if err != nil {
+		jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_DASHBOARD_CODE)
+		return c.JSON(httpCode, jsonResponse)
+	}
+	resultResponse := ListDashboardAttemptCoreToResponse(results)
+	mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_DASHBOARD_CODE, resultResponse)
+	return c.JSON(httpCode, mapResponse)
+}
