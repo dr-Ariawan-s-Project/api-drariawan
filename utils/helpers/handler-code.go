@@ -62,6 +62,9 @@ func CheckHandlerErrorCode(err error) (responseCode int, layerCode string, errCo
 	case config.VAL_PasswordNotSet:
 		return http.StatusBadRequest, config.LAYER_SERVICE_CODE, err
 
+	case config.VAL_Unauthorized:
+		return http.StatusUnauthorized, config.LAYER_HANDLER_CODE, err
+
 	case config.DB_ERR_RECORD_NOT_FOUND:
 		return http.StatusBadRequest, config.LAYER_DATA_CODE, err
 

@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"errors"
 	"strconv"
 	"time"
 
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
+	"github.com/dr-ariawan-s-project/api-drariawan/app/middlewares"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/patient"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/helpers"
 	"github.com/labstack/echo/v4"
@@ -138,5 +140,26 @@ func (handler *PatientHandler) DeleteById(c echo.Context) error {
 		return c.JSON(httpCode, jsonResponse)
 	}
 	mapResponse, httpCode := helpers.WebResponseSuccess("[success] delete data", config.FEAT_PATIENT_CODE, nil)
+	return c.JSON(httpCode, mapResponse)
+}
+
+func (handler *PatientHandler) GetProfile(c echo.Context) error {
+	idToken, roleToken, errToken := middlewares.ExtractTokenJWT(c)
+	if errToken != nil {
+		jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.JWT_FailedCastingJwtToken), config.FEAT_PATIENT_CODE)
+		return c.JSON(httpCode, jsonResponse)
+	}
+	if roleToken != config.VAL_PatientAccess {
+		jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.VAL_Unauthorized), config.FEAT_PATIENT_CODE)
+		return c.JSON(httpCode, jsonResponse)
+	}
+	id := middlewares.ConvertPatientID(idToken)
+	result, err := handler.patientService.FindById(id)
+	if err != nil {
+		jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_PATIENT_CODE)
+		return c.JSON(httpCode, jsonResponse)
+	}
+	var patientRespose = CoreToResponse(*result)
+	mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_PATIENT_CODE, patientRespose)
 	return c.JSON(httpCode, mapResponse)
 }
