@@ -73,6 +73,23 @@ func (repo *questionaireQuery) InsertTestAttempt(data questionaire.CoreAttempt) 
 	return nil
 }
 
+// FindTestAttempt implements questionaire.QuestionaireDataInterface.
+func (repo *questionaireQuery) FindTestAttempt(status string, offset int, limit int) (dataAttempt []questionaire.CoreAttempt, err error) {
+	var attemptData []TestAttempt
+	txSelect := repo.db.Preload("Patient")
+	if status != "" {
+		txSelect.Where("status = ?", status).Session(&gorm.Session{})
+	}
+
+	tx := txSelect.Order("created_at desc").Offset(offset).Limit(limit).Find(&attemptData)
+	if tx.Error != nil {
+		return nil, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+
+	var attemptAll = ListAttemptModelToCore(attemptData)
+	return attemptAll, nil
+}
+
 // InsertAnswer implements questionaire.QuestionaireDataInterface.
 func (repo *questionaireQuery) InsertAnswer(idAttempt string, data []questionaire.CoreAnswer) error {
 	var input = AnswerCoretoModel(idAttempt, data)

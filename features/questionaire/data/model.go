@@ -3,6 +3,7 @@ package data
 import (
 	"time"
 
+	_patientData "github.com/dr-ariawan-s-project/api-drariawan/features/patient/data"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/questionaire"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -34,15 +35,21 @@ type Choice struct {
 }
 
 type TestAttempt struct {
-	ID           string
-	PatientId    string
-	CodeAttempt  string
-	NotesAttempt string
-	Score        int
-	Feedback     string
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	DeletedAt    gorm.DeletedAt
+	ID            string
+	PatientId     string
+	CodeAttempt   string
+	NotesAttempt  string
+	Score         int
+	AiAccuracy    float64
+	AiProbability float64
+	AiDiagnosis   string
+	Diagnosis     string
+	Feedback      string
+	Status        string
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	DeletedAt     gorm.DeletedAt
+	Patient       _patientData.Patient
 }
 
 func (TestAttempt) TableName() string {
@@ -129,11 +136,33 @@ func AttempCoreToModel(core questionaire.CoreAttempt) TestAttempt {
 
 func (data TestAttempt) ModelToCore() questionaire.CoreAttempt {
 	return questionaire.CoreAttempt{
-		Id:           data.ID,
-		PatientId:    data.PatientId,
-		CodeAttempt:  data.CodeAttempt,
-		NotesAttempt: data.NotesAttempt,
-		Score:        data.Score,
-		Feedback:     data.Feedback,
+		Id:            data.ID,
+		PatientId:     data.PatientId,
+		CodeAttempt:   data.CodeAttempt,
+		NotesAttempt:  data.NotesAttempt,
+		Score:         data.Score,
+		AIAccuracy:    data.AiAccuracy,
+		AIProbability: data.AiProbability,
+		AIDiagnosis:   data.AiDiagnosis,
+		Diagnosis:     data.Diagnosis,
+		Feedback:      data.Feedback,
+		Status:        data.Status,
+		CreatedAt:     data.CreatedAt,
+		UpdatedAt:     data.UpdatedAt,
+		Patient: questionaire.Patient{
+			ID:             data.Patient.ID,
+			Name:           data.Patient.Name,
+			Email:          data.Patient.Email,
+			Gender:         data.Patient.Gender,
+			MarriageStatus: data.Patient.MarriageStatus,
+		},
 	}
+}
+
+func ListAttemptModelToCore(data []TestAttempt) []questionaire.CoreAttempt {
+	var result []questionaire.CoreAttempt
+	for _, v := range data {
+		result = append(result, v.ModelToCore())
+	}
+	return result
 }

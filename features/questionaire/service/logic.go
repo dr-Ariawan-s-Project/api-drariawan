@@ -118,6 +118,22 @@ func (service *questionaireService) InsertAnswer(codeAttempt string, data []ques
 	return err
 }
 
+// FindTestAttempt implements questionaire.QuestionaireServiceInterface.
+func (service *questionaireService) GetTestAttempt(status string, page int, perPage int) (dataAttempt []questionaire.CoreAttempt, err error) {
+	if perPage == 0 {
+		perPage = 10
+	}
+	if page == 0 {
+		page = 1
+	}
+	offset := (page * perPage) - perPage
+
+	if offset < 0 {
+		offset = 0
+	}
+	return service.questionaireData.FindTestAttempt(status, offset, perPage)
+}
+
 // GetAll implements questionaire.QuestionaireServiceInterface.
 func (service *questionaireService) GetAll() ([]questionaire.Core, error) {
 	return service.questionaireData.SelectAll()
