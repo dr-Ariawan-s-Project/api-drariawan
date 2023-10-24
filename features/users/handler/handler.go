@@ -42,7 +42,7 @@ func (uh *UserHandler) Insert() echo.HandlerFunc {
 		}
 		log.Println(res)
 
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": "string"})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] create data", config.FEAT_USER_CODE, nil)
 		return c.JSON(httpCode, mapResponse)
 
 	}
@@ -68,7 +68,7 @@ func (uh *UserHandler) Update() echo.HandlerFunc {
 			return c.JSON(httpCode, jsonResponse)
 		}
 
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": "string"})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] update data", config.FEAT_USER_CODE, nil)
 		return c.JSON(httpCode, mapResponse)
 	}
 }
@@ -83,7 +83,7 @@ func (uh *UserHandler) Delete() echo.HandlerFunc {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": "string"})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] delete data", config.FEAT_USER_CODE, nil)
 		return c.JSON(httpCode, mapResponse)
 	}
 }
@@ -100,7 +100,7 @@ func (uh *UserHandler) FindAll() echo.HandlerFunc {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": CoreToResponseArray(res)})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, CoreToResponseArray(res))
 		return c.JSON(httpCode, mapResponse)
 	}
 }
@@ -114,7 +114,7 @@ func (uh *UserHandler) FindById() echo.HandlerFunc {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": CoreToResponse(res)})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, CoreToResponse(res))
 		return c.JSON(httpCode, mapResponse)
 	}
 }
@@ -132,7 +132,7 @@ func (uh *UserHandler) GetProfile() echo.HandlerFunc {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": CoreToResponse(res)})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, CoreToResponse(res))
 		return c.JSON(httpCode, mapResponse)
 	}
 }

@@ -11,6 +11,8 @@ const (
 	FEAT_AUTH_CODE         = "002"
 	FEAT_QUESTIONAIRE_CODE = "003"
 	FEAT_PATIENT_CODE      = "004"
+	FEAT_SCHEDULE_CODE     = "005"
+	FEAT_BOOKING_CODE      = "006"
 	FEAT_DASHBOARD_CODE    = "007"
 )
 
@@ -52,8 +54,10 @@ const (
 	// ErrPrimaryKeyRequired
 	DB_ERR_PRIMARY_KEY_REQUIRED = "error primary key required"
 	// ErrDuplicatedKey
-	DB_ERR_DUPLICATE_KEY      = "duplicated key not allowed"
-	DB_ERR_DUPLICATE_SCHEDULE = "user already have a schedule at this range time"
+	DB_ERR_DUPLICATE_KEY        = "duplicated key not allowed"
+	DB_ERR_DUPLICATE_SCHEDULE   = "user already have a schedule"
+	DB_ERR_DUPLICATE_BOOKING    = "patient already have booking date at this time"
+	DB_ERR_LIMIT_BOOKING_SEVDAY = "patient only can booking one time every week"
 )
 
 // Time Validation Error

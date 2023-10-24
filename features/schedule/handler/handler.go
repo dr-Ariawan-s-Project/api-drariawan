@@ -25,17 +25,17 @@ func (sh *ScheduleHandler) Create() echo.HandlerFunc {
 		requestBody := ScheduleRequest{}
 		err := c.Bind(&requestBody)
 		if err != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_SCHEDULE_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 
 		err = sh.srv.Create(*ReqToCore(requestBody))
 		if err != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_SCHEDULE_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": "string"})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] create data", config.FEAT_SCHEDULE_CODE, nil)
 		return c.JSON(httpCode, mapResponse)
 
 	}
@@ -48,16 +48,16 @@ func (sh *ScheduleHandler) Update() echo.HandlerFunc {
 		requestBody := ScheduleRequest{}
 		err := c.Bind(&requestBody)
 		if err != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_SCHEDULE_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 		err = sh.srv.Update(scheID, *ReqToCore(requestBody))
 		if err != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_SCHEDULE_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": "string"})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] update data", config.FEAT_SCHEDULE_CODE, nil)
 		return c.JSON(httpCode, mapResponse)
 
 	}
@@ -70,10 +70,10 @@ func (sh *ScheduleHandler) Delete() echo.HandlerFunc {
 		scheID, _ := strconv.Atoi(strIdParam)
 		err := sh.srv.Delete(scheID)
 		if err != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_SCHEDULE_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": "string"})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] delete data", config.FEAT_SCHEDULE_CODE, nil)
 		return c.JSON(httpCode, mapResponse)
 	}
 }
@@ -83,10 +83,10 @@ func (sh *ScheduleHandler) GetAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		res, err := sh.srv.GetAll()
 		if err != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_SCHEDULE_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": res})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_SCHEDULE_CODE, res)
 		return c.JSON(httpCode, mapResponse)
 
 	}
