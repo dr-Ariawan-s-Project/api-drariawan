@@ -132,7 +132,7 @@ func (uh *UserHandler) GetProfile() echo.HandlerFunc {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, map[string]interface{}{"data": CoreToResponse(res)})
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, CoreToResponse(res))
 		return c.JSON(httpCode, mapResponse)
 	}
 }
