@@ -53,7 +53,8 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 
 	v1Questioner := v1.Group("/questioner")
 	v1Questioner.GET("", sysRoute.questionaireHandler.GetAllQuestion)
-	v1Questioner.GET("/attempt/list", sysRoute.questionaireHandler.GetAllTestAttempt)
+	v1Questioner.GET("/attempts", sysRoute.questionaireHandler.GetAllTestAttempt)
+	v1Questioner.GET("/attempts/:attempt_id/answers", sysRoute.questionaireHandler.GetAllAnswerByAttempt)
 	v1Questioner.POST("", sysRoute.questionaireHandler.AddAnswer)
 	v1Questioner.POST("/validate", sysRoute.questionaireHandler.Validate)
 

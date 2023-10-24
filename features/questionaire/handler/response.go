@@ -49,6 +49,17 @@ type PatientResponse struct {
 	Email string `json:"email"`
 }
 
+type AnswerResponse struct {
+	Id          string           `json:"id"`
+	AttemptId   string           `json:"attempt_id"`
+	QuestionId  uint             `json:"question_id"`
+	Description string           `json:"description"`
+	Score       int              `json:"score"`
+	CreatedAt   time.Time        `json:"created_at"`
+	UpdatedAt   time.Time        `json:"updated_at"`
+	Question    QuestionResponse `json:"question"`
+}
+
 func CoreChoicesToResponse(dataCore []questionaire.Choice) []ChoiceResponse {
 	var response []ChoiceResponse
 	for _, v := range dataCore {
@@ -112,6 +123,32 @@ func ListAttemptCoreToResponse(dataCore []questionaire.CoreAttempt) []Questioner
 	var result []QuestionerAttemptResponse
 	for _, v := range dataCore {
 		result = append(result, AttemptCoreToResponse(v))
+	}
+	return result
+}
+
+func AnswerCoreToResponse(dataCore questionaire.CoreAnswer) AnswerResponse {
+	return AnswerResponse{
+		Id:          dataCore.Id,
+		AttemptId:   dataCore.AttemptId,
+		QuestionId:  dataCore.QuestionId,
+		Description: dataCore.Description,
+		Score:       dataCore.Score,
+		CreatedAt:   dataCore.CreatedAt,
+		UpdatedAt:   dataCore.UpdatedAt,
+		Question: QuestionResponse{
+			Id:       dataCore.Question.Id,
+			Type:     dataCore.Question.Type,
+			Question: dataCore.Question.Question,
+			Section:  dataCore.Question.Section,
+		},
+	}
+}
+
+func ListAnswerCoreToResponse(dataCore []questionaire.CoreAnswer) []AnswerResponse {
+	var result []AnswerResponse
+	for _, v := range dataCore {
+		result = append(result, AnswerCoreToResponse(v))
 	}
 	return result
 }

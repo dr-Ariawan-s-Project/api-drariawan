@@ -90,6 +90,22 @@ func (repo *questionaireQuery) FindTestAttempt(status string, offset int, limit 
 	return attemptAll, nil
 }
 
+// FindAllAnswerByAttempt implements questionaire.QuestionaireDataInterface.
+func (repo *questionaireQuery) FindAllAnswerByAttempt(idAttempt string, offset int, limit int) (dataAnswer []questionaire.CoreAnswer, err error) {
+	var answerData []Answer
+	tx := repo.db.Preload("Question").Where("attempt_id = ?", idAttempt).Order("question_id asc").Offset(offset).Limit(limit).Find(&answerData)
+
+	if tx.Error != nil {
+		return nil, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	if tx.RowsAffected == 0 {
+		return nil, helpers.CheckQueryErrorMessage(errors.New(config.DB_ERR_RECORD_NOT_FOUND))
+	}
+
+	var answerAll = ListAnswerModelToCore(answerData)
+	return answerAll, nil
+}
+
 // InsertAnswer implements questionaire.QuestionaireDataInterface.
 func (repo *questionaireQuery) InsertAnswer(idAttempt string, data []questionaire.CoreAnswer) error {
 	var input = AnswerCoretoModel(idAttempt, data)

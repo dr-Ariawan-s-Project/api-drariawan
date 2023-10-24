@@ -115,6 +115,32 @@ func (_m *QuestionaireData) CountTestAttempt(patientId string) (questionaire.Cor
 	return r0, r1, r2
 }
 
+// FindAllAnswerByAttempt provides a mock function with given fields: idAttemptattempt_id, offset, limit
+func (_m *QuestionaireData) FindAllAnswerByAttempt(idAttemptattempt_id string, offset int, limit int) ([]questionaire.CoreAnswer, error) {
+	ret := _m.Called(idAttemptattempt_id, offset, limit)
+
+	var r0 []questionaire.CoreAnswer
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, int, int) ([]questionaire.CoreAnswer, error)); ok {
+		return rf(idAttemptattempt_id, offset, limit)
+	}
+	if rf, ok := ret.Get(0).(func(string, int, int) []questionaire.CoreAnswer); ok {
+		r0 = rf(idAttemptattempt_id, offset, limit)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]questionaire.CoreAnswer)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, int, int) error); ok {
+		r1 = rf(idAttemptattempt_id, offset, limit)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // FindTestAttempt provides a mock function with given fields: status, offset, limit
 func (_m *QuestionaireData) FindTestAttempt(status string, offset int, limit int) ([]questionaire.CoreAttempt, error) {
 	ret := _m.Called(status, offset, limit)
