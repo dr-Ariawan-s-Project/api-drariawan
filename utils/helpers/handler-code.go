@@ -66,7 +66,7 @@ func CheckHandlerErrorCode(err error) (responseCode int, layerCode string, errCo
 		return http.StatusUnauthorized, config.LAYER_HANDLER_CODE, err
 
 	case config.DB_ERR_RECORD_NOT_FOUND:
-		return http.StatusBadRequest, config.LAYER_DATA_CODE, err
+		return http.StatusNotFound, config.LAYER_DATA_CODE, err
 
 	case config.DB_ERR_MISSING_WHERE_CLAUSE:
 		return http.StatusInternalServerError, config.LAYER_DATA_CODE, err
