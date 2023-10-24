@@ -60,6 +60,13 @@ const (
 	DB_ERR_LIMIT_BOOKING_SEVDAY = "patient only can booking one time every week"
 )
 
+// Time Validation Error
+const (
+	TIME_ERR_FORMAT_HOUR   = "invalid time format hour"
+	TIME_ERR_FORMAT_MINUTE = "invalid time format minute"
+	TIME_ERR_INVALID_TIME  = "'time end' cannot lower or equal than 'time start'"
+)
+
 // Failed JWT Response
 const (
 	JWT_InvalidJwtToken       string = "jwt token missing or invalid"
