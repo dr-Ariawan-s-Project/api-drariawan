@@ -98,6 +98,41 @@ func (handler *QuestionaireHandler) GetAllTestAttempt(c echo.Context) error {
 	return c.JSON(httpCode, mapResponse)
 }
 
+func (handler *QuestionaireHandler) GetAllAnswerByAttempt(c echo.Context) error {
+	idAttempt := c.Param("attempt_id")
+
+	qPage := c.QueryParam("page")
+	qLimit := c.QueryParam("limit")
+
+	var page, limit int
+	if qPage != "" {
+		var errPage error
+		page, errPage = strconv.Atoi(qPage)
+		if errPage != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(errPage, config.FEAT_PATIENT_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+	}
+	if qLimit != "" {
+		var errLimit error
+		limit, errLimit = strconv.Atoi(qLimit)
+		if errLimit != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(errLimit, config.FEAT_PATIENT_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+	}
+	results, err := handler.questionaireService.GetAllAnswerByAttempt(idAttempt, page, limit)
+
+	if err != nil {
+		jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_QUESTIONAIRE_CODE)
+		return c.JSON(httpCode, jsonResponse)
+	}
+
+	var answerResponse = ListAnswerCoreToResponse(results)
+	mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_QUESTIONAIRE_CODE, answerResponse)
+	return c.JSON(httpCode, mapResponse)
+}
+
 func (handler *QuestionaireHandler) GetAllQuestion(c echo.Context) error {
 	results, err := handler.questionaireService.GetAll()
 

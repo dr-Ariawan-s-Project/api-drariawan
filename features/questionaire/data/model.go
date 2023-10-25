@@ -166,3 +166,32 @@ func ListAttemptModelToCore(data []TestAttempt) []questionaire.CoreAttempt {
 	}
 	return result
 }
+
+func (data Answer) ModelToCore() questionaire.CoreAnswer {
+	return questionaire.CoreAnswer{
+		Id:          data.ID,
+		AttemptId:   data.AttemptId,
+		QuestionId:  data.QuestionId,
+		Description: data.Description,
+		Score:       data.Score,
+		CreatedAt:   data.CreatedAt,
+		UpdatedAt:   data.UpdatedAt,
+		Question: questionaire.Core{
+			Id:          data.Question.ID,
+			Type:        data.Question.Type,
+			Question:    data.Question.Question,
+			Description: data.Question.Description,
+			UrlVideo:    data.Question.UrlVideo,
+			Section:     data.Question.Section,
+			Goto:        data.Question.Goto,
+		},
+	}
+}
+
+func ListAnswerModelToCore(data []Answer) []questionaire.CoreAnswer {
+	var result []questionaire.CoreAnswer
+	for _, v := range data {
+		result = append(result, v.ModelToCore())
+	}
+	return result
+}

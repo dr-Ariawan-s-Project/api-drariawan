@@ -30,6 +30,7 @@ type CoreAnswer struct {
 	Score       int
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+	Question    Core
 }
 
 type CoreAttempt struct {
@@ -72,6 +73,7 @@ type QuestionaireDataInterface interface {
 	CheckCountAttemptAnswer(patientId string) (int, error)
 	InsertTestAttempt(data CoreAttempt) error
 	FindTestAttempt(status string, offset int, limit int) (dataAttempt []CoreAttempt, err error)
+	FindAllAnswerByAttempt(idAttemptattempt_id string, offset int, limit int) (dataAnswer []CoreAnswer, err error)
 	CountAllQuestion() (int, error)
 	CountQuestionerAttempt() (int, error)
 }
@@ -81,5 +83,6 @@ type QuestionaireServiceInterface interface {
 	InsertAnswer(codeAttempt string, data []CoreAnswer) error
 	Validate(patient Patient, as string, partnerEmail string) (codeAttempt string, countAttempt int, err error)
 	GetTestAttempt(status string, page int, perPage int) (dataAttempt []CoreAttempt, err error)
+	GetAllAnswerByAttempt(idAttempt string, page int, perPage int) (dataAnswer []CoreAnswer, err error)
 	CountQuestionerAttempt() (int, error)
 }
