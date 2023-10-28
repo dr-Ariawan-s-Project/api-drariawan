@@ -25,8 +25,8 @@ func New(ur users.Data) users.Service {
 
 // Insert implements users.UserService.
 func (us *userServ) Insert(data users.UsersCore, role string) (users.UsersCore, error) {
-	if strings.ToLower(role) != config.VAL_AdminAccess {
-		return users.UsersCore{}, errors.New(config.VAL_InvalidValidation)
+	if strings.ToLower(role) != config.VAL_SuperAdminAccess {
+		return users.UsersCore{}, errors.New(config.VAL_InvalidValidationAccess)
 	}
 	err := validation.RegistrationValidate(data)
 	if err != nil {

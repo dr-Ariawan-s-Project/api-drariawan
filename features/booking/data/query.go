@@ -30,7 +30,8 @@ func (bq *bookingQuery) Create(data booking.Core) error {
 	qry.BookingCode = helpers.RandomStringAlphabetNumeric()
 
 	// CEK APAKAH SUDAH PERNAH BOOKING
-	err := bq.db.Where("booking_date = ? AND schedule_id = ? ", qry.BookingDate, qry.ScheduleId).First(&qry).Error
+	cnv := Bookings{}
+	err := bq.db.Where("booking_date = ? AND schedule_id = ? ", qry.BookingDate, qry.ScheduleId).First(&cnv).Error
 	if err == nil {
 		return errors.New(config.DB_ERR_DUPLICATE_BOOKING)
 	}

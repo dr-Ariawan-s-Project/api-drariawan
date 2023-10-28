@@ -19,18 +19,18 @@ type UsersCore struct {
 	DeletedAt      *time.Time `json:"deleted_at"`
 }
 
-type Data interface {
-	Insert(data UsersCore) (UsersCore, error)
-	Update(data UsersCore, id int) error
-	Delete(id int) error
-	FindAll(search string, rp int, page int) ([]UsersCore, error)
-	FindByID(id int) (UsersCore, error)
-}
-
 type Service interface {
 	Insert(data UsersCore, role string) (UsersCore, error)
 	Update(data UsersCore, id int) error
 	Delete(id int) error
 	FindAll(search string, rp, page int) ([]UsersCore, error)
 	FindById(id int) (UsersCore, error)
+}
+
+type Data interface {
+	Insert(data UsersCore) (UsersCore, error)
+	Update(data UsersCore, id int) error
+	Delete(id int) error
+	FindAll(search string, rp int, page int) ([]UsersCore, error)
+	FindByID(id int) (UsersCore, error)
 }

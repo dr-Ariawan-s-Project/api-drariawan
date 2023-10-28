@@ -96,14 +96,18 @@ const (
 
 // validation input
 const (
-	VAL_Unauthorized      string = "service unauthorized"
-	VAL_InvalidValidation string = "validation error"
-	VAL_IncompleteAnswer  string = "jawaban tidak lengkap, pastikan anda menjawab semua pertanyaan"
-	VAL_PasswordNotSet    string = "anda belum membuat password, silakan atur password anda terlebih dahulu melalui fitur forgot password"
+	VAL_Unauthorized            string = "service unauthorized"
+	VAL_InvalidValidation       string = "validation error"
+	VAL_InvalidValidationAccess string = "invalid access"
+	VAL_IncompleteAnswer        string = "jawaban tidak lengkap, pastikan anda menjawab semua pertanyaan"
+	VAL_PasswordNotSet          string = "anda belum membuat password, silakan atur password anda terlebih dahulu melalui fitur forgot password"
 )
 
 // validation role
 const (
-	VAL_AdminAccess   string = "admin"
-	VAL_PatientAccess string = "patient"
+	VAL_AdminAccess      string = "admin"
+	VAL_PatientAccess    string = "patient"
+	VAL_SuperAdminAccess string = "superadmin"
+	VAL_SusterAccess     string = "suster"
+	VAL_DokterAccess     string = "dokter"
 )

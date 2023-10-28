@@ -24,13 +24,20 @@ func GenerateToken(userId int) (string, interface{}) {
 	return useToken, token
 }
 
-func ExtractToken(t interface{}) (int, string, error) {
+func ExtractToken(t interface{}) (userId any, role string, err error) {
 	user := t.(*jwt.Token)
 	if user.Valid {
 		claims := user.Claims.(jwt.MapClaims)
-		userId := claims["userId"].(float64)
+		switch claims["userId"].(type) {
+		case float64:
+			userId = claims["userId"].(float64)
+		case string:
+			userId = claims["userId"].(string)
+		default:
+			return 0, "", fmt.Errorf("token invalid")
+		}
 		role := claims["role"].(string)
-		return int(userId), role, nil
+		return userId, role, nil
 	}
 	return 0, "", fmt.Errorf("token invalid")
 }

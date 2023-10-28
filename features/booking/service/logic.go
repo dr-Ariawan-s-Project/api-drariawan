@@ -2,7 +2,9 @@ package service
 
 import (
 	"errors"
+	"strings"
 
+	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/booking"
 )
 
@@ -17,7 +19,10 @@ func New(sd booking.Data) booking.Service {
 }
 
 // Create implements booking.Service.
-func (bs *bookingService) Create(data booking.Core) error {
+func (bs *bookingService) Create(data booking.Core, role string) error {
+	if strings.ToLower(role) != config.VAL_SusterAccess {
+		return errors.New(config.VAL_InvalidValidationAccess)
+	}
 	err := bs.qry.Create(data)
 	if err != nil {
 		return errors.New(err.Error())
@@ -26,7 +31,7 @@ func (bs *bookingService) Create(data booking.Core) error {
 }
 
 // Update implements schedule.bookingService.
-func (bs *bookingService) Update(id int, data booking.Core) error {
+func (bs *bookingService) Update(id int, data booking.Core, role string) error {
 	err := bs.qry.Update(id, data)
 	if err != nil {
 		return errors.New(err.Error())
@@ -35,7 +40,7 @@ func (bs *bookingService) Update(id int, data booking.Core) error {
 }
 
 // Delete implements schedule.bookingService.
-func (bs *bookingService) Delete(id int) error {
+func (bs *bookingService) Delete(id int, role string) error {
 	err := bs.qry.Delete(id)
 	if err != nil {
 		return errors.New(err.Error())
@@ -44,7 +49,10 @@ func (bs *bookingService) Delete(id int) error {
 }
 
 // GetAll implements schedule.bookingService.
-func (bs *bookingService) GetAll() ([]booking.Core, error) {
+func (bs *bookingService) GetAll(role string) ([]booking.Core, error) {
+	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess {
+		return []booking.Core{}, errors.New(config.VAL_InvalidValidationAccess)
+	}
 	res, err := bs.qry.GetAll()
 	if err != nil {
 		return []booking.Core{}, errors.New(err.Error())
@@ -53,7 +61,10 @@ func (bs *bookingService) GetAll() ([]booking.Core, error) {
 }
 
 // GetByUserID implements booking.Service.
-func (bs *bookingService) GetByUserID(userID int) ([]booking.Core, error) {
+func (bs *bookingService) GetByUserID(userID int, role string) ([]booking.Core, error) {
+	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess {
+		return []booking.Core{}, errors.New(config.VAL_InvalidValidationAccess)
+	}
 	res, err := bs.qry.GetByUserID(userID)
 	if err != nil {
 		return []booking.Core{}, errors.New(err.Error())
