@@ -56,7 +56,7 @@ const (
 	// ErrDuplicatedKey
 	DB_ERR_DUPLICATE_KEY        = "duplicated key not allowed"
 	DB_ERR_DUPLICATE_SCHEDULE   = "user already have a schedule"
-	DB_ERR_DUPLICATE_BOOKING    = "patient already have booking date at this time"
+	DB_ERR_DUPLICATE_BOOKING    = "this date already booked"
 	DB_ERR_LIMIT_BOOKING_SEVDAY = "patient only can booking one time every week"
 )
 

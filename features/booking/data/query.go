@@ -30,8 +30,8 @@ func (bq *bookingQuery) Create(data booking.Core) error {
 	qry.BookingCode = helpers.RandomStringAlphabetNumeric()
 
 	// CEK APAKAH SUDAH PERNAH BOOKING
-	cnv := Bookings{}
-	err := bq.db.Where("booking_date = ? AND schedule_id = ? ", qry.BookingDate, qry.ScheduleId).First(&cnv).Error
+	cnv1 := Bookings{}
+	err := bq.db.Where("booking_date = ? AND schedule_id = ? ", qry.BookingDate, qry.ScheduleId).First(&cnv1).Error
 	if err == nil {
 		return errors.New(config.DB_ERR_DUPLICATE_BOOKING)
 	}
@@ -41,9 +41,9 @@ func (bq *bookingQuery) Create(data booking.Core) error {
 	if err != nil {
 		return errors.New(err.Error())
 	}
-	err = bq.db.Where("booking_date >= ? AND booking_date <= ? AND patient_id = ?", sevenDaysAgoStr, sevenDaysLaterStr, qry.PatientId).First(&qry).Error
+	cnv2 := Bookings{}
+	err = bq.db.Where("booking_date >= ? AND booking_date <= ? AND patient_id = ?", sevenDaysAgoStr, sevenDaysLaterStr, qry.PatientId).First(&cnv2).Error
 	if err == nil {
-		log.Println("already booked")
 		return errors.New(config.DB_ERR_LIMIT_BOOKING_SEVDAY)
 	}
 
