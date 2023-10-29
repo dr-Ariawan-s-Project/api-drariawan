@@ -3,7 +3,6 @@ package validation
 import (
 	"errors"
 	"fmt"
-	"log"
 	"time"
 )
 
@@ -18,14 +17,11 @@ func SevenDayLimitVal(BookingDate string) (string, string, error) {
 	sevenDaysAgo := bookTime.Add(-7 * 24 * time.Hour)
 	// Format the results
 	// layout := "2006-01-02 15:04:05"
-	strMonthCur := int(bookTime.Month())
+	// strMonthCur := int(bookTime.Month())
 	strMonthSDL := int(sevenDaysLater.Month())
 	strMonthSDA := int(sevenDaysAgo.Month())
-	bookTimeStr := fmt.Sprintf("%d-%d-%d", bookTime.Year(), strMonthCur, bookTime.Day())
+	// bookTimeStr := fmt.Sprintf("%d-%d-%d", bookTime.Year(), strMonthCur, bookTime.Day())
 	sevenDaysLaterStr := fmt.Sprintf("%d-%d-%d", sevenDaysLater.Year(), strMonthSDL, sevenDaysLater.Day())
 	sevenDaysAgoStr := fmt.Sprintf("%d-%d-%d", sevenDaysAgo.Year(), strMonthSDA, sevenDaysAgo.Day())
-	log.Println("book Time:", bookTimeStr)
-	log.Println("7 Days Later:", sevenDaysLaterStr)
-	log.Println("7 Days Ago:", sevenDaysAgoStr)
 	return sevenDaysLaterStr, sevenDaysAgoStr, nil
 }

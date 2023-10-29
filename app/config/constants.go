@@ -56,7 +56,7 @@ const (
 	// ErrDuplicatedKey
 	DB_ERR_DUPLICATE_KEY        = "duplicated key not allowed"
 	DB_ERR_DUPLICATE_SCHEDULE   = "user already have a schedule"
-	DB_ERR_DUPLICATE_BOOKING    = "patient already have booking date at this time"
+	DB_ERR_DUPLICATE_BOOKING    = "this date already booked"
 	DB_ERR_LIMIT_BOOKING_SEVDAY = "patient only can booking one time every week"
 )
 
@@ -96,14 +96,18 @@ const (
 
 // validation input
 const (
-	VAL_Unauthorized      string = "service unauthorized"
-	VAL_InvalidValidation string = "validation error"
-	VAL_IncompleteAnswer  string = "jawaban tidak lengkap, pastikan anda menjawab semua pertanyaan"
-	VAL_PasswordNotSet    string = "anda belum membuat password, silakan atur password anda terlebih dahulu melalui fitur forgot password"
+	VAL_Unauthorized            string = "service unauthorized"
+	VAL_InvalidValidation       string = "validation error"
+	VAL_InvalidValidationAccess string = "invalid access"
+	VAL_IncompleteAnswer        string = "jawaban tidak lengkap, pastikan anda menjawab semua pertanyaan"
+	VAL_PasswordNotSet          string = "anda belum membuat password, silakan atur password anda terlebih dahulu melalui fitur forgot password"
 )
 
 // validation role
 const (
-	VAL_AdminAccess   string = "admin"
-	VAL_PatientAccess string = "patient"
+	VAL_AdminAccess      string = "admin"
+	VAL_PatientAccess    string = "patient"
+	VAL_SuperAdminAccess string = "superadmin"
+	VAL_SusterAccess     string = "suster"
+	VAL_DokterAccess     string = "dokter"
 )

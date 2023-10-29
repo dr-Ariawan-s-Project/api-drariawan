@@ -66,17 +66,17 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	v1User := v1.Group("/user")
 	v1User.POST("", sysRoute.userHandler.Insert())
 	v1User.PUT("", sysRoute.userHandler.Update(), JWTMiddleware())
-	v1User.DELETE("/deactive", sysRoute.userHandler.Delete())
+	v1User.DELETE("/deactive", sysRoute.userHandler.Delete(), JWTMiddleware())
 	v1User.GET("", sysRoute.userHandler.FindById())
 	v1User.GET("/profile", sysRoute.userHandler.GetProfile(), JWTMiddleware())
 	v1User.GET("/list", sysRoute.userHandler.FindAll())
 
 	// schedules
 	v1Schedule := v1.Group("/schedule")
-	v1Schedule.POST("", sysRoute.scheduleHandler.Create())
-	v1Schedule.PUT("", sysRoute.scheduleHandler.Update())
-	v1Schedule.DELETE("/delete", sysRoute.scheduleHandler.Delete())
-	v1Schedule.GET("/list", sysRoute.scheduleHandler.GetAll())
+	v1Schedule.POST("", sysRoute.scheduleHandler.Create(), JWTMiddleware())
+	v1Schedule.PUT("", sysRoute.scheduleHandler.Update(), JWTMiddleware())
+	v1Schedule.DELETE("/delete", sysRoute.scheduleHandler.Delete(), JWTMiddleware())
+	v1Schedule.GET("/list", sysRoute.scheduleHandler.GetAll(), JWTMiddleware())
 
 	v1Patient := v1.Group("/patients")
 	v1Patient.POST("", sysRoute.patientHandler.AddPatient)
@@ -89,9 +89,9 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 
 	//booking
 	v1Booking := v1.Group("/booking")
-	v1Booking.POST("", sysRoute.bookingHandler.Create())
-	v1Booking.PUT("/:bookingid", sysRoute.bookingHandler.Update())
-	v1Booking.DELETE("/delete/:bookingid", sysRoute.bookingHandler.Delete())
-	v1Booking.GET("/list", sysRoute.bookingHandler.GetAll())
-	v1Booking.GET("/user/:userid", sysRoute.bookingHandler.GetByUserID())
+	v1Booking.POST("", sysRoute.bookingHandler.Create(), JWTMiddleware())
+	v1Booking.PUT("/:bookingid", sysRoute.bookingHandler.Update(), JWTMiddleware())
+	v1Booking.DELETE("/delete/:bookingid", sysRoute.bookingHandler.Delete(), JWTMiddleware())
+	v1Booking.GET("/list", sysRoute.bookingHandler.GetAll(), JWTMiddleware())
+	v1Booking.GET("/user/:userid", sysRoute.bookingHandler.GetByUserID(), JWTMiddleware())
 }

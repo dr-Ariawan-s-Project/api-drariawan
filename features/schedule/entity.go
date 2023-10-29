@@ -27,10 +27,10 @@ type User struct {
 }
 
 type ScheduleService interface {
-	Create(data Core) error
-	Update(id int, data Core) error
-	Delete(id int) error
-	GetAll() ([]Core, error)
+	Create(data Core, role string) error
+	Update(id int, data Core, role string) error
+	Delete(id int, role string) error
+	GetAll(role string) ([]Core, error)
 }
 type ScheduleData interface {
 	Create(data Core) error

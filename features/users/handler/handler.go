@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
+	"github.com/dr-ariawan-s-project/api-drariawan/app/middlewares"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/users"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/encrypt"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/helpers"
@@ -56,13 +57,14 @@ func (uh *UserHandler) Update() echo.HandlerFunc {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
+		IDUser := middlewares.ConvertUserID(UserID)
 		requestBody := UserRequest{}
 		err = c.Bind(&requestBody)
 		if err != nil {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		err = uh.srv.Update(*ReqToCore(requestBody), UserID)
+		err = uh.srv.Update(*ReqToCore(requestBody), IDUser)
 		if err != nil {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
@@ -122,12 +124,13 @@ func (uh *UserHandler) FindById() echo.HandlerFunc {
 // FindById implements users.UserHandler.
 func (uh *UserHandler) GetProfile() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		userID, _, err := encrypt.ExtractToken(c.Get("user"))
+		UserID, _, err := encrypt.ExtractToken(c.Get("user"))
 		if err != nil {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		res, err := uh.srv.FindById(userID)
+		IDUser := middlewares.ConvertUserID(UserID)
+		res, err := uh.srv.FindById(IDUser)
 		if err != nil {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)

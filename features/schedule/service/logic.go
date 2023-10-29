@@ -2,7 +2,10 @@ package service
 
 import (
 	"errors"
+	"log"
+	"strings"
 
+	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/schedule"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/validation"
 )
@@ -18,7 +21,10 @@ func New(sd schedule.ScheduleData) schedule.ScheduleService {
 }
 
 // Create implements schedule.ScheduleService.
-func (ss *ScheduleService) Create(data schedule.Core) error {
+func (ss *ScheduleService) Create(data schedule.Core, role string) error {
+	if strings.ToLower(role) != config.VAL_DokterAccess {
+		return errors.New(config.VAL_InvalidValidationAccess)
+	}
 	err := validation.TimesValidation(data.TimeStart, data.TimeEnd)
 	if err != nil {
 		return errors.New(err.Error())
@@ -39,7 +45,8 @@ func (ss *ScheduleService) Create(data schedule.Core) error {
 }
 
 // Update implements schedule.ScheduleService.
-func (ss *ScheduleService) Update(id int, data schedule.Core) error {
+func (ss *ScheduleService) Update(id int, data schedule.Core, role string) error {
+
 	err := validation.TimesValidation(data.TimeStart, data.TimeEnd)
 	if err != nil {
 		return errors.New(err.Error())
@@ -56,7 +63,8 @@ func (ss *ScheduleService) Update(id int, data schedule.Core) error {
 }
 
 // Delete implements schedule.ScheduleService.
-func (ss *ScheduleService) Delete(id int) error {
+func (ss *ScheduleService) Delete(id int, role string) error {
+
 	err := ss.qry.Delete(id)
 	if err != nil {
 		return errors.New(err.Error())
@@ -65,7 +73,11 @@ func (ss *ScheduleService) Delete(id int) error {
 }
 
 // GetAll implements schedule.ScheduleService.
-func (ss *ScheduleService) GetAll() ([]schedule.Core, error) {
+func (ss *ScheduleService) GetAll(role string) ([]schedule.Core, error) {
+	log.Println(strings.ToLower(role), config.VAL_SusterAccess)
+	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess {
+		return []schedule.Core{}, errors.New(config.VAL_InvalidValidationAccess)
+	}
 	res, err := ss.qry.GetAll()
 	if err != nil {
 		return []schedule.Core{}, errors.New(err.Error())
