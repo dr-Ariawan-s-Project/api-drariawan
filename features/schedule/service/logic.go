@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"log"
 	"strings"
 
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
@@ -22,7 +21,7 @@ func New(sd schedule.ScheduleData) schedule.ScheduleService {
 
 // Create implements schedule.ScheduleService.
 func (ss *ScheduleService) Create(data schedule.Core, role string) error {
-	if strings.ToLower(role) != config.VAL_DokterAccess {
+	if strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_AdminAccess {
 		return errors.New(config.VAL_InvalidValidationAccess)
 	}
 	err := validation.TimesValidation(data.TimeStart, data.TimeEnd)
@@ -74,8 +73,8 @@ func (ss *ScheduleService) Delete(id int, role string) error {
 
 // GetAll implements schedule.ScheduleService.
 func (ss *ScheduleService) GetAll(role string) ([]schedule.Core, error) {
-	log.Println(strings.ToLower(role), config.VAL_SusterAccess)
-	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess {
+	// log.Println(strings.ToLower(role), config.VAL_SusterAccess)
+	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess {
 		return []schedule.Core{}, errors.New(config.VAL_InvalidValidationAccess)
 	}
 	res, err := ss.qry.GetAll()

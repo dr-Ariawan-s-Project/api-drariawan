@@ -50,7 +50,7 @@ func (bs *bookingService) Delete(id int, role string) error {
 
 // GetAll implements schedule.bookingService.
 func (bs *bookingService) GetAll(role string) ([]booking.Core, error) {
-	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess {
+	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess {
 		return []booking.Core{}, errors.New(config.VAL_InvalidValidationAccess)
 	}
 	res, err := bs.qry.GetAll()
@@ -62,7 +62,7 @@ func (bs *bookingService) GetAll(role string) ([]booking.Core, error) {
 
 // GetByUserID implements booking.Service.
 func (bs *bookingService) GetByUserID(userID int, role string) ([]booking.Core, error) {
-	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess {
+	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess {
 		return []booking.Core{}, errors.New(config.VAL_InvalidValidationAccess)
 	}
 	res, err := bs.qry.GetByUserID(userID)
