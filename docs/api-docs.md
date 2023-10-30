@@ -171,6 +171,132 @@
 <!-- ==== End Of Section -->
 
 <details>
+  <summary><kbd>GET /v1/questioner/attempts</kbd></summary>
+    > GET list questioner attempt that has been submit by patient
+    <br>
+
+-  <kbd>Query params</kbd>
+    ```
+    - page
+    - limit
+    - status : pending or validated
+    ```
+
+-  <kbd>Response Body</kbd>
+    ```json
+    {
+    "data": [
+        {
+            "id": "afe84b53-cc1c-44dd-ad58-84350d59a254",
+            "patient_id": "0f5bc9a3-9b01-4732-9568-bfb28d47591d",
+            "code_attempt": "tuhhWhcve15m8UkpyI/ofowuIJeZunE1BzqO8+7bQUVA4S4bFIMEvrStmQq2TsAPahwVxt6DP011z/Nw7+c06A==",
+            "notes_attempt": "",
+            "score": 0,
+            "ai_accuracy": 0,
+            "ai_probability": 0,
+            "ai_diagnosis": "",
+            "diagnosis": "ok",
+            "feedback": "",
+            "status": "validated",
+            "created_at": "2024-09-27T11:54:21+07:00",
+            "updated_at": "2023-10-19T22:03:37+07:00",
+            "patient": {
+                "id": "0f5bc9a3-9b01-4732-9568-bfb28d47591d",
+                "name": "",
+                "email": "john.partner@mail.com"
+            }
+        }
+    ],
+    "messages": [
+        "[success] read data"
+    ],
+    "meta": {
+        "code": "200-003-OK",
+        "status": "success"
+    }
+    }   
+    ```
+</details>
+<!-- ==== End Of Section -->
+
+<details>
+  <summary><kbd>GET /v1/questioner/attempts/:{attempt_id}/answers</kbd></summary>
+    > GET list all answers from 1 attempt
+    <br>
+
+-  <kbd>Query params</kbd>
+    ```
+    - page
+    - limit
+    ```
+
+-  <kbd>Response Body</kbd>
+    ```json
+    {
+    "data": [
+        {
+            "id": "bbd0afae-3849-4a03-b12d-ea4df64b5405",
+            "attempt_id": "97e95c10-ac7b-4315-b121-afb13cc41769",
+            "question_id": 1,
+            "description": "tidak",
+            "score": 10,
+            "created_at": "2023-09-26T23:51:20+07:00",
+            "updated_at": "2023-10-24T11:58:51+07:00",
+            "question": {
+                "id": 1,
+                "type": "choices",
+                "question": "Saya telah mengerti dan memahami maksud dan tujuan pengisian kuesioner ini.\nDengan ini saya sukarela bersedia untuk menjadi responden dalam penelitian ini\ntanpa adanya paksaan atau tekanan dari siapapun.",
+                "description": "",
+                "url_video": "",
+                "section": "",
+                "choices": null,
+                "goto": null
+            }
+        }
+    ],
+    "messages": [
+        "[success] read data"
+    ],
+    "meta": {
+        "code": "200-003-OK",
+        "status": "success"
+    }
+    }  
+    ```
+</details>
+<!-- ==== End Of Section -->
+
+<details>
+  <summary><kbd>POST /v1/questioner/attempts/:{attempt_id}/assesments</kbd></summary>
+    > POST assesment 
+    <br>
+
+-  <kbd>Request Body</kbd>
+    ```json
+    {
+    "diagnosis":"sehat",
+    "feedback":"jaga kesehatan",
+    "status":"validated"
+    }
+    ```
+
+-  <kbd>Response Body</kbd>
+    ```json
+    {
+    "data": null,
+    "messages": [
+        "[success] add assesment"
+    ],
+    "meta": {
+        "code": "200-003-OK",
+        "status": "success"
+    }
+    }  
+    ```
+</details>
+<!-- ==== End Of Section -->
+
+<details>
   <summary><kbd>POST /v1/patients</kbd></summary>
   > Add patient
     <br>
@@ -362,17 +488,22 @@
 
 <details>
   <summary><kbd>GET /v1/patients/profile</kbd></summary>
-  > GET patient profile
+  > GET patient profile from token
     <br>
 
 -  <kbd>Response Body</kbd>
     ```json
     {
     "data": {
-        "id": "022b7a27-6890-403c-978c-aa33448d78bf",
-        "email": "rudi.partner@mail.com",
-        "phone": "08123",
-        "partner_id": "7c0706b3-8cdd-43b2-8262-c542e2cae870"
+        "id": "38e82d68-cceb-4063-8c99-ce4e2676f26d",
+        "name": "budi 2",
+        "email": "budi@mail.com",
+        "nik": "OKdIIuAJgvgRJDGb97E5cA/hPNROZsbpVqz9KcVv/G+EPxUi",
+        "dob": "2023-01-01",
+        "phone": "0812345671",
+        "gender": "male",
+        "marriage_status": "married",
+        "nationality": "indonesia"
     },
     "messages": [
         "[success] read data"
@@ -381,7 +512,7 @@
         "code": "200-004-OK",
         "status": "success"
     }
-    }  
+    } 
     ```
 </details>
 <!-- ==== End Of Section -->
