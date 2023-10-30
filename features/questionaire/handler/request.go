@@ -20,6 +20,12 @@ type ValidateRequest struct {
 	As           string `json:"as"`
 }
 
+type AssesmentRequest struct {
+	Diagnosis string `json:"diagnosis"`
+	Feedback  string `json:"feedback"`
+	Status    string `json:"status"`
+}
+
 func (data AnswerRequest) RequestToCore() []questionaire.CoreAnswer {
 	var result []questionaire.CoreAnswer
 	for _, v := range data.Answer {
@@ -30,4 +36,12 @@ func (data AnswerRequest) RequestToCore() []questionaire.CoreAnswer {
 		})
 	}
 	return result
+}
+
+func (data AssesmentRequest) RequestToCore() questionaire.CoreAttempt {
+	return questionaire.CoreAttempt{
+		Diagnosis: data.Diagnosis,
+		Feedback:  data.Feedback,
+		Status:    data.Status,
+	}
 }

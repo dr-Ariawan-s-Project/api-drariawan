@@ -116,6 +116,25 @@ func (repo *questionaireQuery) InsertAnswer(idAttempt string, data []questionair
 	return nil
 }
 
+// InsertAssesment implements questionaire.QuestionaireDataInterface.
+func (repo *questionaireQuery) InsertAssesment(data questionaire.CoreAttempt) error {
+	//mapping data assesment
+	var input = TestAttempt{
+		Diagnosis: data.Diagnosis,
+		Feedback:  data.Feedback,
+		Status:    data.Status,
+	}
+
+	tx := repo.db.Model(&TestAttempt{}).Where("id = ?", data.Id).Updates(input)
+	if tx.Error != nil {
+		return helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	if tx.RowsAffected == 0 {
+		return helpers.CheckQueryErrorMessage(errors.New(config.DB_ERR_RECORD_NOT_FOUND))
+	}
+	return nil
+}
+
 // SelectAll implements questionaire.QuestionaireDataInterface.
 func (repo *questionaireQuery) SelectAll() ([]questionaire.Core, error) {
 	var questionData []Question

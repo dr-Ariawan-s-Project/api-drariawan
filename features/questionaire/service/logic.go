@@ -150,6 +150,15 @@ func (service *questionaireService) GetAllAnswerByAttempt(idAttempt string, page
 	return service.questionaireData.FindAllAnswerByAttempt(idAttempt, offset, perPage)
 }
 
+// InsertAssesment implements questionaire.QuestionaireServiceInterface.
+func (service *questionaireService) InsertAssesment(data questionaire.CoreAttempt) error {
+	if data.Id == "" {
+		return errors.New(config.REQ_InvalidIdParam)
+	}
+	err := service.questionaireData.InsertAssesment(data)
+	return err
+}
+
 // GetAll implements questionaire.QuestionaireServiceInterface.
 func (service *questionaireService) GetAll() ([]questionaire.Core, error) {
 	return service.questionaireData.SelectAll()
