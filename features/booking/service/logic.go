@@ -20,7 +20,7 @@ func New(sd booking.Data) booking.Service {
 
 // Create implements booking.Service.
 func (bs *bookingService) Create(data booking.Core, role string) error {
-	if strings.ToLower(role) != config.VAL_SusterAccess {
+	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_PatientAccess {
 		return errors.New(config.VAL_InvalidValidationAccess)
 	}
 	err := bs.qry.Create(data)
