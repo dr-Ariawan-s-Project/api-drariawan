@@ -361,6 +361,32 @@
 <!-- ==== End Of Section -->
 
 <details>
+  <summary><kbd>GET /v1/patients/profile</kbd></summary>
+  > GET patient profile
+    <br>
+
+-  <kbd>Response Body</kbd>
+    ```json
+    {
+    "data": {
+        "id": "022b7a27-6890-403c-978c-aa33448d78bf",
+        "email": "rudi.partner@mail.com",
+        "phone": "08123",
+        "partner_id": "7c0706b3-8cdd-43b2-8262-c542e2cae870"
+    },
+    "messages": [
+        "[success] read data"
+    ],
+    "meta": {
+        "code": "200-004-OK",
+        "status": "success"
+    }
+    }  
+    ```
+</details>
+<!-- ==== End Of Section -->
+
+<details>
   <summary><kbd>DELETE /v1/patients/{patient_id}</kbd></summary>
   > DELETE patient by ID
     <br>
@@ -407,6 +433,76 @@
         "status": "success"
     }
   }      
+    ```
+</details>
+<!-- ==== End Of Section -->
+
+<details>
+  <summary><kbd>GET /v1/dashboard/questioner</kbd></summary>
+    > Dashboard feature - grafik
+    <br>
+
+-  <kbd>Response Body</kbd>
+    ```json
+   {
+    "data": [
+        {
+            "month": "januari",
+            "count": 0
+        },
+        {
+            "month": "februari",
+            "count": 0
+        },
+        {
+            "month": "maret",
+            "count": 0
+        },
+        {
+            "month": "april",
+            "count": 0
+        },
+        {
+            "month": "mei",
+            "count": 0
+        },
+        {
+            "month": "juni",
+            "count": 0
+        },
+        {
+            "month": "juli",
+            "count": 0
+        },
+        {
+            "month": "agustus",
+            "count": 0
+        },
+        {
+            "month": "september",
+            "count": 0
+        },
+        {
+            "month": "oktober",
+            "count": 40
+        },
+        {
+            "month": "november",
+            "count": 0
+        },
+        {
+            "month": "desember",
+            "count": 0
+        }
+    ],
+    "messages": [
+        "[success] read data"
+    ],
+    "meta": {
+        "code": "200-007-OK",
+        "status": "success"
+    }
+    }      
     ```
 </details>
 <!-- ==== End Of Section -->
