@@ -64,7 +64,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 
 	// users
 	v1User := v1.Group("/user")
-	v1User.POST("", sysRoute.userHandler.Insert())
+	v1User.POST("", sysRoute.userHandler.Insert(), JWTMiddleware())
 	v1User.PUT("", sysRoute.userHandler.Update(), JWTMiddleware())
 	v1User.DELETE("/deactive", sysRoute.userHandler.Delete(), JWTMiddleware())
 	v1User.GET("", sysRoute.userHandler.FindById())
