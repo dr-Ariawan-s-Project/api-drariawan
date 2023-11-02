@@ -9,6 +9,7 @@ import (
 
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/schedule"
+	"github.com/dr-ariawan-s-project/api-drariawan/utils/validation"
 	"gorm.io/gorm"
 )
 
@@ -103,11 +104,18 @@ func (sq *scheduleQuery) Delete(id int) error {
 
 // GetAll implements schedule.ScheduleData.
 func (sq *scheduleQuery) GetAll() ([]schedule.Core, error) {
-	qry := []Schedules{}
-	err := sq.db.Preload("User").Where("deleted_at is null").Find(&qry).Error
+
+	currentDate := time.Now().Format("2006-01-02")
+	sevenDaysLaterStr, sevenDaysAgoStr, err := validation.SevenDayLimitVal(currentDate)
 	if err != nil {
 		return []schedule.Core{}, errors.New(err.Error())
 	}
-	log.Println(qry)
+	log.Println(currentDate)
+	qry := []Schedules{}
+	err = sq.db.Preload("User").Preload("Booking", "booking_date >= ? AND booking_date <= ?", sevenDaysAgoStr, sevenDaysLaterStr).Where("deleted_at is null").Find(&qry).Error
+	if err != nil {
+		return []schedule.Core{}, errors.New(err.Error())
+	}
+
 	return DataToCoreArray(qry), nil
 }

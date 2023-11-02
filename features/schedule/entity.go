@@ -15,15 +15,28 @@ type Core struct {
 	UpdatedAt         time.Time  `json:"updated_at"`
 	DeletedAt         *time.Time `json:"deleted_at"`
 	User              User
+	Booking           []Booking
+}
+
+type Booking struct {
+	ID          string     `json:"id"`
+	BookingCode string     `json:"booking_code"`
+	PatientId   string     `json:"patient_id"`
+	ScheduleId  int        `json:"schedule_id"`
+	BookingDate string     `json:"booking_date"`
+	State       string     `json:"state"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	DeletedAt   *time.Time `json:"deleted_at"`
 }
 
 type User struct {
-	ID             int
-	Name           string
-	Email          string
-	Phone          string
-	UrlPicture     string
-	Specialization string
+	ID             int    `json:"user_id"`
+	Name           string `json:"name"`
+	Email          string `json:"email"`
+	Phone          string `json:"phone"`
+	UrlPicture     string `json:"picture"`
+	Specialization string `json:"specialization"`
 }
 
 type ScheduleService interface {

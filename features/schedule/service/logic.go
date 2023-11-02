@@ -21,7 +21,7 @@ func New(sd schedule.ScheduleData) schedule.ScheduleService {
 
 // Create implements schedule.ScheduleService.
 func (ss *ScheduleService) Create(data schedule.Core, role string) error {
-	if strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_AdminAccess {
+	if strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_AdminAccess && strings.ToLower(role) != config.VAL_SuperAdminAccess {
 		return errors.New(config.VAL_InvalidValidationAccess)
 	}
 	err := validation.TimesValidation(data.TimeStart, data.TimeEnd)
