@@ -110,7 +110,6 @@ func (sq *scheduleQuery) GetAll() ([]schedule.Core, error) {
 	if err != nil {
 		return []schedule.Core{}, errors.New(err.Error())
 	}
-	log.Println(currentDate)
 	qry := []Schedules{}
 	err = sq.db.Preload("User").Preload("Booking", "booking_date >= ? AND booking_date <= ?", sevenDaysAgoStr, sevenDaysLaterStr).Where("deleted_at is null").Find(&qry).Error
 	if err != nil {
