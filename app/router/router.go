@@ -52,8 +52,8 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 
 	v1 := e.Group("/v1")
 	v1Dashboard := v1.Group("/dashboard")
-	v1Dashboard.GET("", sysRoute.dashboardHandler.GetDashboardQuestioner)
-	v1Dashboard.GET("/questioner", sysRoute.dashboardHandler.GetQuestionerAttemptPerMonth)
+	v1Dashboard.GET("", sysRoute.dashboardHandler.GetDashboardQuestioner, JWTMiddleware())
+	v1Dashboard.GET("/questioner", sysRoute.dashboardHandler.GetQuestionerAttemptPerMonth, JWTMiddleware())
 
 	v1Questioner := v1.Group("/questioner")
 	v1Questioner.GET("", sysRoute.questionaireHandler.GetAllQuestion)
@@ -64,12 +64,12 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 
 	// users
 	v1User := v1.Group("/user")
-	v1User.POST("", sysRoute.userHandler.Insert())
+	v1User.POST("", sysRoute.userHandler.Insert(), JWTMiddleware())
 	v1User.PUT("", sysRoute.userHandler.Update(), JWTMiddleware())
 	v1User.DELETE("/deactive", sysRoute.userHandler.Delete(), JWTMiddleware())
-	v1User.GET("", sysRoute.userHandler.FindById())
+	v1User.GET("", sysRoute.userHandler.FindById(), JWTMiddleware())
 	v1User.GET("/profile", sysRoute.userHandler.GetProfile(), JWTMiddleware())
-	v1User.GET("/list", sysRoute.userHandler.FindAll())
+	v1User.GET("/list", sysRoute.userHandler.FindAll(), JWTMiddleware())
 
 	// schedules
 	v1Schedule := v1.Group("/schedule")
@@ -81,10 +81,10 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	v1Patient := v1.Group("/patients")
 	v1Patient.POST("", sysRoute.patientHandler.AddPatient)
 	v1Patient.POST("/login", sysRoute.authHandler.LoginPatient)
-	v1Patient.GET("", sysRoute.patientHandler.GetAll)
-	v1Patient.GET("/:patient_id", sysRoute.patientHandler.GetById)
-	v1Patient.PUT("/:patient_id", sysRoute.patientHandler.EditPatient)
-	v1Patient.DELETE("/:patient_id", sysRoute.patientHandler.DeleteById)
+	v1Patient.GET("", sysRoute.patientHandler.GetAll, JWTMiddleware())
+	v1Patient.GET("/:patient_id", sysRoute.patientHandler.GetById, JWTMiddleware())
+	v1Patient.PUT("/:patient_id", sysRoute.patientHandler.EditPatient, JWTMiddleware())
+	v1Patient.DELETE("/:patient_id", sysRoute.patientHandler.DeleteById, JWTMiddleware())
 	v1Patient.GET("/profile", sysRoute.patientHandler.GetProfile, JWTMiddleware())
 
 	//booking

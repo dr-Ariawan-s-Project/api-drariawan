@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"log"
 	"strconv"
 
@@ -25,13 +26,14 @@ func New(us users.Service) *UserHandler {
 // Insert implements users.UserHandler.
 func (uh *UserHandler) Insert() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		_, role, err := encrypt.ExtractToken(c.Get("user"))
-		if err != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
+		_, role, errToken := middlewares.ExtractTokenJWT(c)
+		log.Println("role:", role)
+		if errToken != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.JWT_FailedCastingJwtToken), config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 		requestBody := UserRequest{}
-		err = c.Bind(&requestBody)
+		err := c.Bind(&requestBody)
 		if err != nil {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
