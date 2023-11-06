@@ -29,6 +29,7 @@ type PatientDataInterface interface {
 	CheckByEmailAndPhone(email string, phone string) (*Core, error)
 	CountPartner(partnerId string) (int, error)
 	CountAllPatient() (int, error)
+	SelectAllNIK() ([]string, error)
 }
 
 type PatientServiceInterface interface {

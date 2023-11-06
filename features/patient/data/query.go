@@ -1,6 +1,8 @@
 package data
 
 import (
+	"log"
+
 	"github.com/dr-ariawan-s-project/api-drariawan/features/patient"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/helpers"
 	"github.com/google/uuid"
@@ -132,4 +134,15 @@ func (repo *patientQuery) Update(id string, data patient.Core) (*patient.Core, e
 	}
 	dataCore := patient.ModelToCore()
 	return &dataCore, nil
+}
+
+// SelectAllNIK implements patient.PatientDataInterface.
+func (repo *patientQuery) SelectAllNIK() ([]string, error) {
+	var niks []string
+	txSelect := repo.db.Raw("SELECT nik FROM patients where nik != '' AND deleted_at IS NULL").Scan(&niks)
+	if txSelect.Error != nil {
+		return nil, helpers.CheckQueryErrorMessage(txSelect.Error)
+	}
+	log.Println("niks", niks)
+	return niks, nil
 }
