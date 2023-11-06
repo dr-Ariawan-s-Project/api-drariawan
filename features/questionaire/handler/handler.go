@@ -133,6 +133,26 @@ func (handler *QuestionaireHandler) GetAllAnswerByAttempt(c echo.Context) error 
 	return c.JSON(httpCode, mapResponse)
 }
 
+func (handler *QuestionaireHandler) AddAssesmentByAttempt(c echo.Context) error {
+	idAttempt := c.Param("attempt_id")
+	assesmentInput := new(AssesmentRequest)
+	errBind := c.Bind(&assesmentInput)
+	if errBind != nil {
+		jsonResponse, httpCode := helpers.WebResponseError(errBind, config.FEAT_QUESTIONAIRE_CODE)
+		return c.JSON(httpCode, jsonResponse)
+	}
+	data := assesmentInput.RequestToCore()
+	data.Id = idAttempt
+
+	err := handler.questionaireService.InsertAssesment(data)
+	if err != nil {
+		jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_QUESTIONAIRE_CODE)
+		return c.JSON(httpCode, jsonResponse)
+	}
+	mapResponse, httpCode := helpers.WebResponseSuccess("[success] add assesment", config.FEAT_QUESTIONAIRE_CODE, nil)
+	return c.JSON(httpCode, mapResponse)
+}
+
 func (handler *QuestionaireHandler) GetAllQuestion(c echo.Context) error {
 	results, err := handler.questionaireService.GetAll()
 
