@@ -181,6 +181,20 @@ func (_m *QuestionaireData) InsertAnswer(idAttempt string, data []questionaire.C
 	return r0
 }
 
+// InsertAssesment provides a mock function with given fields: data
+func (_m *QuestionaireData) InsertAssesment(data questionaire.CoreAttempt) error {
+	ret := _m.Called(data)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(questionaire.CoreAttempt) error); ok {
+		r0 = rf(data)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // InsertTestAttempt provides a mock function with given fields: data
 func (_m *QuestionaireData) InsertTestAttempt(data questionaire.CoreAttempt) error {
 	ret := _m.Called(data)

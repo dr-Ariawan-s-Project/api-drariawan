@@ -94,6 +94,14 @@ func (service *patientService) Insert(data patient.Core, partnerEmail string) (*
 	}
 
 	if data.NIK != "" {
+		allNIK, _ := service.patientData.SelectAllNIK()
+		for _, nik := range allNIK {
+			nikDecrypt := encrypt.DecryptText(nik, service.cfg.AES_GCM_SECRET)
+			if nikDecrypt == data.NIK {
+				log.Println("NIK duplicated", nikDecrypt)
+				return nil, errors.New(config.DB_ERR_DUPLICATE_KEY)
+			}
+		}
 		nikEncrypt := encrypt.EncryptText(data.NIK, service.cfg.AES_GCM_SECRET)
 		data.NIK = nikEncrypt
 	}
@@ -138,6 +146,14 @@ func (service *patientService) Update(data patient.Core) (*patient.Core, error) 
 		return nil, errors.New(config.REQ_InvalidIdParam)
 	}
 	if data.NIK != "" {
+		allNIK, _ := service.patientData.SelectAllNIK()
+		for _, nik := range allNIK {
+			nikDecrypt := encrypt.DecryptText(nik, service.cfg.AES_GCM_SECRET)
+			if nikDecrypt == data.NIK {
+				log.Println("NIK duplicated", nikDecrypt)
+				return nil, errors.New(config.DB_ERR_DUPLICATE_KEY)
+			}
+		}
 		nikEncrypt := encrypt.EncryptText(data.NIK, service.cfg.AES_GCM_SECRET)
 		data.NIK = nikEncrypt
 	}
