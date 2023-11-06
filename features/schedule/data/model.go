@@ -17,6 +17,19 @@ type Schedules struct {
 	UpdatedAt         time.Time
 	DeletedAt         *time.Time
 	User              Users
+	Booking           []Booking `gorm:"foreignKey:ScheduleId"`
+}
+
+type Booking struct {
+	ID          string
+	BookingCode string
+	PatientId   string
+	ScheduleId  int
+	BookingDate string
+	State       string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   *time.Time
 }
 
 type Users struct {
@@ -26,6 +39,20 @@ type Users struct {
 	Phone          string
 	UrlPicture     string
 	Specialization string
+}
+
+func BookDataToBookCore(data Booking) schedule.Booking {
+	return schedule.Booking{
+		ID:          data.ID,
+		BookingCode: data.BookingCode,
+		PatientId:   data.PatientId,
+		ScheduleId:  data.ScheduleId,
+		BookingDate: data.BookingDate,
+		State:       data.State,
+		CreatedAt:   data.CreatedAt,
+		UpdatedAt:   data.UpdatedAt,
+		DeletedAt:   data.DeletedAt,
+	}
 }
 
 func CoreToData(core schedule.Core) Schedules {
@@ -69,6 +96,7 @@ func DataToCore(data Schedules) schedule.Core {
 			UrlPicture:     data.User.UrlPicture,
 			Specialization: data.User.Specialization,
 		},
+		Booking: BookingDataToCoreArray(data.Booking),
 	}
 }
 
@@ -76,6 +104,14 @@ func DataToCoreArray(data []Schedules) []schedule.Core {
 	result := []schedule.Core{}
 	for _, val := range data {
 		result = append(result, DataToCore(val))
+	}
+	return result
+}
+
+func BookingDataToCoreArray(data []Booking) []schedule.Booking {
+	result := []schedule.Booking{}
+	for _, val := range data {
+		result = append(result, BookDataToBookCore(val))
 	}
 	return result
 }
