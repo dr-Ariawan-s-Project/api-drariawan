@@ -60,7 +60,11 @@ func (service *questionaireService) Validate(patientData questionaire.Patient, a
 
 			//else if patient / partner already take test attempt, but they haven't filled the answer yet
 			//send email invitation link again
-			go helpers.SendMailQuestionerLink(patientFound.Email, dataAttempt.CodeAttempt, service.cfg.GMAIL_APP_PASSWORD)
+			if as == config.QUESTIONER_ATTEMPT_PARTNER {
+				go helpers.SendMailQuestionerLink(partnerEmail, dataAttempt.CodeAttempt, service.cfg.GMAIL_APP_PASSWORD)
+			} else {
+				go helpers.SendMailQuestionerLink(patientFound.Email, dataAttempt.CodeAttempt, service.cfg.GMAIL_APP_PASSWORD)
+			}
 			return dataAttempt.CodeAttempt, countAttempt, nil
 		}
 	} else {
@@ -91,7 +95,11 @@ func (service *questionaireService) Validate(patientData questionaire.Patient, a
 	}
 
 	//send email invitation link
-	go helpers.SendMailQuestionerLink(patientData.Email, codeAttemp, service.cfg.GMAIL_APP_PASSWORD)
+	if as == config.QUESTIONER_ATTEMPT_PARTNER {
+		go helpers.SendMailQuestionerLink(partnerEmail, codeAttemp, service.cfg.GMAIL_APP_PASSWORD)
+	} else {
+		go helpers.SendMailQuestionerLink(patientData.Email, codeAttemp, service.cfg.GMAIL_APP_PASSWORD)
+	}
 
 	return codeAttemp, 0, nil
 }
