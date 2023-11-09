@@ -18,11 +18,11 @@ type PatientCore struct {
 
 type AuthDataInterface interface {
 	CreateToken(id any, role string) (token string, err error)
-	GetUserByEmail(email string) (UserCore, error)
-	GetPatientByEmail(email string) (PatientCore, error)
+	GetUserByEmail(email string) (*UserCore, error)
+	GetPatientByEmail(email string) (*PatientCore, error)
 }
 
 type AuthServiceInterface interface {
-	Login(email string, password string) (string, error)
-	LoginPatient(email string, password string) (string, error)
+	Login(email string, password string) (*UserCore, string, error)
+	LoginPatient(email string, password string) (*PatientCore, string, error)
 }

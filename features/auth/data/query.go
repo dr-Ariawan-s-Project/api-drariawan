@@ -35,29 +35,29 @@ func (repo *authQuery) CreateToken(id any, role string) (token string, err error
 }
 
 // GetUserByEmail implements auth.AuthDataInterface.
-func (repo *authQuery) GetUserByEmail(email string) (auth.UserCore, error) {
+func (repo *authQuery) GetUserByEmail(email string) (*auth.UserCore, error) {
 	var record auth.UserCore
-	tx := repo.db.Table("users").Select("id", "email", "password", "name", "role").Where("email = ?", email).Scan(&record)
+	tx := repo.db.Table("users").Select("id", "email", "password", "name", "role").Where("email = ? and deleted_at is null", email).Scan(&record)
 	if tx.Error != nil {
-		return auth.UserCore{}, helpers.CheckQueryErrorMessage(tx.Error)
+		return nil, helpers.CheckQueryErrorMessage(tx.Error)
 	}
 
 	if tx.RowsAffected == 0 {
-		return auth.UserCore{}, errors.New(config.DB_ERR_RECORD_NOT_FOUND)
+		return nil, errors.New(config.DB_ERR_RECORD_NOT_FOUND)
 	}
-	return record, nil
+	return &record, nil
 }
 
 // GetPatientByEmail implements auth.AuthDataInterface.
-func (repo *authQuery) GetPatientByEmail(email string) (auth.PatientCore, error) {
+func (repo *authQuery) GetPatientByEmail(email string) (*auth.PatientCore, error) {
 	var record auth.PatientCore
-	tx := repo.db.Table("patients").Select("id", "email", "password", "name", "phone").Where("email = ?", email).Scan(&record)
+	tx := repo.db.Table("patients").Select("id", "email", "password", "name", "phone").Where("email = ? and deleted_at is null", email).Scan(&record)
 	if tx.Error != nil {
-		return auth.PatientCore{}, helpers.CheckQueryErrorMessage(tx.Error)
+		return nil, helpers.CheckQueryErrorMessage(tx.Error)
 	}
 
 	if tx.RowsAffected == 0 {
-		return auth.PatientCore{}, errors.New(config.DB_ERR_RECORD_NOT_FOUND)
+		return nil, errors.New(config.DB_ERR_RECORD_NOT_FOUND)
 	}
-	return record, nil
+	return &record, nil
 }
