@@ -23,55 +23,55 @@ func New(repo auth.AuthDataInterface) auth.AuthServiceInterface {
 }
 
 // Login implements auth.AuthServiceInterface.
-func (service *authService) Login(email string, password string) (string, error) {
+func (service *authService) Login(email string, password string) (*auth.UserCore, string, error) {
 	dataLogin := auth.UserCore{
 		Email:    email,
 		Password: password,
 	}
 	errValidate := validation.ValidateStruct(service.validate, dataLogin)
 	if errValidate != nil {
-		return "", errValidate
+		return nil, "", errValidate
 	}
 
 	data, err := service.authData.GetUserByEmail(email)
 	if err != nil {
-		return "", err
+		return nil, "", err
 	}
 	if encrypt.CheckPasswordHash(data.Password, password) {
 		token, err := service.authData.CreateToken(int(data.Id), data.Role)
 		if err != nil {
-			return "", errors.New(config.JWT_FailedCreateToken)
+			return nil, "", errors.New(config.JWT_FailedCreateToken)
 		}
-		return token, nil
+		return data, token, nil
 	}
-	return "", errors.New(config.ERR_AuthWrongCredentials)
+	return nil, "", errors.New(config.ERR_AuthWrongCredentials)
 }
 
 // LoginPatient implements auth.AuthServiceInterface.
-func (service *authService) LoginPatient(email string, password string) (string, error) {
+func (service *authService) LoginPatient(email string, password string) (*auth.PatientCore, string, error) {
 	dataLogin := auth.PatientCore{
 		Email:    email,
 		Password: password,
 	}
 	errValidate := validation.ValidateStruct(service.validate, dataLogin)
 	if errValidate != nil {
-		return "", errValidate
+		return nil, "", errValidate
 	}
 
 	data, err := service.authData.GetPatientByEmail(email)
 	if err != nil {
-		return "", err
+		return nil, "", err
 	}
 	if data.Password == "" {
-		return "", errors.New(config.VAL_PasswordNotSet)
+		return nil, "", errors.New(config.VAL_PasswordNotSet)
 	}
 
 	if encrypt.CheckPasswordHash(data.Password, password) {
 		token, err := service.authData.CreateToken(data.Id, config.VAL_PatientAccess)
 		if err != nil {
-			return "", errors.New(config.JWT_FailedCreateToken)
+			return nil, "", errors.New(config.JWT_FailedCreateToken)
 		}
-		return token, nil
+		return data, token, nil
 	}
-	return "", errors.New(config.ERR_AuthWrongCredentials)
+	return nil, "", errors.New(config.ERR_AuthWrongCredentials)
 }

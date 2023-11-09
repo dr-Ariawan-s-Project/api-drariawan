@@ -25,7 +25,7 @@ func (handler *AuthHandler) LoginPatient(c echo.Context) error {
 		return c.JSON(httpCode, jsonResponse)
 	}
 
-	token, err := handler.authService.LoginPatient(authInput.Email, authInput.Password)
+	dataPatient, token, err := handler.authService.LoginPatient(authInput.Email, authInput.Password)
 	if err != nil {
 		jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_AUTH_CODE)
 		return c.JSON(httpCode, jsonResponse)
@@ -33,6 +33,8 @@ func (handler *AuthHandler) LoginPatient(c echo.Context) error {
 
 	mapResponse, httpCode := helpers.WebResponseSuccess("[success] login", config.FEAT_AUTH_CODE, map[string]any{
 		"token": token,
+		"name":  &dataPatient.Name,
+		"role":  config.VAL_PatientAccess,
 	})
 	return c.JSON(httpCode, mapResponse)
 
@@ -46,7 +48,7 @@ func (handler *AuthHandler) Login(c echo.Context) error {
 		return c.JSON(httpCode, jsonResponse)
 	}
 
-	token, err := handler.authService.Login(authInput.Email, authInput.Password)
+	dataUser, token, err := handler.authService.Login(authInput.Email, authInput.Password)
 	if err != nil {
 		jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_AUTH_CODE)
 		return c.JSON(httpCode, jsonResponse)
@@ -54,6 +56,8 @@ func (handler *AuthHandler) Login(c echo.Context) error {
 
 	mapResponse, httpCode := helpers.WebResponseSuccess("[success] login", config.FEAT_AUTH_CODE, map[string]any{
 		"token": token,
+		"name":  &dataUser.Name,
+		"role":  &dataUser.Role,
 	})
 	return c.JSON(httpCode, mapResponse)
 
