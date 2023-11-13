@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"log"
 	"strconv"
 	"time"
 
@@ -26,7 +27,8 @@ func (handler *PatientHandler) AddPatient(c echo.Context) error {
 	input := new(PatientRequest)
 	errBind := c.Bind(&input)
 	if errBind != nil {
-		jsonResponse, httpCode := helpers.WebResponseError(errBind, config.FEAT_PATIENT_CODE)
+		log.Println("error bind", errBind)
+		jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.REQ_ErrorBindData), config.FEAT_PATIENT_CODE)
 		return c.JSON(httpCode, jsonResponse)
 	}
 	var dataCore = input.RequestToCore()
@@ -34,7 +36,8 @@ func (handler *PatientHandler) AddPatient(c echo.Context) error {
 		layoutFormat := "2006-01-02"
 		dobTime, errParse := time.Parse(layoutFormat, input.DOB)
 		if errParse != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(errParse, config.FEAT_PATIENT_CODE)
+			log.Println("error format dob", errParse)
+			jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.REQ_InvalidParam), config.FEAT_PATIENT_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 		dataCore.DOB = &dobTime
@@ -46,6 +49,7 @@ func (handler *PatientHandler) AddPatient(c echo.Context) error {
 
 	dataNewPatient, err := handler.patientService.Insert(dataCore, input.PartnerEmail)
 	if err != nil {
+		log.Println("error", err)
 		jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_PATIENT_CODE)
 		return c.JSON(httpCode, jsonResponse)
 	}
