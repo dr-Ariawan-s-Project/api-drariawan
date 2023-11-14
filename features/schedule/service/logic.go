@@ -22,7 +22,7 @@ func New(sd schedule.ScheduleData) schedule.ScheduleService {
 // Create implements schedule.ScheduleService.
 func (ss *ScheduleService) Create(data schedule.Core, role string) error {
 	if strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_AdminAccess && strings.ToLower(role) != config.VAL_SuperAdminAccess {
-		return errors.New(config.VAL_InvalidValidationAccess)
+		return errors.New(config.VAL_Unauthorized)
 	}
 	err := validation.TimesValidation(data.TimeStart, data.TimeEnd)
 	if err != nil {
@@ -75,7 +75,7 @@ func (ss *ScheduleService) Delete(id int, role string) error {
 func (ss *ScheduleService) GetAll(role string) ([]schedule.Core, error) {
 	// log.Println(strings.ToLower(role), config.VAL_SusterAccess)
 	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess {
-		return []schedule.Core{}, errors.New(config.VAL_InvalidValidationAccess)
+		return []schedule.Core{}, errors.New(config.VAL_Unauthorized)
 	}
 	res, err := ss.qry.GetAll()
 	if err != nil {

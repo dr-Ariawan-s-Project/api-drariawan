@@ -21,7 +21,7 @@ func New(sd booking.Data) booking.Service {
 // Create implements booking.Service.
 func (bs *bookingService) Create(data booking.Core, role string) error {
 	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_PatientAccess {
-		return errors.New(config.VAL_InvalidValidationAccess)
+		return errors.New(config.VAL_Unauthorized)
 	}
 	err := bs.qry.Create(data)
 	if err != nil {
@@ -51,7 +51,7 @@ func (bs *bookingService) Delete(id int, role string) error {
 // GetAll implements schedule.bookingService.
 func (bs *bookingService) GetAll(role string) ([]booking.Core, error) {
 	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess {
-		return []booking.Core{}, errors.New(config.VAL_InvalidValidationAccess)
+		return []booking.Core{}, errors.New(config.VAL_Unauthorized)
 	}
 	res, err := bs.qry.GetAll()
 	if err != nil {
@@ -63,7 +63,7 @@ func (bs *bookingService) GetAll(role string) ([]booking.Core, error) {
 // GetByUserID implements booking.Service.
 func (bs *bookingService) GetByUserID(userID int, role string) ([]booking.Core, error) {
 	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess {
-		return []booking.Core{}, errors.New(config.VAL_InvalidValidationAccess)
+		return []booking.Core{}, errors.New(config.VAL_Unauthorized)
 	}
 	res, err := bs.qry.GetByUserID(userID)
 	if err != nil {
