@@ -13,8 +13,8 @@ type UserValidate struct {
 	Email          string `validate:"required,email"`
 	Role           string `validate:"required,alpha"`
 	Phone          string `validate:"required,numeric"`
-	Specialization string `validate:"required,alpha"`
-	Password       string `validate:"required,min=5,alphanum"`
+	Specialization string `validate:"required"`
+	Password       string `validate:"required,min=5"`
 }
 
 func CoreToRegValUser(data users.UsersCore) UserValidate {
@@ -54,22 +54,6 @@ func UpdateUserCheckValidation(data users.UsersCore) error {
 	if data.Password == "" && data.Phone == "" && data.Specialization == "" && data.Email == "" && data.Name == "" && data.Role == "" {
 		return nil
 	}
-	if data.Name != "" {
-		err := validate.Var(data.Name, "alpha")
-		if err != nil {
-			e := err.(validator.ValidationErrors)[0]
-			vlderror := fmt.Sprintf("name %s is not %s", data.Name, e.Tag())
-			return errors.New(vlderror)
-		}
-	}
-	if data.Specialization != "" {
-		err := validate.Var(data.Specialization, "alpha")
-		if err != nil {
-			e := err.(validator.ValidationErrors)[0]
-			vlderror := fmt.Sprintf("specialization %s is not %s", data.Specialization, e.Tag())
-			return errors.New(vlderror)
-		}
-	}
 	if data.Role != "" {
 		err := validate.Var(data.Role, "alpha")
 		if err != nil {
@@ -95,7 +79,7 @@ func UpdateUserCheckValidation(data users.UsersCore) error {
 		}
 	}
 	if data.Password != "" {
-		err := validate.Var(data.Password, "min=3,alphanum")
+		err := validate.Var(data.Password, "min=5")
 		if err != nil {
 			e := err.(validator.ValidationErrors)[0]
 			vlderror := fmt.Sprintf("password %s is not %s", data.Password, e.Tag())
