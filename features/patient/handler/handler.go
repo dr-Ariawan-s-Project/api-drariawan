@@ -37,7 +37,7 @@ func (handler *PatientHandler) AddPatient(c echo.Context) error {
 		dobTime, errParse := time.Parse(layoutFormat, input.DOB)
 		if errParse != nil {
 			log.Println("[patient] error format dob", errParse)
-			jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.REQ_InvalidParam), config.FEAT_PATIENT_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.VAL_InvalidValidation), config.FEAT_PATIENT_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 		dataCore.DOB = &dobTime
@@ -68,7 +68,7 @@ func (handler *PatientHandler) GetAll(c echo.Context) error {
 		var errPage error
 		page, errPage = strconv.Atoi(qPage)
 		if errPage != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(errPage, config.FEAT_PATIENT_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.REQ_InvalidPageParam), config.FEAT_PATIENT_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 	}
@@ -76,7 +76,7 @@ func (handler *PatientHandler) GetAll(c echo.Context) error {
 		var errLimit error
 		limit, errLimit = strconv.Atoi(qLimit)
 		if errLimit != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(errLimit, config.FEAT_PATIENT_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.REQ_InvalidLimitParam), config.FEAT_PATIENT_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 	}
@@ -107,7 +107,7 @@ func (handler *PatientHandler) EditPatient(c echo.Context) error {
 	input := new(PatientRequest)
 	errBind := c.Bind(&input)
 	if errBind != nil {
-		jsonResponse, httpCode := helpers.WebResponseError(errBind, config.FEAT_PATIENT_CODE)
+		jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.REQ_ErrorBindData), config.FEAT_PATIENT_CODE)
 		return c.JSON(httpCode, jsonResponse)
 	}
 
@@ -117,7 +117,7 @@ func (handler *PatientHandler) EditPatient(c echo.Context) error {
 		layoutFormat := "2006-01-02"
 		dobTime, errParse := time.Parse(layoutFormat, input.DOB)
 		if errParse != nil {
-			jsonResponse, httpCode := helpers.WebResponseError(errParse, config.FEAT_PATIENT_CODE)
+			jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.VAL_InvalidValidation), config.FEAT_PATIENT_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 		dataCore.DOB = &dobTime
