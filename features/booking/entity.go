@@ -45,6 +45,7 @@ type Service interface {
 	Delete(id int, role string) error
 	GetAll(role string) ([]Core, error)
 	GetByUserID(userID int, role string) ([]Core, error)
+	GetByPatientID(patientID string) ([]Core, error)
 }
 type Data interface {
 	Create(data Core) error
@@ -52,4 +53,5 @@ type Data interface {
 	Delete(id int) error
 	GetAll() ([]Core, error)
 	GetByUserID(userID int) ([]Core, error)
+	GetByPatientID(patientID string) ([]Core, error)
 }
