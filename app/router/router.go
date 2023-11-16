@@ -95,5 +95,5 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	v1Booking.DELETE("/delete/:bookingid", sysRoute.bookingHandler.Delete(), JWTMiddleware())
 	v1Booking.GET("/list", sysRoute.bookingHandler.GetAll(), JWTMiddleware())
 	v1Booking.GET("/user/:userid", sysRoute.bookingHandler.GetByUserID(), JWTMiddleware())
-	v1Booking.GET("/patient", sysRoute.bookingHandler.GetByPatientID())
+	v1Booking.GET("/patients", sysRoute.bookingHandler.GetByPatientID())
 }

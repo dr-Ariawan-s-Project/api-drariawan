@@ -107,7 +107,7 @@ func (bq *bookingQuery) GetByUserID(userID int) ([]booking.Core, error) {
 	if err != nil {
 		return []booking.Core{}, errors.New(err.Error())
 	}
-	log.Println(qry)
+	// log.Println(qry)
 	return DataToCoreArray(qry), nil
 }
 
