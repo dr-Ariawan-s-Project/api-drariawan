@@ -32,6 +32,7 @@ RUN addgroup --system appgroup && adduser --system --disabled-password --no-crea
 
 COPY --chown=appuser:appgroup --from=build-stage ${APP_PATH}/service-app ${APP_PATH}/
 COPY --chown=appuser:appgroup --from=build-stage ${APP_PATH}/migration/ ${APP_PATH}/migration/
+COPY --chown=appuser:appgroup --from=build-stage ${APP_PATH}/utils/files/ ${APP_PATH}/utils/files/
 
 RUN apt-get update && apt-get install -y iputils-ping telnet wget
 
