@@ -71,3 +71,12 @@ func (bs *bookingService) GetByUserID(userID int, role string) ([]booking.Core, 
 	}
 	return res, nil
 }
+
+// GetByPatientID implements booking.Service.
+func (bs *bookingService) GetByPatientID(patientID string) ([]booking.Core, error) {
+	res, err := bs.qry.GetByPatientID(patientID)
+	if err != nil {
+		return []booking.Core{}, errors.New(err.Error())
+	}
+	return res, nil
+}

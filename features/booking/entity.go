@@ -14,8 +14,8 @@ type Core struct {
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`
 	DeletedAt   *time.Time `json:"deleted_at"`
-	Patient     Patients
-	Schedule    Schedules
+	Patient     Patients   `json:"patient"`
+	Schedule    Schedules  `json:"schedule"`
 }
 
 type Patients struct {
@@ -30,7 +30,7 @@ type Schedules struct {
 	Day               string `json:"day"`
 	TimeStart         string `json:"time_start"`
 	TimeEnd           string `json:"time_end"`
-	User              Users
+	User              Users  `json:"user"`
 }
 type Users struct {
 	ID             int    `json:"id"`
@@ -45,6 +45,7 @@ type Service interface {
 	Delete(id int, role string) error
 	GetAll(role string) ([]Core, error)
 	GetByUserID(userID int, role string) ([]Core, error)
+	GetByPatientID(patientID string) ([]Core, error)
 }
 type Data interface {
 	Create(data Core) error
@@ -52,4 +53,5 @@ type Data interface {
 	Delete(id int) error
 	GetAll() ([]Core, error)
 	GetByUserID(userID int) ([]Core, error)
+	GetByPatientID(patientID string) ([]Core, error)
 }

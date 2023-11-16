@@ -107,6 +107,16 @@ func (bq *bookingQuery) GetByUserID(userID int) ([]booking.Core, error) {
 	if err != nil {
 		return []booking.Core{}, errors.New(err.Error())
 	}
-	log.Println(qry)
+	// log.Println(qry)
+	return DataToCoreArray(qry), nil
+}
+
+// GetByPatientID implements booking.Data.
+func (bq *bookingQuery) GetByPatientID(patientID string) ([]booking.Core, error) {
+	qry := []Bookings{}
+	err := bq.db.Where("deleted_at IS NULL AND patient_id = ?", patientID).Order("created_at DESC").Preload("Patient").Preload("Schedule").Preload("Schedule.User").Find(&qry).Error
+	if err != nil {
+		return []booking.Core{}, errors.New(err.Error())
+	}
 	return DataToCoreArray(qry), nil
 }

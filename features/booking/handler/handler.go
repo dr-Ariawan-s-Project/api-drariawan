@@ -132,3 +132,17 @@ func (bh *BookingHandler) GetByUserID() echo.HandlerFunc {
 
 	}
 }
+
+func (bh *BookingHandler) GetByPatientID() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		strIdParam := c.QueryParam("patient_id")
+		res, err := bh.srv.GetByPatientID(strIdParam)
+		if err != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_BOOKING_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_BOOKING_CODE, res)
+		return c.JSON(httpCode, mapResponse)
+
+	}
+}
