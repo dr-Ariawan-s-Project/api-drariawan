@@ -13,6 +13,18 @@ import (
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 )
 
+type AppointmentDTO struct {
+	BookingCode       string
+	PatientName       string
+	Email             string
+	DoctorName        string
+	Specialization    string
+	HealthcareAddress string
+	BookingDate       string
+	TimeStart         string
+	TimeEnd           string
+}
+
 // Request struct
 type EmailRequest struct {
 	from    string
@@ -47,6 +59,32 @@ func SendMailQuestionerLink(email, codeAttempt, gmailPass string) {
 	}
 
 	errTemplate := r.ParseEmailTemplate(wd+"/utils/files/index.html", templateData)
+	if errTemplate == nil {
+		errSendEmail := r.SendMail(gmailPass)
+		if errSendEmail == nil {
+			log.Println("success send email '" + subjectEmail + "' to " + email)
+		} else {
+			log.Println("error send email to "+email+". ", errSendEmail)
+		}
+	} else {
+		log.Println("error load template", errTemplate)
+	}
+
+}
+
+// kirim email konfirmasi booking
+func SendMailAppointmentConfirmation(email, gmailPass string, data AppointmentDTO) {
+	// var baseUrlFrontend = config.InitConfig().BASE_URL_FE
+	// Working Directory
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var subjectEmail = "Appointment Schedule dr. Ariawan App"
+	r := NewRequest([]string{email}, subjectEmail, "-")
+
+	errTemplate := r.ParseEmailTemplate(wd+"/utils/files/appointment_confirmation.html", data)
 	if errTemplate == nil {
 		errSendEmail := r.SendMail(gmailPass)
 		if errSendEmail == nil {

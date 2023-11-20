@@ -10,7 +10,7 @@ import (
 
 func New(db *gorm.DB, cfg *config.AppConfig) *_bookingHandler.BookingHandler {
 	repo := _bookingData.New(db)
-	service := _bookingService.New(repo)
+	service := _bookingService.New(repo, cfg)
 	handler := _bookingHandler.New(service)
 
 	return handler

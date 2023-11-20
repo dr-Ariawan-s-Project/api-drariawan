@@ -2,19 +2,24 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"strings"
+	"time"
 
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/booking"
+	"github.com/dr-ariawan-s-project/api-drariawan/utils/helpers"
 )
 
 type bookingService struct {
 	qry booking.Data
+	cfg *config.AppConfig
 }
 
-func New(sd booking.Data) booking.Service {
+func New(sd booking.Data, cfg *config.AppConfig) booking.Service {
 	return &bookingService{
 		qry: sd,
+		cfg: cfg,
 	}
 }
 
@@ -23,10 +28,37 @@ func (bs *bookingService) Create(data booking.Core, role string) error {
 	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_PatientAccess {
 		return errors.New(config.VAL_Unauthorized)
 	}
-	err := bs.qry.Create(data)
+	bookingID, err := bs.qry.Create(data)
 	if err != nil {
 		return errors.New(err.Error())
 	}
+
+	bookingResult, errBookingResult := bs.qry.GetByBookingID(*bookingID)
+	if errBookingResult != nil {
+		return errBookingResult
+	}
+
+	layoutFormat := "2006-01-02"
+	// value = "2015-09-02 08:04:00"
+	bookDate, _ := time.Parse(layoutFormat, bookingResult.BookingDate)
+	y, m, d := bookDate.Date()
+	bookDateStr := fmt.Sprintf("%d-%v-%d", d, m, y)
+	fmt.Println(bookingResult.BookingDate, "booking date:", bookDateStr)
+
+	appointmentData := helpers.AppointmentDTO{
+		BookingCode:       bookingResult.BookingCode,
+		PatientName:       bookingResult.Patient.Name,
+		Email:             bookingResult.Patient.Email,
+		DoctorName:        bookingResult.Schedule.User.Name,
+		Specialization:    bookingResult.Schedule.User.Specialization,
+		HealthcareAddress: bookingResult.Schedule.HealthcareAddress,
+		BookingDate:       bookDateStr,
+		TimeStart:         bookingResult.Schedule.TimeStart,
+		TimeEnd:           bookingResult.Schedule.TimeEnd,
+	}
+
+	go helpers.SendMailAppointmentConfirmation(bookingResult.Patient.Email, bs.cfg.GMAIL_APP_PASSWORD, appointmentData)
+
 	return nil
 }
 

@@ -19,8 +19,9 @@ type Core struct {
 }
 
 type Patients struct {
-	ID   string `json:"patient_id"`
-	Name string `json:"name"`
+	ID    string `json:"patient_id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 type Schedules struct {
@@ -48,10 +49,11 @@ type Service interface {
 	GetByPatientID(patientID string) ([]Core, error)
 }
 type Data interface {
-	Create(data Core) error
+	Create(data Core) (bookingID *string, err error)
 	Update(id int, data Core) error
 	Delete(id int) error
 	GetAll() ([]Core, error)
 	GetByUserID(userID int) ([]Core, error)
 	GetByPatientID(patientID string) ([]Core, error)
+	GetByBookingID(bookingID string) (*Core, error)
 }
