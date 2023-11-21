@@ -108,6 +108,13 @@ func UpdateScheduleCheckValidation(data schedule.Core) error {
 func TimeCheckerValidate(timeStart, timeEnd string) error {
 	strPemisah := ":"
 
+	// validasi ketika data time start dan end yang dimasukkan tidak sesuai format yaitu menggunakan :
+	indexTimeStart := strings.Index(timeStart, strPemisah)
+	indexTimeEnd := strings.Index(timeEnd, strPemisah)
+	if indexTimeStart < 0 || indexTimeEnd < 0 {
+		return errors.New(config.TIME_ERR_FORMAT_HOUR)
+	}
+
 	// Memisahkan hour dan minute time start
 	tsHour := timeStart[:strings.Index(timeStart, strPemisah)]
 	tsMin := timeStart[(strings.Index(timeStart, strPemisah) + 1):]
