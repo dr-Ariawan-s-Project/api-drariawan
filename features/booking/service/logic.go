@@ -38,13 +38,13 @@ func (bs *bookingService) Create(data booking.Core, role string) error {
 		return errBookingResult
 	}
 
-	layoutFormat := "2006-01-02"
-	// value = "2015-09-02 08:04:00"
+	// format booking date
+	layoutFormat := "2006-01-02T15:04:05+07:00"
 	bookDate, _ := time.Parse(layoutFormat, bookingResult.BookingDate)
 	y, m, d := bookDate.Date()
-	bookDateStr := fmt.Sprintf("%d-%v-%d", d, m, y)
-	fmt.Println(bookingResult.BookingDate, "booking date:", bookDateStr)
+	bookDateStr := fmt.Sprintf("%d-%d-%d", d, m, y)
 
+	// send data to func send email
 	appointmentData := helpers.AppointmentDTO{
 		BookingCode:       bookingResult.BookingCode,
 		PatientName:       bookingResult.Patient.Name,
@@ -57,6 +57,7 @@ func (bs *bookingService) Create(data booking.Core, role string) error {
 		TimeEnd:           bookingResult.Schedule.TimeEnd,
 	}
 
+	// send email
 	go helpers.SendMailAppointmentConfirmation(bookingResult.Patient.Email, bs.cfg.GMAIL_APP_PASSWORD, appointmentData)
 
 	return nil
