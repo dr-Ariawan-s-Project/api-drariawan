@@ -21,8 +21,9 @@ type Bookings struct {
 }
 
 type Patients struct {
-	ID   string
-	Name string
+	ID    string
+	Name  string
+	Email string
 }
 
 type Schedules struct {
@@ -85,8 +86,9 @@ func DataToCore(data Bookings) booking.Core {
 		UpdatedAt:   data.UpdatedAt,
 		DeletedAt:   data.DeletedAt,
 		Patient: booking.Patients{
-			ID:   data.Patient.ID,
-			Name: data.Patient.Name,
+			ID:    data.Patient.ID,
+			Name:  data.Patient.Name,
+			Email: data.Patient.Email,
 		},
 		Schedule: booking.Schedules{
 			ID:                data.Schedule.ID,

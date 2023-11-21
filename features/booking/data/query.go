@@ -23,7 +23,7 @@ func New(db *gorm.DB) booking.Data {
 }
 
 // Create implements schedule.ScheduleData.
-func (bq *bookingQuery) Create(data booking.Core) error {
+func (bq *bookingQuery) Create(data booking.Core) (*string, error) {
 	qry := CoreToData(data)
 	qry.State = "confirmed"
 	qry.ID = helpers.UUIDGenerate()
@@ -33,26 +33,26 @@ func (bq *bookingQuery) Create(data booking.Core) error {
 	cnv1 := Bookings{}
 	err := bq.db.Where("booking_date = ? AND schedule_id = ? ", qry.BookingDate, qry.ScheduleId).First(&cnv1).Error
 	if err == nil {
-		return errors.New(config.DB_ERR_DUPLICATE_BOOKING)
+		return nil, errors.New(config.DB_ERR_DUPLICATE_BOOKING)
 	}
 
 	// CEK APAKAH DALAM SATU MINGGU SUDAH PERNAH BOOKING
 	sevenDaysLaterStr, sevenDaysAgoStr, err := validation.SevenDayLimitVal(qry.BookingDate)
 	if err != nil {
-		return errors.New(err.Error())
+		return nil, errors.New(err.Error())
 	}
 	cnv2 := Bookings{}
 	err = bq.db.Where("booking_date >= ? AND booking_date <= ? AND patient_id = ?", sevenDaysAgoStr, sevenDaysLaterStr, qry.PatientId).First(&cnv2).Error
 	if err == nil {
-		return errors.New(config.DB_ERR_LIMIT_BOOKING_SEVDAY)
+		return nil, errors.New(config.DB_ERR_LIMIT_BOOKING_SEVDAY)
 	}
 
 	qry.DeletedAt = nil
 	err = bq.db.Create(&qry).Error
 	if err != nil {
-		return errors.New(err.Error())
+		return nil, errors.New(err.Error())
 	}
-	return nil
+	return &qry.ID, nil
 }
 
 // Update implements schedule.ScheduleData.
@@ -119,4 +119,15 @@ func (bq *bookingQuery) GetByPatientID(patientID string) ([]booking.Core, error)
 		return []booking.Core{}, errors.New(err.Error())
 	}
 	return DataToCoreArray(qry), nil
+}
+
+// GetByBookingID implements booking.Data.
+func (bq *bookingQuery) GetByBookingID(bookingId string) (*booking.Core, error) {
+	qry := Bookings{}
+	tx := bq.db.Where("id = ? and deleted_at IS NULL", bookingId).Order("created_at DESC").Preload("Patient").Preload("Schedule").Preload("Schedule.User").Find(&qry)
+	if tx.Error != nil {
+		return nil, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	result := DataToCore(qry)
+	return &result, nil
 }
