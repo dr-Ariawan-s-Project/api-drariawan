@@ -87,6 +87,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	v1Patient.PUT("/:patient_id", sysRoute.patientHandler.EditPatient, JWTMiddleware())
 	v1Patient.DELETE("/:patient_id", sysRoute.patientHandler.DeleteById, JWTMiddleware())
 	v1Patient.GET("/profile", sysRoute.patientHandler.GetProfile, JWTMiddleware())
+	v1Patient.GET("/forgot-password", sysRoute.patientHandler.GetProfile, JWTMiddleware())
 
 	//booking
 	v1Booking := v1.Group("/booking")
