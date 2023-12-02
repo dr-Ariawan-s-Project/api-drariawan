@@ -102,6 +102,7 @@ func (sh *ScheduleHandler) GetAll() echo.HandlerFunc {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_SCHEDULE_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
+		// log.Println("Handler OK")
 		res, err := sh.srv.GetAll(role)
 		if err != nil {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_SCHEDULE_CODE)

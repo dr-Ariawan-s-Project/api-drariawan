@@ -74,9 +74,10 @@ func (ss *ScheduleService) Delete(id int, role string) error {
 // GetAll implements schedule.ScheduleService.
 func (ss *ScheduleService) GetAll(role string) ([]schedule.Core, error) {
 	// log.Println(strings.ToLower(role), config.VAL_SusterAccess)
-	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess {
+	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess && strings.ToLower(role) != config.VAL_SuperAdminAccess && strings.ToLower(role) != config.VAL_AdminAccess {
 		return []schedule.Core{}, errors.New(config.VAL_Unauthorized)
 	}
+	// log.Println("SERVICE OK")
 	res, err := ss.qry.GetAll()
 	if err != nil {
 		return []schedule.Core{}, errors.New(err.Error())
