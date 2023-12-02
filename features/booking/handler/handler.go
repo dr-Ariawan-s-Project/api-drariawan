@@ -55,7 +55,7 @@ func (bh *BookingHandler) Update() echo.HandlerFunc {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_BOOKING_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		bookID, _ := strconv.Atoi(c.Param("bookingid"))
+		bookID := c.Param("bookingid")
 		requestBody := BookingRequest{}
 		err = c.Bind(&requestBody)
 		if err != nil {
@@ -82,8 +82,8 @@ func (bh *BookingHandler) Delete() echo.HandlerFunc {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_BOOKING_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
-		strIdParam := c.Param("bookingid")
-		bookID, _ := strconv.Atoi(strIdParam)
+
+		bookID := c.Param("bookingid")
 		err = bh.srv.Delete(bookID, role)
 		if err != nil {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_BOOKING_CODE)

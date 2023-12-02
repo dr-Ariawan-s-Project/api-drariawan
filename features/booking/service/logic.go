@@ -64,7 +64,7 @@ func (bs *bookingService) Create(data booking.Core, role string) error {
 }
 
 // Update implements schedule.bookingService.
-func (bs *bookingService) Update(id int, data booking.Core, role string) error {
+func (bs *bookingService) Update(id string, data booking.Core, role string) error {
 	err := bs.qry.Update(id, data)
 	if err != nil {
 		return errors.New(err.Error())
@@ -73,7 +73,7 @@ func (bs *bookingService) Update(id int, data booking.Core, role string) error {
 }
 
 // Delete implements schedule.bookingService.
-func (bs *bookingService) Delete(id int, role string) error {
+func (bs *bookingService) Delete(id string, role string) error {
 	err := bs.qry.Delete(id)
 	if err != nil {
 		return errors.New(err.Error())
@@ -83,7 +83,7 @@ func (bs *bookingService) Delete(id int, role string) error {
 
 // GetAll implements schedule.bookingService.
 func (bs *bookingService) GetAll(role string) ([]booking.Core, error) {
-	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess {
+	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess && strings.ToLower(role) != config.VAL_SuperAdminAccess && strings.ToLower(role) != config.VAL_AdminAccess {
 		return []booking.Core{}, errors.New(config.VAL_Unauthorized)
 	}
 	res, err := bs.qry.GetAll()
@@ -95,7 +95,7 @@ func (bs *bookingService) GetAll(role string) ([]booking.Core, error) {
 
 // GetByUserID implements booking.Service.
 func (bs *bookingService) GetByUserID(userID int, role string) ([]booking.Core, error) {
-	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess {
+	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess && strings.ToLower(role) != config.VAL_SuperAdminAccess && strings.ToLower(role) != config.VAL_AdminAccess {
 		return []booking.Core{}, errors.New(config.VAL_Unauthorized)
 	}
 	res, err := bs.qry.GetByUserID(userID)

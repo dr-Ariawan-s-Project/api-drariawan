@@ -56,7 +56,7 @@ func (bq *bookingQuery) Create(data booking.Core) (*string, error) {
 }
 
 // Update implements schedule.ScheduleData.
-func (bq *bookingQuery) Update(id int, data booking.Core) error {
+func (bq *bookingQuery) Update(id string, data booking.Core) error {
 	cnv := CoreToData(data)
 	cnv.DeletedAt = nil
 	qry := bq.db.Model(&Bookings{}).Where("id = ?", id).Updates(&cnv)
@@ -73,7 +73,7 @@ func (bq *bookingQuery) Update(id int, data booking.Core) error {
 }
 
 // Delete implements schedule.ScheduleData.
-func (bq *bookingQuery) Delete(id int) error {
+func (bq *bookingQuery) Delete(id string) error {
 	data := Bookings{}
 	timeNow := time.Now()
 	data.DeletedAt = &timeNow
