@@ -96,10 +96,29 @@ func (uh *UserHandler) Delete() echo.HandlerFunc {
 func (uh *UserHandler) FindAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		search := c.QueryParam("search")
-		rp, _ := strconv.Atoi(c.QueryParam("rp"))
-		page, _ := strconv.Atoi(c.QueryParam("page"))
+		rp := c.QueryParam("rp")
+		page := c.QueryParam("page")
 
-		res, err := uh.srv.FindAll(search, rp, page)
+		//check query param
+		var pageInt, rpInt int
+		if page != "" {
+			var errPage error
+			pageInt, errPage = strconv.Atoi(page)
+			if errPage != nil {
+				jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.REQ_InvalidPageParam), config.FEAT_PATIENT_CODE)
+				return c.JSON(httpCode, jsonResponse)
+			}
+		}
+		if rp != "" {
+			var errLimit error
+			rpInt, errLimit = strconv.Atoi(rp)
+			if errLimit != nil {
+				jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.REQ_InvalidLimitParam), config.FEAT_PATIENT_CODE)
+				return c.JSON(httpCode, jsonResponse)
+			}
+		}
+
+		res, err := uh.srv.FindAll(search, rpInt, pageInt)
 		if err != nil {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)

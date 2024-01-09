@@ -75,6 +75,12 @@ func (us *userServ) Delete(id int) error {
 
 // FindAll implements users.UserService.
 func (us *userServ) FindAll(search string, rp int, page int) ([]users.UsersCore, error) {
+	if rp == 0 {
+		rp = 10
+	}
+	if page == 0 {
+		page = 1
+	}
 	res, err := us.userRepo.FindAll(search, rp, page)
 	if err != nil {
 		return []users.UsersCore{}, errors.New(err.Error())

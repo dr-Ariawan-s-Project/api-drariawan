@@ -75,9 +75,13 @@ func (uq *userQuery) Delete(id int) error {
 func (uq *userQuery) FindAll(search string, rp int, page int) ([]users.UsersCore, error) {
 	data := []Users{}
 	offset := (page - 1) * rp
-	err := uq.db.Where("name LIKE ? AND deleted_at is null AND state = ?", "%"+search+"%", "active").Limit(rp).Offset(offset).Find(&data).Error
-	if err != nil {
-		return []users.UsersCore{}, errors.New(err.Error())
+	txSelect := uq.db.Where("state = ? AND deleted_at is null", "active")
+	if search != "" {
+		txSelect.Where("name LIKE ?", "%"+search+"%").Session(&gorm.Session{})
+	}
+	tx := txSelect.Offset(offset).Limit(rp).Find(&data)
+	if tx.Error != nil {
+		return []users.UsersCore{}, errors.New(tx.Error.Error())
 	}
 	return DataToCoreArray(data), nil
 }
