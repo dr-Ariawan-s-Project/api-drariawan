@@ -26,8 +26,8 @@ func New(ur users.Data) users.Service {
 
 // for pagination
 // GetPagination implements users.Service.
-func (us *userServ) GetPagination(search string, page int, perPage int) (map[string]any, error) {
-	totalRows, err := us.userRepo.CountByFilter(search)
+func (us *userServ) GetPagination(search string, role string, page int, perPage int) (map[string]any, error) {
+	totalRows, err := us.userRepo.CountByFilter(search, role)
 	response := map[string]any{
 		"page":          0,
 		"limit":         0,
@@ -96,14 +96,18 @@ func (us *userServ) Delete(id int) error {
 }
 
 // FindAll implements users.UserService.
-func (us *userServ) FindAll(search string, rp int, page int) ([]users.UsersCore, error) {
+func (us *userServ) FindAll(search string, role string, rp int, page int) ([]users.UsersCore, error) {
 	if rp == 0 {
 		rp = 10
 	}
 	if page == 0 {
 		page = 1
 	}
-	res, err := us.userRepo.FindAll(search, rp, page)
+
+	if role != "" && role != config.VAL_AdminAccess && role != config.VAL_SuperAdminAccess && role != config.VAL_DokterAccess && role != config.VAL_SusterAccess && role != config.VAL_PatientAccess {
+		return nil, errors.New("[validation] invalid role")
+	}
+	res, err := us.userRepo.FindAll(search, role, rp, page)
 	if err != nil {
 		return []users.UsersCore{}, errors.New(err.Error())
 	}
