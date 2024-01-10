@@ -96,6 +96,7 @@ func (uh *UserHandler) Delete() echo.HandlerFunc {
 func (uh *UserHandler) FindAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		search := c.QueryParam("search")
+		role := c.QueryParam("role")
 		rp := c.QueryParam("rp")
 		page := c.QueryParam("page")
 
@@ -118,7 +119,7 @@ func (uh *UserHandler) FindAll() echo.HandlerFunc {
 			}
 		}
 
-		res, err := uh.srv.FindAll(search, rpInt, pageInt)
+		res, err := uh.srv.FindAll(search, role, rpInt, pageInt)
 		if err != nil {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_USER_CODE)
 			return c.JSON(httpCode, jsonResponse)
@@ -126,7 +127,7 @@ func (uh *UserHandler) FindAll() echo.HandlerFunc {
 		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, CoreToResponseArray(res))
 
 		//pagination
-		paginationRes, errPagination := uh.srv.GetPagination(search, pageInt, rpInt)
+		paginationRes, errPagination := uh.srv.GetPagination(search, role, pageInt, rpInt)
 		if errPagination == nil {
 			mapResponse["pagination"] = paginationRes
 		}

@@ -22,11 +22,14 @@ func New(db *gorm.DB) users.Data {
 
 // for pagination
 // CountByFilter implements users.Data.
-func (uq *userQuery) CountByFilter(search string) (int64, error) {
+func (uq *userQuery) CountByFilter(search string, role string) (int64, error) {
 	var countAttemp int64
 	tx := uq.db.Model(&Users{})
 	if search != "" {
 		tx.Where("name like ? OR email LIKE ?", "%"+search+"%", "%"+search+"%")
+	}
+	if role != "" {
+		tx.Where("role = ?", role)
 	}
 	tx.Count(&countAttemp)
 	if tx.Error != nil {
@@ -88,16 +91,19 @@ func (uq *userQuery) Delete(id int) error {
 }
 
 // FindAll implements users.UserData.
-func (uq *userQuery) FindAll(search string, rp int, page int) ([]users.UsersCore, error) {
+func (uq *userQuery) FindAll(search string, role string, rp int, page int) ([]users.UsersCore, error) {
 	data := []Users{}
 	offset := (page - 1) * rp
 	txSelect := uq.db.Where("state = ? AND deleted_at is null", "active")
 	if search != "" {
-		txSelect.Where("name LIKE ?", "%"+search+"%").Session(&gorm.Session{})
+		txSelect.Where("name like ? OR email LIKE ?", "%"+search+"%", "%"+search+"%")
 	}
-	tx := txSelect.Offset(offset).Limit(rp).Find(&data)
-	if tx.Error != nil {
-		return []users.UsersCore{}, errors.New(tx.Error.Error())
+	if role != "" {
+		txSelect.Where("role = ?", role)
+	}
+	txSelect.Offset(offset).Limit(rp).Find(&data)
+	if txSelect.Error != nil {
+		return []users.UsersCore{}, errors.New(txSelect.Error.Error())
 	}
 	return DataToCoreArray(data), nil
 }
