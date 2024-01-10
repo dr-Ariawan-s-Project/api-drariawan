@@ -7,6 +7,7 @@ import (
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/patient"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/encrypt"
+	"github.com/dr-ariawan-s-project/api-drariawan/utils/helpers"
 )
 
 type patientService struct {
@@ -19,6 +20,17 @@ func New(repo patient.PatientDataInterface, cfg *config.AppConfig) patient.Patie
 		patientData: repo,
 		cfg:         cfg,
 	}
+}
+
+// for pagination
+// GetPagination implements patient.PatientServiceInterface.
+func (service *patientService) GetPagination(search string, page int, perPage int) (helpers.Pagination, error) {
+	totalRows, err := service.patientData.CountByFilter(search)
+	if err != nil {
+		return helpers.Pagination{}, err
+	}
+	paginationRes := helpers.CountPagination(totalRows, page, perPage)
+	return paginationRes, nil
 }
 
 // for dashboard
@@ -57,10 +69,10 @@ func (service *patientService) Delete(id string) error {
 
 // FindAll implements patient.PatientServiceInterface.
 func (service *patientService) FindAll(search string, page int, perPage int) ([]patient.Core, error) {
-	if perPage == 0 {
+	if perPage <= 0 {
 		perPage = 10
 	}
-	if page == 0 {
+	if page <= 0 {
 		page = 1
 	}
 	offset := (page * perPage) - perPage

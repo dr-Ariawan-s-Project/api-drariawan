@@ -7,6 +7,7 @@ import (
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/users"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/encrypt"
+	"github.com/dr-ariawan-s-project/api-drariawan/utils/helpers"
 	"github.com/dr-ariawan-s-project/api-drariawan/utils/validation"
 	"github.com/go-playground/validator/v10"
 )
@@ -21,6 +22,27 @@ func New(ur users.Data) users.Service {
 		userRepo: ur,
 		validate: validator.New(),
 	}
+}
+
+// for pagination
+// GetPagination implements users.Service.
+func (us *userServ) GetPagination(search string, page int, perPage int) (map[string]any, error) {
+	totalRows, err := us.userRepo.CountByFilter(search)
+	response := map[string]any{
+		"page":          0,
+		"limit":         0,
+		"total_pages":   0,
+		"total_records": 0,
+	}
+	if err != nil {
+		return response, err
+	}
+	paginationRes := helpers.CountPagination(totalRows, page, perPage)
+	response["page"] = paginationRes.Page
+	response["limit"] = paginationRes.Limit
+	response["total_pages"] = paginationRes.TotalPages
+	response["total_records"] = paginationRes.TotalRecords
+	return response, nil
 }
 
 // Insert implements users.UserService.

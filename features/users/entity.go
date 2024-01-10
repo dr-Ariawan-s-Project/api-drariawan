@@ -25,6 +25,7 @@ type Service interface {
 	Delete(id int) error
 	FindAll(search string, rp, page int) ([]UsersCore, error)
 	FindById(id int) (UsersCore, error)
+	GetPagination(search string, page int, perPage int) (map[string]any, error)
 }
 
 type Data interface {
@@ -33,4 +34,5 @@ type Data interface {
 	Delete(id int) error
 	FindAll(search string, rp int, page int) ([]UsersCore, error)
 	FindByID(id int) (UsersCore, error)
+	CountByFilter(search string) (int64, error)
 }
