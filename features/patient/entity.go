@@ -1,6 +1,10 @@
 package patient
 
-import "time"
+import (
+	"time"
+
+	"github.com/dr-ariawan-s-project/api-drariawan/utils/helpers"
+)
 
 type Core struct {
 	ID             string
@@ -30,6 +34,7 @@ type PatientDataInterface interface {
 	CountPartner(partnerId string) (int, error)
 	CountAllPatient() (int, error)
 	SelectAllNIK() ([]string, error)
+	CountByFilter(search string) (int64, error)
 }
 
 type PatientServiceInterface interface {
@@ -41,4 +46,5 @@ type PatientServiceInterface interface {
 	CheckByEmailAndPhone(email string, phone string) (*Core, error)
 	CountPartner(partnerId string) (int, error)
 	CountAllPatient() (int, error)
+	GetPagination(search string, page int, perPage int) (helpers.Pagination, error)
 }

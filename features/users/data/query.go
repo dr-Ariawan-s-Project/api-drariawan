@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/dr-ariawan-s-project/api-drariawan/features/users"
+	"github.com/dr-ariawan-s-project/api-drariawan/utils/helpers"
 	"gorm.io/gorm"
 )
 
@@ -17,6 +18,21 @@ func New(db *gorm.DB) users.Data {
 	return &userQuery{
 		db: db,
 	}
+}
+
+// for pagination
+// CountByFilter implements users.Data.
+func (uq *userQuery) CountByFilter(search string) (int64, error) {
+	var countAttemp int64
+	tx := uq.db.Model(&Users{})
+	if search != "" {
+		tx.Where("name like ? OR email LIKE ?", "%"+search+"%", "%"+search+"%")
+	}
+	tx.Count(&countAttemp)
+	if tx.Error != nil {
+		return 0, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	return countAttemp, nil
 }
 
 // Insert implements users.UserData.

@@ -87,6 +87,13 @@ func (handler *PatientHandler) GetAll(c echo.Context) error {
 	}
 	var patientRespose = CoreToResponseList(results)
 	mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_PATIENT_CODE, patientRespose)
+
+	//pagination
+	paginationRes, errPagination := handler.patientService.GetPagination(qSearch, page, limit)
+	if errPagination == nil {
+		mapResponse["pagination"] = paginationRes
+	}
+
 	return c.JSON(httpCode, mapResponse)
 }
 

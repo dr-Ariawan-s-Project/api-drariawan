@@ -124,6 +124,12 @@ func (uh *UserHandler) FindAll() echo.HandlerFunc {
 			return c.JSON(httpCode, jsonResponse)
 		}
 		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_USER_CODE, CoreToResponseArray(res))
+
+		//pagination
+		paginationRes, errPagination := uh.srv.GetPagination(search, pageInt, rpInt)
+		if errPagination == nil {
+			mapResponse["pagination"] = paginationRes
+		}
 		return c.JSON(httpCode, mapResponse)
 	}
 }

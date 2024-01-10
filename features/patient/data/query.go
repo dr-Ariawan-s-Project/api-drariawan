@@ -19,6 +19,21 @@ func New(db *gorm.DB) patient.PatientDataInterface {
 	}
 }
 
+// for pagination
+// CountByFilter implements patient.PatientDataInterface.
+func (repo *patientQuery) CountByFilter(search string) (int64, error) {
+	var countAttemp int64
+	tx := repo.db.Model(&Patient{})
+	if search != "" {
+		tx.Where("name like ? OR email LIKE ?", "%"+search+"%", "%"+search+"%")
+	}
+	tx.Count(&countAttemp)
+	if tx.Error != nil {
+		return 0, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	return countAttemp, nil
+}
+
 // for dashboard
 // CountAllPatient implements patient.PatientDataInterface.
 func (repo *patientQuery) CountAllPatient() (int, error) {
