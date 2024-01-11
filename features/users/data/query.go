@@ -24,7 +24,7 @@ func New(db *gorm.DB) users.Data {
 // CountByFilter implements users.Data.
 func (uq *userQuery) CountByFilter(search string, role string) (int64, error) {
 	var countAttemp int64
-	tx := uq.db.Model(&Users{})
+	tx := uq.db.Model(&Users{}).Where("state = ? AND deleted_at is null", "active")
 	if search != "" {
 		tx.Where("name like ? OR email LIKE ?", "%"+search+"%", "%"+search+"%")
 	}
