@@ -23,7 +23,7 @@ func New(db *gorm.DB) patient.PatientDataInterface {
 // CountByFilter implements patient.PatientDataInterface.
 func (repo *patientQuery) CountByFilter(search string) (int64, error) {
 	var countAttemp int64
-	tx := repo.db.Model(&Patient{})
+	tx := repo.db.Model(&Patient{}).Where("deleted_at is null")
 	if search != "" {
 		tx.Where("name like ? OR email LIKE ?", "%"+search+"%", "%"+search+"%")
 	}
@@ -38,7 +38,7 @@ func (repo *patientQuery) CountByFilter(search string) (int64, error) {
 // CountAllPatient implements patient.PatientDataInterface.
 func (repo *patientQuery) CountAllPatient() (int, error) {
 	var countAttemp int64
-	tx := repo.db.Model(&Patient{}).Count(&countAttemp)
+	tx := repo.db.Model(&Patient{}).Where("deleted_at is null").Count(&countAttemp)
 	if tx.Error != nil {
 		return 0, helpers.CheckQueryErrorMessage(tx.Error)
 	}
@@ -110,12 +110,12 @@ func (repo *patientQuery) Insert(data patient.Core) (*patient.Core, error) {
 // Select implements patient.PatientDataInterface.
 func (repo *patientQuery) Select(search string, offset int, limit int) ([]patient.Core, error) {
 	var patient []Patient
-	txSelect := repo.db.Preload("Partner")
+	tx := repo.db.Preload("Partner")
 	if search != "" {
-		txSelect.Where("name like ? OR email LIKE ?", "%"+search+"%", "%"+search+"%").Session(&gorm.Session{})
+		tx.Where("name like ? OR email LIKE ?", "%"+search+"%", "%"+search+"%")
 	}
-
-	tx := txSelect.Offset(offset).Limit(limit).Find(&patient)
+	tx.Where("deleted_at is null")
+	tx.Offset(offset).Limit(limit).Find(&patient)
 	if tx.Error != nil {
 		return nil, helpers.CheckQueryErrorMessage(tx.Error)
 	}
