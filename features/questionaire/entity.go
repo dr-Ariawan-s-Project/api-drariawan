@@ -1,6 +1,10 @@
 package questionaire
 
-import "time"
+import (
+	"time"
+
+	"github.com/dr-ariawan-s-project/api-drariawan/utils/helpers"
+)
 
 type Core struct {
 	Id          uint
@@ -77,6 +81,7 @@ type QuestionaireDataInterface interface {
 	InsertAssesment(data CoreAttempt) error
 	CountAllQuestion() (int, error)
 	CountQuestionerAttempt() (int, error)
+	CountTestAttemptByFilter(status string) (int64, error)
 }
 
 type QuestionaireServiceInterface interface {
@@ -87,4 +92,5 @@ type QuestionaireServiceInterface interface {
 	GetAllAnswerByAttempt(idAttempt string, page int, perPage int) (dataAnswer []CoreAnswer, err error)
 	InsertAssesment(data CoreAttempt) error
 	CountQuestionerAttempt() (int, error)
+	GetPaginationTestAttempt(status string, page int, perPage int) (helpers.Pagination, error)
 }

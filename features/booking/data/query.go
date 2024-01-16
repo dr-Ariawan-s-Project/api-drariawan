@@ -22,6 +22,18 @@ func New(db *gorm.DB) booking.Data {
 	}
 }
 
+// for pagination
+// CountByFilter implements booking.Data.
+func (bq *bookingQuery) CountByFilter() (int64, error) {
+	var countAttemp int64
+	tx := bq.db.Model(&Bookings{}).Where("deleted_at is null")
+	tx.Count(&countAttemp)
+	if tx.Error != nil {
+		return 0, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	return countAttemp, nil
+}
+
 // Create implements schedule.ScheduleData.
 func (bq *bookingQuery) Create(data booking.Core) (*string, error) {
 	qry := CoreToData(data)
@@ -91,9 +103,9 @@ func (bq *bookingQuery) Delete(id string) error {
 }
 
 // GetAll implements schedule.ScheduleData.
-func (bq *bookingQuery) GetAll() ([]booking.Core, error) {
+func (bq *bookingQuery) GetAll(offset int, limit int) ([]booking.Core, error) {
 	qry := []Bookings{}
-	err := bq.db.Where("deleted_at IS NULL").Order("created_at DESC").Preload("Patient").Preload("Schedule").Preload("Schedule.User").Find(&qry).Error
+	err := bq.db.Where("deleted_at IS NULL").Order("created_at DESC").Preload("Patient").Preload("Schedule").Preload("Schedule.User").Offset(offset).Limit(limit).Find(&qry).Error
 	if err != nil {
 		return []booking.Core{}, errors.New(err.Error())
 	}

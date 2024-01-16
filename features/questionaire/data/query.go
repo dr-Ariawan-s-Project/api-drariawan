@@ -19,6 +19,21 @@ func New(db *gorm.DB) questionaire.QuestionaireDataInterface {
 	}
 }
 
+// for pagination
+// CountTestAttemptByFilter implements questionaire.QuestionaireDataInterface.
+func (repo *questionaireQuery) CountTestAttemptByFilter(status string) (int64, error) {
+	var countAttemp int64
+	tx := repo.db.Model(&TestAttempt{}).Where("deleted_at is null")
+	if status != "" {
+		tx.Where("status = ?", status)
+	}
+	tx.Count(&countAttemp)
+	if tx.Error != nil {
+		return 0, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	return countAttemp, nil
+}
+
 // CountAllQuestion implements questionaire.QuestionaireDataInterface.
 func (repo *questionaireQuery) CountAllQuestion() (int, error) {
 	var countAttemp int64
@@ -32,7 +47,7 @@ func (repo *questionaireQuery) CountAllQuestion() (int, error) {
 // CountQuestionerAttempt implements questionaire.QuestionaireDataInterface.
 func (repo *questionaireQuery) CountQuestionerAttempt() (int, error) {
 	var countAttemp int64
-	tx := repo.db.Model(&TestAttempt{}).Count(&countAttemp)
+	tx := repo.db.Model(&TestAttempt{}).Where("deleted_at is null").Count(&countAttemp)
 	if tx.Error != nil {
 		return 0, helpers.CheckQueryErrorMessage(tx.Error)
 	}
@@ -43,7 +58,7 @@ func (repo *questionaireQuery) CountQuestionerAttempt() (int, error) {
 func (repo *questionaireQuery) CountTestAttempt(patientId string) (dataAttempt questionaire.CoreAttempt, count int, err error) {
 	// var countAttemp int64
 	var attempt TestAttempt
-	tx := repo.db.Where("patient_id = ?", patientId).First(&attempt)
+	tx := repo.db.Where("patient_id = ? and deleted_at is null", patientId).First(&attempt)
 	if tx.Error != nil {
 		return questionaire.CoreAttempt{}, 0, helpers.CheckQueryErrorMessage(tx.Error)
 	}
@@ -56,7 +71,7 @@ func (repo *questionaireQuery) CountTestAttempt(patientId string) (dataAttempt q
 // CheckCountAttemptAnswer implements questionaire.QuestionaireDataInterface.
 func (repo *questionaireQuery) CheckCountAttemptAnswer(patientId string) (int, error) {
 	var countAttemp int64
-	tx := repo.db.Model(&Answer{}).Select("answers.id").Joins("inner join test_attempt on test_attempt.id = answers.attempt_id").Where("test_attempt.patient_id = ?", patientId).Count(&countAttemp)
+	tx := repo.db.Model(&Answer{}).Select("answers.id").Joins("inner join test_attempt on test_attempt.id = answers.attempt_id").Where("test_attempt.patient_id = ? and test_attempt.deleted_at is null", patientId).Count(&countAttemp)
 	if tx.Error != nil {
 		return 0, helpers.CheckQueryErrorMessage(tx.Error)
 	}
@@ -78,7 +93,7 @@ func (repo *questionaireQuery) FindTestAttempt(status string, offset int, limit 
 	var attemptData []TestAttempt
 	txSelect := repo.db.Preload("Patient")
 	if status != "" {
-		txSelect.Where("status = ?", status).Session(&gorm.Session{})
+		txSelect.Where("status = ? and deleted_at is null", status).Session(&gorm.Session{})
 	}
 
 	tx := txSelect.Order("created_at desc").Offset(offset).Limit(limit).Find(&attemptData)

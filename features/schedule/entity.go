@@ -43,11 +43,13 @@ type ScheduleService interface {
 	Create(data Core, role string) error
 	Update(id int, data Core, role string) error
 	Delete(id int, role string) error
-	GetAll(role string) ([]Core, error)
+	GetAll(role string, page int, perPage int) ([]Core, error)
+	GetPagination(page int, perPage int) (map[string]any, error)
 }
 type ScheduleData interface {
 	Create(data Core) error
 	Update(id int, data Core) error
 	Delete(id int) error
-	GetAll() ([]Core, error)
+	GetAll(offset int, limit int) ([]Core, error)
+	CountByFilter() (int64, error)
 }
