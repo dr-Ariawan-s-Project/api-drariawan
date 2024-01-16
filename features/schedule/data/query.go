@@ -23,6 +23,19 @@ func New(db *gorm.DB) schedule.ScheduleData {
 	}
 }
 
+// for pagination
+// CountByFilter implements schedule.ScheduleData.
+func (sq *scheduleQuery) CountByFilter() (int64, error) {
+
+	var countAttemp int64
+	tx := sq.db.Model(&Schedules{}).Where("deleted_at is null")
+	tx.Count(&countAttemp)
+	if tx.Error != nil {
+		return 0, errors.New("error count pagination")
+	}
+	return countAttemp, nil
+}
+
 func (sq *scheduleQuery) CheckDuplUserID(userId int) error {
 	check := Schedules{}
 	err := sq.db.Where("user_id = ?", userId).First(&check).Error
@@ -103,7 +116,7 @@ func (sq *scheduleQuery) Delete(id int) error {
 }
 
 // GetAll implements schedule.ScheduleData.
-func (sq *scheduleQuery) GetAll() ([]schedule.Core, error) {
+func (sq *scheduleQuery) GetAll(offset int, limit int) ([]schedule.Core, error) {
 
 	currentDate := time.Now().Format("2006-01-02")
 	sevenDaysLaterStr, sevenDaysAgoStr, err := validation.SevenDayLimitVal(currentDate)
@@ -111,8 +124,12 @@ func (sq *scheduleQuery) GetAll() ([]schedule.Core, error) {
 		return []schedule.Core{}, errors.New(err.Error())
 	}
 	qry := []Schedules{}
-	err = sq.db.Preload("User").Preload("Booking", "booking_date >= ? AND booking_date <= ?", sevenDaysAgoStr, sevenDaysLaterStr).Where("deleted_at is null").Find(&qry).Error
-	if err != nil {
+	tx := sq.db.Preload("User").Preload("Booking", "booking_date >= ? AND booking_date <= ?", sevenDaysAgoStr, sevenDaysLaterStr).Where("deleted_at is null")
+	if limit != 0 {
+		tx.Offset(offset).Limit(limit)
+	}
+	tx.Find(&qry)
+	if tx.Error != nil {
 		return []schedule.Core{}, errors.New(err.Error())
 	}
 

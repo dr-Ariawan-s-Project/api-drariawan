@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"strconv"
 
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
@@ -102,13 +103,39 @@ func (sh *ScheduleHandler) GetAll() echo.HandlerFunc {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_SCHEDULE_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
+		qPage := c.QueryParam("page")
+		qLimit := c.QueryParam("limit")
+
+		var page, limit int
+		if qPage != "" {
+			var errPage error
+			page, errPage = strconv.Atoi(qPage)
+			if errPage != nil {
+				jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.REQ_InvalidPageParam), config.FEAT_PATIENT_CODE)
+				return c.JSON(httpCode, jsonResponse)
+			}
+		}
+		if qLimit != "" {
+			var errLimit error
+			limit, errLimit = strconv.Atoi(qLimit)
+			if errLimit != nil {
+				jsonResponse, httpCode := helpers.WebResponseError(errors.New(config.REQ_InvalidLimitParam), config.FEAT_PATIENT_CODE)
+				return c.JSON(httpCode, jsonResponse)
+			}
+		}
 		// log.Println("Handler OK")
-		res, err := sh.srv.GetAll(role)
+		res, err := sh.srv.GetAll(role, page, limit)
 		if err != nil {
 			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_SCHEDULE_CODE)
 			return c.JSON(httpCode, jsonResponse)
 		}
 		mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_SCHEDULE_CODE, res)
+
+		//pagination
+		paginationRes, errPagination := sh.srv.GetPagination(page, limit)
+		if errPagination == nil {
+			mapResponse["pagination"] = paginationRes
+		}
 		return c.JSON(httpCode, mapResponse)
 
 	}

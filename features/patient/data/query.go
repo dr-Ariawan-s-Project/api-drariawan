@@ -115,7 +115,10 @@ func (repo *patientQuery) Select(search string, offset int, limit int) ([]patien
 		tx.Where("name like ? OR email LIKE ?", "%"+search+"%", "%"+search+"%")
 	}
 	tx.Where("deleted_at is null")
-	tx.Offset(offset).Limit(limit).Find(&patient)
+	if limit != 0 {
+		tx.Offset(offset).Limit(limit)
+	}
+	tx.Find(&patient)
 	if tx.Error != nil {
 		return nil, helpers.CheckQueryErrorMessage(tx.Error)
 	}

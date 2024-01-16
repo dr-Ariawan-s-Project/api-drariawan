@@ -30,6 +30,11 @@ func (service *patientService) GetPagination(search string, page int, perPage in
 		return helpers.Pagination{}, err
 	}
 	paginationRes := helpers.CountPagination(totalRows, page, perPage)
+	if perPage == 0 {
+		// di patient feature, jika limit tidak diinputkan maka tampilkan semua datanya.
+		paginationRes.Limit = 0
+		paginationRes.TotalPages = 1
+	}
 	return paginationRes, nil
 }
 
@@ -69,9 +74,9 @@ func (service *patientService) Delete(id string) error {
 
 // FindAll implements patient.PatientServiceInterface.
 func (service *patientService) FindAll(search string, page int, perPage int) ([]patient.Core, error) {
-	if perPage <= 0 {
-		perPage = 10
-	}
+	// if perPage <= 0 {
+	// 	perPage = 10
+	// }
 	if page <= 0 {
 		page = 1
 	}

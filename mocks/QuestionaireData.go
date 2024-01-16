@@ -115,6 +115,30 @@ func (_m *QuestionaireData) CountTestAttempt(patientId string) (questionaire.Cor
 	return r0, r1, r2
 }
 
+// CountTestAttemptByFilter provides a mock function with given fields: status
+func (_m *QuestionaireData) CountTestAttemptByFilter(status string) (int64, error) {
+	ret := _m.Called(status)
+
+	var r0 int64
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (int64, error)); ok {
+		return rf(status)
+	}
+	if rf, ok := ret.Get(0).(func(string) int64); ok {
+		r0 = rf(status)
+	} else {
+		r0 = ret.Get(0).(int64)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(status)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // FindAllAnswerByAttempt provides a mock function with given fields: idAttemptattempt_id, offset, limit
 func (_m *QuestionaireData) FindAllAnswerByAttempt(idAttemptattempt_id string, offset int, limit int) ([]questionaire.CoreAnswer, error) {
 	ret := _m.Called(idAttemptattempt_id, offset, limit)

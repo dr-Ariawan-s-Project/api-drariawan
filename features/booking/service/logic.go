@@ -23,6 +23,27 @@ func New(sd booking.Data, cfg *config.AppConfig) booking.Service {
 	}
 }
 
+// for pagination
+// GetPagination implements booking.Service.
+func (bs *bookingService) GetPagination(page int, perPage int) (map[string]any, error) {
+	totalRows, err := bs.qry.CountByFilter()
+	response := map[string]any{
+		"page":          0,
+		"limit":         0,
+		"total_pages":   0,
+		"total_records": 0,
+	}
+	if err != nil {
+		return response, err
+	}
+	paginationRes := helpers.CountPagination(totalRows, page, perPage)
+	response["page"] = paginationRes.Page
+	response["limit"] = paginationRes.Limit
+	response["total_pages"] = paginationRes.TotalPages
+	response["total_records"] = paginationRes.TotalRecords
+	return response, nil
+}
+
 // Create implements booking.Service.
 func (bs *bookingService) Create(data booking.Core, role string) error {
 	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_PatientAccess {
@@ -82,11 +103,22 @@ func (bs *bookingService) Delete(id string, role string) error {
 }
 
 // GetAll implements schedule.bookingService.
-func (bs *bookingService) GetAll(role string) ([]booking.Core, error) {
+func (bs *bookingService) GetAll(role string, page int, perPage int) ([]booking.Core, error) {
 	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess && strings.ToLower(role) != config.VAL_SuperAdminAccess && strings.ToLower(role) != config.VAL_AdminAccess {
 		return []booking.Core{}, errors.New(config.VAL_Unauthorized)
 	}
-	res, err := bs.qry.GetAll()
+	if perPage <= 0 {
+		perPage = 10
+	}
+	if page <= 0 {
+		page = 1
+	}
+	offset := (page * perPage) - perPage
+
+	if offset < 0 {
+		offset = 0
+	}
+	res, err := bs.qry.GetAll(offset, perPage)
 	if err != nil {
 		return []booking.Core{}, errors.New(err.Error())
 	}

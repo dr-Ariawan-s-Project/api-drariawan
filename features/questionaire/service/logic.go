@@ -17,6 +17,17 @@ type questionaireService struct {
 	cfg              *config.AppConfig
 }
 
+// for pagination
+// GetPaginationTestAttempt implements questionaire.QuestionaireServiceInterface.
+func (service *questionaireService) GetPaginationTestAttempt(status string, page int, perPage int) (helpers.Pagination, error) {
+	totalRows, err := service.questionaireData.CountTestAttemptByFilter(status)
+	if err != nil {
+		return helpers.Pagination{}, err
+	}
+	paginationRes := helpers.CountPagination(totalRows, page, perPage)
+	return paginationRes, nil
+}
+
 func New(repo questionaire.QuestionaireDataInterface, patientServ patient.PatientServiceInterface, cfg *config.AppConfig) questionaire.QuestionaireServiceInterface {
 	return &questionaireService{
 		questionaireData: repo,
