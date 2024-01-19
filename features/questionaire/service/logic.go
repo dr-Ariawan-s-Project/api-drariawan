@@ -147,7 +147,7 @@ func (service *questionaireService) GetTestAttempt(status string, page int, perP
 	}
 	offset := (page * perPage) - perPage
 
-	if offset < 0 {
+	if offset <= 0 {
 		offset = 0
 	}
 	return service.questionaireData.FindTestAttempt(status, offset, perPage)

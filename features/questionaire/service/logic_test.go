@@ -12,6 +12,67 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
+func TestGetPaginationTestAttempt(t *testing.T) {
+	patientServ := new(mocks.PatientService)
+	questionaireRepo := new(mocks.QuestionaireData)
+	cfg := config.InitConfig()
+
+	t.Run("Success Get Pagination", func(t *testing.T) {
+		totalRows := int64(20)
+		page := 1
+		perPage := 10
+		status := ""
+		questionaireRepo.On("CountTestAttemptByFilter", status).Return(totalRows, nil).Once()
+		questionaireService := New(questionaireRepo, patientServ, cfg)
+		paginationRes, err := questionaireService.GetPaginationTestAttempt(status, page, perPage)
+		assert.NoError(t, err)
+		assert.Equal(t, 10, paginationRes.Limit)
+		assert.Equal(t, 1, paginationRes.Page)
+		assert.Equal(t, 2, paginationRes.TotalPages)
+		assert.Equal(t, int64(20), paginationRes.TotalRecords)
+		questionaireRepo.AssertExpectations(t)
+	})
+
+	t.Run("Error Count by filter", func(t *testing.T) {
+		page := 1
+		perPage := 10
+		status := ""
+		questionaireRepo.On("CountTestAttemptByFilter", status).Return(int64(0), errors.New("error get count by filter")).Once()
+		questionaireService := New(questionaireRepo, patientServ, cfg)
+		_, err := questionaireService.GetPaginationTestAttempt(status, page, perPage)
+		assert.Error(t, err)
+		questionaireRepo.AssertExpectations(t)
+	})
+
+	t.Run("if perPage = 0", func(t *testing.T) {
+		totalRows := int64(20)
+		page := 1
+		perPage := 0
+		status := ""
+		questionaireRepo.On("CountTestAttemptByFilter", status).Return(totalRows, nil).Once()
+		questionaireService := New(questionaireRepo, patientServ, cfg)
+		paginationRes, err := questionaireService.GetPaginationTestAttempt(status, page, perPage)
+		assert.NoError(t, err)
+		assert.Equal(t, 10, paginationRes.Limit)
+		assert.Equal(t, 2, paginationRes.TotalPages)
+		questionaireRepo.AssertExpectations(t)
+	})
+}
+
+func TestCountQuestionerAttempt(t *testing.T) {
+	patientServ := new(mocks.PatientService)
+	questionaireRepo := new(mocks.QuestionaireData)
+	cfg := config.InitConfig()
+
+	t.Run("test count questioner attempt", func(t *testing.T) {
+		questionaireRepo.On("CountQuestionerAttempt").Return(10, nil).Once()
+		questionaireService := New(questionaireRepo, patientServ, cfg)
+		response, err := questionaireService.CountQuestionerAttempt()
+		assert.NoError(t, err)
+		assert.Equal(t, 10, response)
+	})
+}
+
 func TestValidate(t *testing.T) {
 	patientServ := new(mocks.PatientService)
 	questionaireRepo := new(mocks.QuestionaireData)
@@ -180,6 +241,67 @@ func TestInsertAnswer(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 
+}
+
+func TestGetTestAttempt(t *testing.T) {
+	patientServ := new(mocks.PatientService)
+	questionaireRepo := new(mocks.QuestionaireData)
+	cfg := config.InitConfig()
+
+	t.Run("success get test attempt", func(t *testing.T) {
+		page := 0
+		perPage := 0
+		// offset := 0
+		status := ""
+
+		returnData := []questionaire.CoreAttempt{
+			{
+				Id:            "ATMP0001",
+				PatientId:     "PATIENT0001",
+				CodeAttempt:   "CODE0001",
+				NotesAttempt:  "-",
+				Score:         100,
+				AIAccuracy:    100,
+				AIProbability: 0,
+				AIDiagnosis:   "ok",
+				Diagnosis:     "ok",
+				Feedback:      "ok",
+				Status:        "completed",
+			},
+		}
+		questionaireRepo.On("FindTestAttempt", status, 0, 10).Return(returnData, nil).Once()
+		questionaireService := New(questionaireRepo, patientServ, cfg)
+		response, err := questionaireService.GetTestAttempt(status, page, perPage)
+		assert.NoError(t, err)
+		assert.Equal(t, returnData[0].Id, response[0].Id)
+	})
+}
+
+func TestGetAllAnswerAttempt(t *testing.T) {
+	patientServ := new(mocks.PatientService)
+	questionaireRepo := new(mocks.QuestionaireData)
+	cfg := config.InitConfig()
+
+	t.Run("success get all answer attempt", func(t *testing.T) {
+		page := 0
+		perPage := 0
+		// offset := 0
+
+		returnData := []questionaire.CoreAnswer{
+			{
+				Id:          "ASWR0001",
+				AttemptId:   "ATMP0001",
+				QuestionId:  1,
+				Description: "keterangan",
+				Score:       5,
+			},
+		}
+		questionaireRepo.On("FindAllAnswerByAttempt", "ATMP0001", 0, 10).Return(returnData, nil).Once()
+		questionaireService := New(questionaireRepo, patientServ, cfg)
+		response, err := questionaireService.GetAllAnswerByAttempt("ATMP0001", page, perPage)
+		assert.NoError(t, err)
+		assert.Equal(t, returnData[0].Id, response[0].Id)
+	})
 }
 
 func TestGetAll(t *testing.T) {
