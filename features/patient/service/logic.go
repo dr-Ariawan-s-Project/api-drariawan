@@ -82,7 +82,7 @@ func (service *patientService) FindAll(search string, page int, perPage int) ([]
 	}
 	offset := (page * perPage) - perPage
 
-	if offset < 0 {
+	if offset <= 0 {
 		offset = 0
 	}
 	log.Println("limit", page, "offset", offset)
