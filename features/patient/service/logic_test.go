@@ -199,16 +199,7 @@ func TestInsert(t *testing.T) {
 		NIK:      "1234567890",
 		Phone:    "08123456",
 	}
-	// var partnerIDDummy = "PATIENT0001"
-	// partnerResponseData := patient.Core{
-	// 	ID:        "PARTNER0001",
-	// 	Name:      "Test Patient Partner",
-	// 	Email:     "testpartner@alterra.id",
-	// 	Password:  "qwerty",
-	// 	NIK:       "12345678901",
-	// 	Phone:     "081234561",
-	// 	PartnerID: &partnerIDDummy,
-	// }
+
 	// untuk data yang not found
 	emptyResponseData := patient.Core{}
 
@@ -228,12 +219,7 @@ func TestInsert(t *testing.T) {
 		NIK:      "12345678901",
 		Phone:    "081234561",
 	}
-	// partnerInputDataSuccess := patient.Core{
-	// 	ID:    "PARTNER0001",
-	// 	Name:  "Test Patient Partner",
-	// 	Email: "testpartner@alterra.id",
-	// 	Phone: "081234561",
-	// }
+
 	var partnerIDDummy = "PATIENT0001"
 	partnerResponseDataSuccess := patient.Core{
 		ID:        "PARTNER0001",
@@ -263,13 +249,11 @@ func TestInsert(t *testing.T) {
 		}
 		patientRepo.On("SelectByEmailOrPhone", "test@alterra.id").Return(&emptyResponseData, nil).Once()
 		patientRepo.On("SelectAllNIK").Return(responseNIK, nil).Once()
-		// 	// patientRepo.On("CountPartner", "PARTNER0001").Return(1, nil).Once()
-		// patientRepo.On("Insert", inputData).Return(&responseData, nil).Once()
+
 		patientService := New(patientRepo, cfg)
 		response, err := patientService.Insert(inputData, "")
 		assert.Error(t, err)
 		assert.Nil(t, response)
-		// 	// patientRepo.AssertExpectations(t)
 	})
 
 	t.Run("4. NIK not duplicated, but check partner email error", func(t *testing.T) {
@@ -279,13 +263,11 @@ func TestInsert(t *testing.T) {
 		patientRepo.On("SelectByEmailOrPhone", "test@alterra.id").Return(&emptyResponseData, nil).Once()
 		patientRepo.On("SelectAllNIK").Return(responseNIK, nil).Once()
 		patientRepo.On("SelectByEmailOrPhone", "testpartner@alterra.id").Return(&emptyResponseData, errors.New("error check/search partner email")).Once()
-		// patientRepo.On("CountPartner", "PARTNER0001").Return(1, nil).Once()
-		// patientRepo.On("Insert", inputData).Return(&responseData, nil).Once()
+
 		patientService := New(patientRepo, cfg)
 		response, err := patientService.Insert(inputData, "testpartner@alterra.id")
 		assert.Error(t, err)
 		assert.Nil(t, response)
-		// 	// patientRepo.AssertExpectations(t)
 	})
 	t.Run("5. NIK not duplicated, but check patient partner email not found", func(t *testing.T) {
 		responseNIK := []string{
@@ -342,32 +324,78 @@ func TestInsert(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, partnerResponseDataSuccess.Email, response.Email)
 	})
-	// t.Run("8. NIK not duplicated, and check patient partner email found, then patient already have partner", func(t *testing.T) {
-	// 	responseNIK := []string{
-	// 		"1",
-	// 	}
-	// 	patientRepo.On("SelectByEmailOrPhone", "testpartner@alterra.id").Return(&emptyResponseData, nil).Once()
-	// 	patientRepo.On("SelectAllNIK").Return(responseNIK, nil).Once()
-	// 	patientRepo.On("SelectByEmailOrPhone", "test@alterra.id").Return(&responseData, nil).Once()
-	// 	patientRepo.On("CountPartner", responseData.ID).Return(int(1), nil).Once()
-	// 	// patientRepo.On("Insert", inputData).Return(&responseData, nil).Once()
-	// 	patientService := New(patientRepo, cfg)
-	// 	_, err := patientService.Insert(partnerInputData, "test@alterra.id")
-	// 	assert.Error(t, err)
-	// 	// assert.Nil(t, response)
-	// })
-	// t.Run("success insert patient", func(t *testing.T) {
-	// 	responseNIK := []string{
-	// 		"1",
-	// 	}
-	// 	patientRepo.On("SelectByEmailOrPhone", "test@alterra.id").Return(&emptyResponseData, nil).Once()
-	// 	patientRepo.On("SelectAllNIK").Return(responseNIK, nil).Once()
-	// 	patientRepo.On("SelectByEmailOrPhone", "testpartner@alterra.id").Return(&partnerResponseData, nil).Once()
-	// 	patientRepo.On("CountPartner", "PARTNER0001").Return(0, nil).Once()
-	// 	patientRepo.On("Insert", inputData).Return(&responseData, nil).Once()
-	// 	patientService := New(patientRepo, cfg)
-	// 	response, err := patientService.Insert(inputData, "testpartner@alterra.id")
-	// 	assert.NoError(t, err)
-	// 	assert.Equal(t, responseData.Email, response.Email)
-	// })
+
+}
+
+func TestUpdate(t *testing.T) {
+	patientRepo := new(mocks.PatientData)
+	cfg := config.InitConfig()
+
+	t.Run("error id null", func(t *testing.T) {
+		inputData := patient.Core{
+			Name:     "Test Patient",
+			Email:    "test@alterra.id",
+			Password: "qwerty",
+			NIK:      "1234567890",
+			Phone:    "08123456",
+		}
+		patientService := New(patientRepo, cfg)
+		response, err := patientService.Update(inputData)
+		assert.Error(t, err)
+		assert.Nil(t, response)
+	})
+
+	t.Run("success update", func(t *testing.T) {
+		inputData := patient.Core{
+			ID:    "PATIENT0001",
+			Name:  "Test Patient",
+			Email: "test@alterra.id",
+			Phone: "08123456",
+		}
+
+		responseData := patient.Core{
+			ID:    "PATIENT0001",
+			Name:  "Test Patient",
+			Email: "test@alterra.id",
+			Phone: "08123456",
+		}
+
+		patientRepo.On("Update", inputData.ID, inputData).Return(&responseData, nil).Once()
+
+		patientService := New(patientRepo, cfg)
+		response, err := patientService.Update(inputData)
+		assert.NoError(t, err)
+		assert.Equal(t, inputData.Name, response.Name)
+	})
+
+	t.Run("error NIK duplicate", func(t *testing.T) {
+		inputData := patient.Core{
+			ID:       "PATIENT0001",
+			Name:     "Test Patient",
+			Email:    "test@alterra.id",
+			NIK:      "1234567890",
+			Password: "qwerty",
+			Phone:    "08123456",
+		}
+
+		responseData := patient.Core{
+			ID:    "PATIENT0001",
+			Name:  "Test Patient",
+			Email: "test@alterra.id",
+			Phone: "08123456",
+		}
+
+		responseNIK := []string{
+			"r7liBB3MWJRtPxRw+NsyuGCpZjJGf5VaK1FsP2EL+ALlxnBr4HY=", // hasil encrypt dari 1234567890
+		}
+
+		patientRepo.On("SelectAllNIK").Return(responseNIK, nil).Once()
+		patientRepo.On("Update", inputData.ID, inputData).Return(&responseData, nil).Once()
+
+		patientService := New(patientRepo, cfg)
+		response, err := patientService.Update(inputData)
+		assert.Error(t, err)
+		assert.Nil(t, response)
+	})
+
 }
