@@ -126,6 +126,6 @@ func TestGetQuestionerAttemptPerMonth(t *testing.T) {
 		dashboardService := New(dashboardRepo)
 		response, err := dashboardService.GetQuestionerAttemptPerMonth()
 		assert.NoError(t, err)
-		assert.Equal(t, 1, len(response))
+		assert.Equal(t, 12, len(response))
 	})
 }
