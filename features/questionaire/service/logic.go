@@ -163,7 +163,7 @@ func (service *questionaireService) GetAllAnswerByAttempt(idAttempt string, page
 	}
 	offset := (page * perPage) - perPage
 
-	if offset < 0 {
+	if offset <= 0 {
 		offset = 0
 	}
 	return service.questionaireData.FindAllAnswerByAttempt(idAttempt, offset, perPage)
