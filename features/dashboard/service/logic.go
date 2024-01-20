@@ -21,19 +21,24 @@ func New(dashboardData dashboard.DashboardDataInterface) dashboard.DashboardServ
 func (service *dashboardService) GetDashboardStatistics() (dashboard.DashboardCore, error) {
 	var dashboardResult dashboard.DashboardCore
 	questAttemptCount, errQuestAttempt := service.dashboardData.CountQuestionerAttempt()
-
+	if errQuestAttempt != nil {
+		return dashboardResult, errQuestAttempt
+	}
 	// get data from status validated
 	questAttemptNeedAssess, errQuestAttemptNeedAssess := service.dashboardData.CountAttemptByStatusAssessment(config.QUESTIONER_ATTEMPT_STATUS_VALIDATED)
-
+	if errQuestAttemptNeedAssess != nil {
+		return dashboardResult, errQuestAttemptNeedAssess
+	}
 	// get data from this month
 	t := time.Now()
 	questAttemptMonth, errQuestAttemptMonth := service.dashboardData.CountAttemptByMonth(int(t.Month()))
-
+	if errQuestAttemptMonth != nil {
+		return dashboardResult, errQuestAttemptMonth
+	}
 	//get data all patient
 	patientCount, errPatientCount := service.dashboardData.CountAllPatient()
-
-	if errQuestAttempt != nil || errQuestAttemptNeedAssess != nil || errQuestAttemptMonth != nil || errPatientCount != nil {
-		return dashboardResult, errQuestAttempt
+	if errPatientCount != nil {
+		return dashboardResult, errPatientCount
 	}
 	dashboardResult.AllQuestioner = questAttemptCount
 	dashboardResult.NeedAssessQuestioner = questAttemptNeedAssess
