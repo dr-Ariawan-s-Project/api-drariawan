@@ -77,6 +77,7 @@ type QuestionaireDataInterface interface {
 	CheckCountAttemptAnswer(patientId string) (int, error)
 	InsertTestAttempt(data CoreAttempt) error
 	FindTestAttempt(status string, offset int, limit int) (dataAttempt []CoreAttempt, err error)
+	FindTestAttemptById(id string) (dataAttempt *CoreAttempt, err error)
 	FindAllAnswerByAttempt(idAttemptattempt_id string, offset int, limit int) (dataAnswer []CoreAnswer, err error)
 	InsertAssesment(data CoreAttempt) error
 	CountAllQuestion() (int, error)
@@ -89,6 +90,7 @@ type QuestionaireServiceInterface interface {
 	InsertAnswer(codeAttempt string, data []CoreAnswer) error
 	Validate(patient Patient, as string, partnerEmail string) (codeAttempt string, countAttempt int, err error)
 	GetTestAttempt(status string, page int, perPage int) (dataAttempt []CoreAttempt, err error)
+	GetTestAttemptById(id string) (dataAttempt *CoreAttempt, err error)
 	GetAllAnswerByAttempt(idAttempt string, page int, perPage int) (dataAnswer []CoreAnswer, err error)
 	InsertAssesment(data CoreAttempt) error
 	CountQuestionerAttempt() (int, error)

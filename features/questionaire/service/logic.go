@@ -153,6 +153,15 @@ func (service *questionaireService) GetTestAttempt(status string, page int, perP
 	return service.questionaireData.FindTestAttempt(status, offset, perPage)
 }
 
+// GetTestAttemptById implements questionaire.QuestionaireServiceInterface.
+func (service *questionaireService) GetTestAttemptById(id string) (dataAttempt *questionaire.CoreAttempt, err error) {
+	if id == "" {
+		return nil, errors.New(config.REQ_InvalidIdParam)
+	}
+	response, err := service.questionaireData.FindTestAttemptById(id)
+	return response, err
+}
+
 // GetAllAnswerByAttempt implements questionaire.QuestionaireServiceInterface.
 func (service *questionaireService) GetAllAnswerByAttempt(idAttempt string, page int, perPage int) (dataAnswer []questionaire.CoreAnswer, err error) {
 	if perPage == 0 {

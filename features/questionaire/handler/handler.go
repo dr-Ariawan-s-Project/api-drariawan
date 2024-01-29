@@ -103,6 +103,18 @@ func (handler *QuestionaireHandler) GetAllTestAttempt(c echo.Context) error {
 	return c.JSON(httpCode, mapResponse)
 }
 
+func (handler *QuestionaireHandler) GetTestAttemptById(c echo.Context) error {
+	id := c.Param("attempt_id")
+	result, err := handler.questionaireService.GetTestAttemptById(id)
+	if err != nil {
+		jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_QUESTIONAIRE_CODE)
+		return c.JSON(httpCode, jsonResponse)
+	}
+	var attemptResponse = AttemptCoreToResponse(*result)
+	mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_QUESTIONAIRE_CODE, attemptResponse)
+	return c.JSON(httpCode, mapResponse)
+}
+
 func (handler *QuestionaireHandler) GetAllAnswerByAttempt(c echo.Context) error {
 	idAttempt := c.Param("attempt_id")
 

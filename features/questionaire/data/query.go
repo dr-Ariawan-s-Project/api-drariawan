@@ -105,6 +105,18 @@ func (repo *questionaireQuery) FindTestAttempt(status string, offset int, limit 
 	return attemptAll, nil
 }
 
+// FindTestAttemptById implements questionaire.QuestionaireDataInterface.
+func (repo *questionaireQuery) FindTestAttemptById(id string) (dataAttempt *questionaire.CoreAttempt, err error) {
+	var attemptData TestAttempt
+	tx := repo.db.Preload("Patient").Where("id = ? and deleted_at is null", id).First(&attemptData)
+	if tx.Error != nil {
+		return nil, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+
+	var attemptAll = attemptData.ModelToCore()
+	return &attemptAll, nil
+}
+
 // FindAllAnswerByAttempt implements questionaire.QuestionaireDataInterface.
 func (repo *questionaireQuery) FindAllAnswerByAttempt(idAttempt string, offset int, limit int) (dataAnswer []questionaire.CoreAnswer, err error) {
 	var answerData []Answer

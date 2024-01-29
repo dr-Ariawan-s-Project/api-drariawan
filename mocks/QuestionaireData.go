@@ -191,6 +191,32 @@ func (_m *QuestionaireData) FindTestAttempt(status string, offset int, limit int
 	return r0, r1
 }
 
+// FindTestAttemptById provides a mock function with given fields: id
+func (_m *QuestionaireData) FindTestAttemptById(id string) (*questionaire.CoreAttempt, error) {
+	ret := _m.Called(id)
+
+	var r0 *questionaire.CoreAttempt
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (*questionaire.CoreAttempt, error)); ok {
+		return rf(id)
+	}
+	if rf, ok := ret.Get(0).(func(string) *questionaire.CoreAttempt); ok {
+		r0 = rf(id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*questionaire.CoreAttempt)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // InsertAnswer provides a mock function with given fields: idAttempt, data
 func (_m *QuestionaireData) InsertAnswer(idAttempt string, data []questionaire.CoreAnswer) error {
 	ret := _m.Called(idAttempt, data)
