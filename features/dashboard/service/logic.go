@@ -24,8 +24,8 @@ func (service *dashboardService) GetDashboardStatistics() (dashboard.DashboardCo
 	if errQuestAttempt != nil {
 		return dashboardResult, errQuestAttempt
 	}
-	// get data from status validated
-	questAttemptNeedAssess, errQuestAttemptNeedAssess := service.dashboardData.CountAttemptByStatusAssessment(config.QUESTIONER_ATTEMPT_STATUS_VALIDATED)
+	// get data from status submitted
+	questAttemptNeedAssess, errQuestAttemptNeedAssess := service.dashboardData.CountAttemptByStatusAssessment(config.QUESTIONER_ATTEMPT_STATUS_SUBMITTED)
 	if errQuestAttemptNeedAssess != nil {
 		return dashboardResult, errQuestAttemptNeedAssess
 	}

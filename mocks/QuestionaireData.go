@@ -36,6 +36,30 @@ func (_m *QuestionaireData) CheckCountAttemptAnswer(patientId string) (int, erro
 	return r0, r1
 }
 
+// CheckIsValidCodeAttempt provides a mock function with given fields: codeAttempt
+func (_m *QuestionaireData) CheckIsValidCodeAttempt(codeAttempt string) (bool, error) {
+	ret := _m.Called(codeAttempt)
+
+	var r0 bool
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (bool, error)); ok {
+		return rf(codeAttempt)
+	}
+	if rf, ok := ret.Get(0).(func(string) bool); ok {
+		r0 = rf(codeAttempt)
+	} else {
+		r0 = ret.Get(0).(bool)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(codeAttempt)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // CountAllQuestion provides a mock function with given fields:
 func (_m *QuestionaireData) CountAllQuestion() (int, error) {
 	ret := _m.Called()

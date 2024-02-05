@@ -83,6 +83,7 @@ type QuestionaireDataInterface interface {
 	CountAllQuestion() (int, error)
 	CountQuestionerAttempt() (int, error)
 	CountTestAttemptByFilter(status string) (int64, error)
+	CheckIsValidCodeAttempt(codeAttempt string) (isValid bool, err error)
 }
 
 type QuestionaireServiceInterface interface {

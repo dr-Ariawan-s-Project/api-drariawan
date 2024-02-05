@@ -2,6 +2,7 @@ package data
 
 import (
 	"errors"
+	"log"
 
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/questionaire"
@@ -133,12 +134,49 @@ func (repo *questionaireQuery) FindAllAnswerByAttempt(idAttempt string, offset i
 	return answerAll, nil
 }
 
+// CheckIsValidCodeAttempt implements questionaire.QuestionaireDataInterface.
+func (repo *questionaireQuery) CheckIsValidCodeAttempt(codeAttempt string) (isValid bool, err error) {
+	var attemptData []TestAttempt
+	tx := repo.db.Where("code_attempt = ? and deleted_at is null", codeAttempt).Find(&attemptData)
+	if tx.Error != nil {
+		return false, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	log.Println("len attempt data:", len(attemptData))
+	if len(attemptData) != 1 {
+		return false, errors.New("[validation] invalid code attempt. duplicate code attempt")
+	}
+
+	if attemptData[0].Status != config.QUESTIONER_ATTEMPT_STATUS_WAITING {
+		return false, errors.New("[validation] code attempt already submit the answers or assested by doctor")
+	}
+	return true, nil
+}
+
 // InsertAnswer implements questionaire.QuestionaireDataInterface.
 func (repo *questionaireQuery) InsertAnswer(idAttempt string, data []questionaire.CoreAnswer) error {
+	// start db transaction
+	tx := repo.db.Begin()
+	if err := tx.Error; err != nil {
+		return helpers.CheckQueryErrorMessage(err)
+	}
 	var input = AnswerCoretoModel(idAttempt, data)
-	tx := repo.db.Create(&input)
-	if tx.Error != nil {
-		return helpers.CheckQueryErrorMessage(tx.Error)
+	// input answer
+	errCreate := tx.Create(&input).Error
+	if errCreate != nil {
+		tx.Rollback()
+		return helpers.CheckQueryErrorMessage(errCreate)
+	}
+	// if success input answer, update status test attempt to submitted
+	errUpdate := tx.Model(&TestAttempt{}).Where("id = ?", idAttempt).Update("status", config.QUESTIONER_ATTEMPT_STATUS_SUBMITTED).Error
+	if errUpdate != nil {
+		tx.Rollback()
+		return helpers.CheckQueryErrorMessage(errCreate)
+	}
+	// commit db transaction
+	errCommit := tx.Commit().Error
+	if errCommit != nil {
+		tx.Rollback()
+		return helpers.CheckQueryErrorMessage(errCommit)
 	}
 	return nil
 }

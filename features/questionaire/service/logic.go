@@ -2,6 +2,8 @@ package service
 
 import (
 	"errors"
+	"log"
+	"net/url"
 
 	"github.com/dr-ariawan-s-project/api-drariawan/app/config"
 	"github.com/dr-ariawan-s-project/api-drariawan/features/patient"
@@ -99,6 +101,7 @@ func (service *questionaireService) Validate(patientData questionaire.Patient, a
 		Id:          idAttempt,
 		PatientId:   patientFound.ID,
 		CodeAttempt: codeAttemp,
+		Status:      config.QUESTIONER_ATTEMPT_STATUS_WAITING,
 	}
 	errTestAttempt := service.questionaireData.InsertTestAttempt(dataTestAttempt)
 	if errTestAttempt != nil {
@@ -131,7 +134,22 @@ func (service *questionaireService) InsertAnswer(codeAttempt string, data []ques
 		return errors.New(config.VAL_IncompleteAnswer)
 	}
 	// decrypt codeAttempt to idAttempt
-	idAttempt := encrypt.DecryptText(codeAttempt, service.cfg.AES_GCM_SECRET)
+	codeAttemptUnescape, errUnescape := url.QueryUnescape(codeAttempt)
+	if errUnescape != nil {
+		return errors.New(config.REQ_InvalidParam)
+	}
+
+	log.Println("code attempt unescape: ", codeAttemptUnescape)
+	// check if codeattempt is valid
+	isValid, errCheckCodeAttempt := service.questionaireData.CheckIsValidCodeAttempt(codeAttemptUnescape)
+	if errCheckCodeAttempt != nil {
+		return errCheckCodeAttempt
+	}
+	if !isValid {
+		return errCheckCodeAttempt
+	}
+
+	idAttempt := encrypt.DecryptText(codeAttemptUnescape, service.cfg.AES_GCM_SECRET)
 
 	err := service.questionaireData.InsertAnswer(idAttempt, data)
 	return err

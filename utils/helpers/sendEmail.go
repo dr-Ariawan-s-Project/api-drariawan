@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"log"
 	"net/smtp"
+	"net/url"
 	"os"
 	"strings"
 
@@ -55,7 +56,7 @@ func SendMailQuestionerLink(email, codeAttempt, gmailPass string) {
 	templateData := struct {
 		UrlLink string
 	}{
-		UrlLink: baseUrlFrontend + "/kuisioner?code=" + codeAttempt,
+		UrlLink: baseUrlFrontend + "/questionnaire/start?code=" + url.QueryEscape(codeAttempt),
 	}
 
 	errTemplate := r.ParseEmailTemplate(wd+"/utils/files/index.html", templateData)
