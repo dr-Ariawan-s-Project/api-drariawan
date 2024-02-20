@@ -35,6 +35,17 @@ func (repo *questionaireQuery) CountTestAttemptByFilter(status string) (int64, e
 	return countAttemp, nil
 }
 
+// for pagination
+// CountAllAnswersByAttemptId implements questionaire.QuestionaireDataInterface.
+func (repo *questionaireQuery) CountAllAnswersByAttemptId(idAttempt string) (int64, error) {
+	var countAnswers int64
+	tx := repo.db.Model(&Answer{}).Where("attempt_id = ? and deleted_at is null", idAttempt).Count(&countAnswers)
+	if tx.Error != nil {
+		return 0, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	return countAnswers, nil
+}
+
 // CountAllQuestion implements questionaire.QuestionaireDataInterface.
 func (repo *questionaireQuery) CountAllQuestion() (int, error) {
 	var countAttemp int64

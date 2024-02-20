@@ -162,6 +162,11 @@ func (handler *QuestionaireHandler) GetAllAnswerByAttempt(c echo.Context) error 
 
 	var answerResponse = ListAnswerCoreToResponse(results)
 	mapResponse, httpCode := helpers.WebResponseSuccess("[success] read data", config.FEAT_QUESTIONAIRE_CODE, answerResponse)
+	//pagination
+	paginationRes, errPagination := handler.questionaireService.GetPaginationListAnswers(idAttempt, page, limit)
+	if errPagination == nil {
+		mapResponse["pagination"] = paginationRes
+	}
 	return c.JSON(httpCode, mapResponse)
 }
 
