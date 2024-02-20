@@ -60,6 +60,30 @@ func (_m *QuestionaireData) CheckIsValidCodeAttempt(codeAttempt string) (bool, e
 	return r0, r1
 }
 
+// CountAllAnswersByAttemptId provides a mock function with given fields: idAttempt
+func (_m *QuestionaireData) CountAllAnswersByAttemptId(idAttempt string) (int64, error) {
+	ret := _m.Called(idAttempt)
+
+	var r0 int64
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (int64, error)); ok {
+		return rf(idAttempt)
+	}
+	if rf, ok := ret.Get(0).(func(string) int64); ok {
+		r0 = rf(idAttempt)
+	} else {
+		r0 = ret.Get(0).(int64)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(idAttempt)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // CountAllQuestion provides a mock function with given fields:
 func (_m *QuestionaireData) CountAllQuestion() (int, error) {
 	ret := _m.Called()

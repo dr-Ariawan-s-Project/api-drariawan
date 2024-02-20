@@ -30,6 +30,16 @@ func (service *questionaireService) GetPaginationTestAttempt(status string, page
 	return paginationRes, nil
 }
 
+// GetPaginationListAnswers implements questionaire.QuestionaireServiceInterface.
+func (service *questionaireService) GetPaginationListAnswers(idAttempt string, page int, perPage int) (helpers.Pagination, error) {
+	totalRows, err := service.questionaireData.CountAllAnswersByAttemptId(idAttempt)
+	if err != nil {
+		return helpers.Pagination{}, err
+	}
+	paginationRes := helpers.CountPagination(totalRows, page, perPage)
+	return paginationRes, nil
+}
+
 func New(repo questionaire.QuestionaireDataInterface, patientServ patient.PatientServiceInterface, cfg *config.AppConfig) questionaire.QuestionaireServiceInterface {
 	return &questionaireService{
 		questionaireData: repo,

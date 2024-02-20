@@ -83,6 +83,7 @@ type QuestionaireDataInterface interface {
 	CountAllQuestion() (int, error)
 	CountQuestionerAttempt() (int, error)
 	CountTestAttemptByFilter(status string) (int64, error)
+	CountAllAnswersByAttemptId(idAttempt string) (int64, error)
 	CheckIsValidCodeAttempt(codeAttempt string) (isValid bool, err error)
 }
 
@@ -96,5 +97,6 @@ type QuestionaireServiceInterface interface {
 	InsertAssesment(data CoreAttempt) error
 	CountQuestionerAttempt() (int, error)
 	GetPaginationTestAttempt(status string, page int, perPage int) (helpers.Pagination, error)
+	GetPaginationListAnswers(idAttempt string, page int, perPage int) (helpers.Pagination, error)
 	CheckIsValidCodeAttempt(codeAttempt string) (isValid bool, err error)
 }
