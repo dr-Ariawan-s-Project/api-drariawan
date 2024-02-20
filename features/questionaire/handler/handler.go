@@ -47,6 +47,21 @@ func (handler *QuestionaireHandler) Validate(c echo.Context) error {
 	return c.JSON(httpCode, mapResponse)
 }
 
+func (handler *QuestionaireHandler) CheckIsValidCodeAttempt(c echo.Context) error {
+	codeAttempt := c.QueryParam("code")
+	isValid, err := handler.questionaireService.CheckIsValidCodeAttempt(codeAttempt)
+	if err != nil {
+		jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_QUESTIONAIRE_CODE)
+		return c.JSON(httpCode, jsonResponse)
+	}
+	data := map[string]any{}
+	if isValid {
+		data["is_valid"] = true
+	}
+	mapResponse, httpCode := helpers.WebResponseSuccess("[success] code is valid", config.FEAT_QUESTIONAIRE_CODE, data)
+	return c.JSON(httpCode, mapResponse)
+}
+
 func (handler *QuestionaireHandler) AddAnswer(c echo.Context) error {
 	answerInput := new(AnswerRequest)
 	errBind := c.Bind(&answerInput)
