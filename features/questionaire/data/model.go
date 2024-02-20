@@ -131,6 +131,7 @@ func AttempCoreToModel(core questionaire.CoreAttempt) TestAttempt {
 		ID:          core.Id,
 		PatientId:   core.PatientId,
 		CodeAttempt: core.CodeAttempt,
+		Status:      core.Status,
 	}
 }
 
