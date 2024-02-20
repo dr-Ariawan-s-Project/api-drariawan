@@ -96,4 +96,5 @@ type QuestionaireServiceInterface interface {
 	InsertAssesment(data CoreAttempt) error
 	CountQuestionerAttempt() (int, error)
 	GetPaginationTestAttempt(status string, page int, perPage int) (helpers.Pagination, error)
+	CheckIsValidCodeAttempt(codeAttempt string) (isValid bool, err error)
 }

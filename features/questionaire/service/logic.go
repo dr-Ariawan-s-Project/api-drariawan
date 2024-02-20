@@ -78,7 +78,7 @@ func (service *questionaireService) Validate(patientData questionaire.Patient, a
 			} else {
 				go helpers.SendMailQuestionerLink(patientFound.Email, dataAttempt.CodeAttempt, service.cfg.GMAIL_APP_PASSWORD)
 			}
-			return dataAttempt.CodeAttempt, countAttempt, nil
+			return url.QueryEscape(dataAttempt.CodeAttempt), countAttempt, nil
 		}
 	} else {
 		data := patient.Core{
@@ -115,7 +115,23 @@ func (service *questionaireService) Validate(patientData questionaire.Patient, a
 		go helpers.SendMailQuestionerLink(patientData.Email, codeAttemp, service.cfg.GMAIL_APP_PASSWORD)
 	}
 
-	return codeAttemp, 0, nil
+	return url.QueryEscape(codeAttemp), 0, nil
+}
+
+// CheckIsValidCodeAttempt implements questionaire.QuestionaireServiceInterface.
+func (service *questionaireService) CheckIsValidCodeAttempt(codeAttempt string) (isValid bool, err error) {
+	// decrypt codeAttempt to idAttempt
+	if codeAttempt == "" {
+		return false, errors.New("[validation] code attempt cannot empty")
+	}
+	// codeAttemptUnescape, errUnescape := url.QueryUnescape(codeAttempt)
+	// log.Println("codeattempt", codeAttempt)
+	// log.Println("codeattemptun", codeAttemptUnescape)
+	// if errUnescape != nil {
+	// 	return false, errors.New(config.REQ_InvalidParam)
+	// }
+	isValid, err = service.questionaireData.CheckIsValidCodeAttempt(codeAttempt)
+	return
 }
 
 // InsertAnswer implements questionaire.QuestionaireServiceInterface.

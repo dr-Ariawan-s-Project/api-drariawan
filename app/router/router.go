@@ -63,6 +63,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	v1Questioner.POST("/attempts/:attempt_id/assesments", sysRoute.questionaireHandler.AddAssesmentByAttempt)
 	v1Questioner.POST("", sysRoute.questionaireHandler.AddAnswer)
 	v1Questioner.POST("/validate", sysRoute.questionaireHandler.Validate)
+	v1Questioner.GET("/check", sysRoute.questionaireHandler.CheckIsValidCodeAttempt)
 
 	// users
 	v1User := v1.Group("/user")

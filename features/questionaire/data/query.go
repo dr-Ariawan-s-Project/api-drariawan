@@ -142,6 +142,9 @@ func (repo *questionaireQuery) CheckIsValidCodeAttempt(codeAttempt string) (isVa
 		return false, helpers.CheckQueryErrorMessage(tx.Error)
 	}
 	log.Println("len attempt data:", len(attemptData))
+	if len(attemptData) == 0 {
+		return false, errors.New("[validation] invalid code attempt. code attempt not found")
+	}
 	if len(attemptData) != 1 {
 		return false, errors.New("[validation] invalid code attempt. duplicate code attempt")
 	}
