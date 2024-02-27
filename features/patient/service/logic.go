@@ -107,7 +107,15 @@ func (service *patientService) Insert(data patient.Core, partnerEmail string) (*
 	}
 	// if email already in use
 	if patientDataFound.ID != "" {
-		return nil, errors.New(config.DB_ERR_DUPLICATE_KEY)
+		// jika email sama, dan password sudah terisi
+		if patientDataFound.Password != "" {
+			return nil, errors.New("[validation] email already registered")
+			// return nil, errors.New(config.DB_ERR_DUPLICATE_KEY)
+		} else { // jika email sama, tapi password belum terisi maka update data nya.
+			data.ID = patientDataFound.ID
+			response, err := service.Update(data)
+			return response, err
+		}
 	}
 
 	if data.NIK != "" {
