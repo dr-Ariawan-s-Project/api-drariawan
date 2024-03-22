@@ -102,6 +102,22 @@ func (bs *bookingService) Delete(id string, role string) error {
 	return nil
 }
 
+// CancelBooking implements booking.Service.
+func (bs *bookingService) CancelBooking(id string, role string) error {
+	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess && strings.ToLower(role) != config.VAL_SuperAdminAccess && strings.ToLower(role) != config.VAL_AdminAccess {
+		return errors.New(config.VAL_Unauthorized)
+	}
+	// check if bookingid is exist or not. err means not exist.
+	_, errBookData := bs.qry.GetByBookingID(id)
+	if errBookData != nil {
+		return errBookData
+	}
+
+	// do cancel if bookingid exist
+	errCancel := bs.qry.CancelBooking(id)
+	return errCancel
+}
+
 // GetAll implements schedule.bookingService.
 func (bs *bookingService) GetAll(role string, page int, perPage int) ([]booking.Core, error) {
 	if strings.ToLower(role) != config.VAL_SusterAccess && strings.ToLower(role) != config.VAL_DokterAccess && strings.ToLower(role) != config.VAL_PatientAccess && strings.ToLower(role) != config.VAL_SuperAdminAccess && strings.ToLower(role) != config.VAL_AdminAccess {

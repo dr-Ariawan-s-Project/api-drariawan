@@ -44,6 +44,7 @@ type Service interface {
 	Create(data Core, role string) error
 	Update(id string, data Core, role string) error
 	Delete(id string, role string) error
+	CancelBooking(id string, role string) error
 	GetAll(role string, page int, perPage int) ([]Core, error)
 	GetByUserID(userID int, role string) ([]Core, error)
 	GetByPatientID(patientID string) ([]Core, error)
@@ -53,6 +54,7 @@ type Data interface {
 	Create(data Core) (bookingID *string, err error)
 	Update(id string, data Core) error
 	Delete(id string) error
+	CancelBooking(id string) error
 	GetAll(offset int, limit int) ([]Core, error)
 	GetByUserID(userID int) ([]Core, error)
 	GetByPatientID(patientID string) ([]Core, error)
