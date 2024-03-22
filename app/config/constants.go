@@ -34,6 +34,11 @@ const (
 	QUESTIONER_ATTEMPT_STATUS_DONE      = "done"
 )
 
+const (
+	BOOKING_STATE_CANCELED  = "canceled"
+	BOOKING_STATE_CONFIRMED = "confirmed"
+)
+
 // const db error
 const (
 	// ErrRecordNotFound record not found error
