@@ -37,7 +37,7 @@ func (bq *bookingQuery) CountByFilter() (int64, error) {
 // Create implements schedule.ScheduleData.
 func (bq *bookingQuery) Create(data booking.Core) (*string, error) {
 	qry := CoreToData(data)
-	qry.State = "confirmed"
+	qry.State = config.BOOKING_STATE_CONFIRMED
 	qry.ID = helpers.UUIDGenerate()
 	qry.BookingCode = helpers.RandomStringAlphabetNumeric()
 
@@ -102,6 +102,25 @@ func (bq *bookingQuery) Delete(id string) error {
 	return nil
 }
 
+// CancelBooking implements booking.Data.
+func (bq *bookingQuery) CancelBooking(id string) error {
+	data := Bookings{}
+	data.State = config.BOOKING_STATE_CANCELED
+	qry := bq.db.Model(&Bookings{}).Where("id = ?", id).Updates(&data)
+	err := qry.Error
+	if err != nil {
+		return helpers.CheckQueryErrorMessage(err)
+	}
+
+	affrows := qry.RowsAffected
+	if affrows == 0 {
+		log.Println("no rows affected")
+		return errors.New("no data changed")
+	}
+
+	return nil
+}
+
 // GetAll implements schedule.ScheduleData.
 func (bq *bookingQuery) GetAll(offset int, limit int) ([]booking.Core, error) {
 	qry := []Bookings{}
@@ -136,9 +155,12 @@ func (bq *bookingQuery) GetByPatientID(patientID string) ([]booking.Core, error)
 // GetByBookingID implements booking.Data.
 func (bq *bookingQuery) GetByBookingID(bookingId string) (*booking.Core, error) {
 	qry := Bookings{}
-	tx := bq.db.Where("id = ? and deleted_at IS NULL", bookingId).Order("created_at DESC").Preload("Patient").Preload("Schedule").Preload("Schedule.User").Find(&qry)
+	tx := bq.db.Where("id = ? and deleted_at IS NULL", bookingId).Order("created_at DESC").Preload("Patient").Preload("Schedule").Preload("Schedule.User").First(&qry)
 	if tx.Error != nil {
 		return nil, helpers.CheckQueryErrorMessage(tx.Error)
+	}
+	if tx.RowsAffected == 0 {
+		return nil, errors.New(config.DB_ERR_RECORD_NOT_FOUND)
 	}
 	result := DataToCore(qry)
 	return &result, nil

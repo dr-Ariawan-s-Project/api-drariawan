@@ -93,6 +93,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo, cfg *config.AppConfig) {
 	//booking
 	v1Booking := v1.Group("/booking")
 	v1Booking.POST("", sysRoute.bookingHandler.Create(), JWTMiddleware())
+	v1Booking.POST("/:bookingid/cancel", sysRoute.bookingHandler.CancelBooking(), JWTMiddleware())
 	v1Booking.PUT("/:bookingid", sysRoute.bookingHandler.Update(), JWTMiddleware())
 	v1Booking.DELETE("/delete/:bookingid", sysRoute.bookingHandler.Delete(), JWTMiddleware())
 	v1Booking.GET("/list", sysRoute.bookingHandler.GetAll(), JWTMiddleware())

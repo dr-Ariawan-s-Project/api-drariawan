@@ -95,6 +95,26 @@ func (bh *BookingHandler) Delete() echo.HandlerFunc {
 	}
 }
 
+// CancelBooking implements Booking.BookingHandler.
+func (bh *BookingHandler) CancelBooking() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		_, role, err := encrypt.ExtractToken(c.Get("user"))
+		if err != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_BOOKING_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+
+		bookID := c.Param("bookingid")
+		err = bh.srv.CancelBooking(bookID, role)
+		if err != nil {
+			jsonResponse, httpCode := helpers.WebResponseError(err, config.FEAT_BOOKING_CODE)
+			return c.JSON(httpCode, jsonResponse)
+		}
+		mapResponse, httpCode := helpers.WebResponseSuccess("[success] cancel booking", config.FEAT_BOOKING_CODE, nil)
+		return c.JSON(httpCode, mapResponse)
+	}
+}
+
 // GetAll implements Booking.BookingHandler.
 func (bh *BookingHandler) GetAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
